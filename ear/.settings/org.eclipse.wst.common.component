@@ -11,10 +11,16 @@
         <dependent-module archiveName="helper-1.0.0.0.jar" deploy-path="/" handle="module:/resource/helper/helper">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="jpa-1.0.0.0.jar" deploy-path="/" handle="module:/resource/jpa/jpa">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <dependent-module archiveName="slf4j-simple-1.7.5.jar" deploy-path="/" handle="module:/classpath/var/M2_REPO/org/slf4j/slf4j-simple/1.7.5/slf4j-simple-1.7.5.jar">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="slf4j-api-1.7.5.jar" deploy-path="/" handle="module:/classpath/var/M2_REPO/org/slf4j/slf4j-api/1.7.5/slf4j-api-1.7.5.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="lombok-1.12.2.jar" deploy-path="/" handle="module:/classpath/var/M2_REPO/org/projectlombok/lombok/1.12.2/lombok-1.12.2.jar">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="gson-2.2.4.jar" deploy-path="/" handle="module:/classpath/var/M2_REPO/com/google/code/gson/gson/2.2.4/gson-2.2.4.jar">
@@ -27,9 +33,6 @@
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="jboss-logging-3.0.0.CR1.jar" deploy-path="/" handle="module:/classpath/var/M2_REPO/org/jboss/logging/jboss-logging/3.0.0.CR1/jboss-logging-3.0.0.CR1.jar">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="jpa-1.0.0.0.jar" deploy-path="/" handle="module:/resource/jpa/jpa">
             <dependency-type>uses</dependency-type>
         </dependent-module>
     </wb-module>

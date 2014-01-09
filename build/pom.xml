@@ -32,4 +32,60 @@
 		<module>../ui.jsf</module>
 		<module>../ear</module>
 	</modules>
+	<dependencies>
+		
+		<!-- JAVAX J2EE -->
+		<dependency>
+			<groupId>javax</groupId>
+			<artifactId>javaee-api</artifactId>
+			<version>7.0</version>
+			<scope>provided</scope>
+		</dependency>
+		
+		<!-- JAVAX CDI -->
+		<dependency>
+			<groupId>javax.enterprise</groupId>
+			<artifactId>cdi-api</artifactId>
+			<version>1.1-PRD</version>
+			<scope>provided</scope>
+		</dependency>
+		
+		<!-- JUNIT -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+			<scope>test</scope>
+		</dependency>
+		
+		<!-- SLF4J -->
+		<dependency> 
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>1.7.5</version>
+			<scope>compile</scope>
+		</dependency>
+		
+		<!-- LOMBOK -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.12.2</version>
+		</dependency>
+		
+		<!-- GSON -->
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.2.4</version>
+		</dependency>
+		
+		<!-- TRUGGER -->
+		<dependency>
+			<groupId>org.atatec.trugger</groupId>
+			<artifactId>trugger</artifactId>
+			<version>4.1.1</version>
+		</dependency>
+		
+	</dependencies>
 </project>
