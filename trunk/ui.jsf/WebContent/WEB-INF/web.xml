@@ -18,6 +18,6 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>FacesServlet</servlet-name>
-		<url-pattern>*.xhtml</url-pattern>
+		<url-pattern>*.hcs</url-pattern>
 	</servlet-mapping>
 </web-app>
