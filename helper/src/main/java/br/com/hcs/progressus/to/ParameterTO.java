@@ -3,6 +3,7 @@ package br.com.hcs.progressus.to;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.hcs.progressus.to.common.ProgressusTO;
 import lombok.Getter;
 import lombok.Setter;
 

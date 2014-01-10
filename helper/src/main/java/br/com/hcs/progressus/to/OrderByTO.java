@@ -6,6 +6,7 @@ import java.util.Map;
 
 import br.com.hcs.progressus.enumerator.OrderByType;
 import br.com.hcs.progressus.exception.InvalidParameterException;
+import br.com.hcs.progressus.to.common.ProgressusTO;
 import lombok.Setter;
 
 

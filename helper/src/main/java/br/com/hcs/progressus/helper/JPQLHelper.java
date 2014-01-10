@@ -9,9 +9,9 @@ import javax.persistence.TypedQuery;
 import br.com.hcs.progressus.enumerator.WhereClauseOperator;
 import br.com.hcs.progressus.exception.InvalidParameterException;
 import br.com.hcs.progressus.to.OrderByTO;
-import br.com.hcs.progressus.to.ProgressusTO;
 import br.com.hcs.progressus.to.WhereClauseTO;
 import br.com.hcs.progressus.to.WhereTO;
+import br.com.hcs.progressus.to.common.ProgressusTO;
 
 
 public class JPQLHelper {

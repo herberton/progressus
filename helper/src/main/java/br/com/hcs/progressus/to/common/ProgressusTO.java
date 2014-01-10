@@ -1,4 +1,4 @@
-package br.com.hcs.progressus.to;
+package br.com.hcs.progressus.to.common;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;

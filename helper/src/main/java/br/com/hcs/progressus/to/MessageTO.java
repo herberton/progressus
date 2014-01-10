@@ -5,8 +5,9 @@ import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
-import br.com.hcs.progressus.exception.ProgressusException;
+import br.com.hcs.progressus.exception.common.ProgressusException;
 import br.com.hcs.progressus.helper.StringHelper;
+import br.com.hcs.progressus.to.common.ProgressusTO;
 
 public class MessageTO extends ProgressusTO<MessageTO> {
 	
