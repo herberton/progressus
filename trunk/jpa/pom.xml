@@ -32,6 +32,23 @@
 	</properties>
 	<dependencies>
 		
+		<!-- HIBERNATE -->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>4.3.0.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>5.0.2.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator-cdi</artifactId>
+			<version>5.0.2.Final</version>
+		</dependency>
+		
 		<!-- PROGRESSUS HELPER -->
 		<dependency>
 			<groupId>br.com.hcs.progressus</groupId>
