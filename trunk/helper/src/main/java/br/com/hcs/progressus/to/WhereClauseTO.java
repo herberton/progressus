@@ -1,6 +1,7 @@
 package br.com.hcs.progressus.to;
 
 import br.com.hcs.progressus.enumerator.WhereClauseOperator;
+import br.com.hcs.progressus.to.common.ProgressusTO;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -1,7 +1,7 @@
 package br.com.hcs.progressus.helper;
 
 import br.com.hcs.progressus.exception.EmptyParameterException;
-import br.com.hcs.progressus.exception.ProgressusException;
+import br.com.hcs.progressus.exception.common.ProgressusException;
 
 public class ValidateHelper {
 	

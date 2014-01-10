@@ -1,5 +1,6 @@
 package br.com.hcs.progressus.exception;
 
+import br.com.hcs.progressus.exception.common.ProgressusException;
 import br.com.hcs.progressus.to.ParameterTO;
 
 

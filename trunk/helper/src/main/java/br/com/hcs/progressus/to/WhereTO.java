@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import br.com.hcs.progressus.to.common.ProgressusTO;
 import lombok.Setter;
 
 public class WhereTO extends ProgressusTO<WhereTO> {

@@ -1,4 +1,4 @@
-package br.com.hcs.progressus.exception;
+package br.com.hcs.progressus.exception.common;
 
 import java.util.ArrayList;
 import java.util.List;
