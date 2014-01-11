@@ -16,7 +16,7 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import lombok.Getter;
-import br.com.hcs.progressus.client.dao.sb.common.NAODAOLocal;
+import br.com.hcs.progressus.client.dao.sb.common.ProgressusDAOLocal;
 import br.com.hcs.progressus.enumerator.Status;
 import br.com.hcs.progressus.exception.CountException;
 import br.com.hcs.progressus.exception.DeleteException;
@@ -36,17 +36,17 @@ import br.com.hcs.progressus.to.OrderByTO;
 @LocalBean
 @TransactionManagement(TransactionManagementType.CONTAINER)
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
-public class NAODAO<T extends ProgressusEntity<? extends ProgressusEntity<?>>> implements NAODAOLocal<T> {
+public class ProgressusDAO<T extends ProgressusEntity<? extends ProgressusEntity<?>>> implements ProgressusDAOLocal<T> {
 
 	private static final long serialVersionUID = 6836058369612935358L;
 	
 	
 	@Getter
-	@PersistenceContext
+	@PersistenceContext(name="jpapu")
 	private EntityManager entityManager;
 	
 	
-    public NAODAO() { super(); }
+    public ProgressusDAO() { super(); }
 
 	
    	@Override

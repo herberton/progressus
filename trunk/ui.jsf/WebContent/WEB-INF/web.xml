@@ -9,12 +9,31 @@
  	id="ui.jsf">
 	<display-name>ui.jsf</display-name>
 	<welcome-file-list>
-		<welcome-file>/index.xhtml</welcome-file>
+		<welcome-file>page/login.xhtml</welcome-file>
 	</welcome-file-list>
+	<session-config>
+		<session-timeout>10</session-timeout>
+	</session-config>
+	<error-page>
+		<exception-type>javax.faces.application.ViewExpiredException</exception-type>
+		<location>/page/login.xhtml</location>
+	</error-page>
+	<context-param>
+		<param-name>primefaces.THEME</param-name>
+		<param-value>#{sessionMB.theme}</param-value>
+	</context-param>
+	<filter>
+		<filter-name>PrimeFacesFileUploadFilter</filter-name>
+		<filter-class>org.primefaces.webapp.filter.FileUploadFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>PrimeFacesFileUploadFilter</filter-name>
+		<servlet-name>FacesServlet</servlet-name>
+	</filter-mapping>
 	<servlet>
 		<servlet-name>FacesServlet</servlet-name>
 		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
-		<load-on-startup>1</load-on-startup>
+		<load-on-startup>2</load-on-startup>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>FacesServlet</servlet-name>

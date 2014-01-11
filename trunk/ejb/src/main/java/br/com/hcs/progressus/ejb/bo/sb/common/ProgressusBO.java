@@ -11,8 +11,8 @@ import javax.transaction.UserTransaction;
 
 import lombok.AccessLevel;
 import lombok.Getter;
-import br.com.hcs.progressus.client.bo.sb.common.NAOBORemote;
-import br.com.hcs.progressus.client.dao.sb.common.NAODAOLocal;
+import br.com.hcs.progressus.client.bo.sb.common.ProgressusBORemote;
+import br.com.hcs.progressus.client.dao.sb.common.ProgressusDAOLocal;
 import br.com.hcs.progressus.exception.BeginTransactionException;
 import br.com.hcs.progressus.exception.CommitTransactionException;
 import br.com.hcs.progressus.exception.GetDAOException;
@@ -26,7 +26,7 @@ import br.com.hcs.progressus.jpa.entity.common.ProgressusEntity;
 @Stateless
 @LocalBean
 @TransactionManagement(TransactionManagementType.BEAN)
-public class NAOBO implements NAOBORemote {
+public class ProgressusBO implements ProgressusBORemote {
 
 	private static final long serialVersionUID = -8263350772481901387L;
 	
@@ -36,7 +36,7 @@ public class NAOBO implements NAOBORemote {
 	private UserTransaction userTransaction;
 	
 	
-    public NAOBO() { super(); }
+    public ProgressusBO() { super(); }
 
     
     protected void beginTransaction() throws ProgressusException {
@@ -72,13 +72,13 @@ public class NAOBO implements NAOBORemote {
 	}
     
 	@SuppressWarnings("unchecked")
-	protected <T extends ProgressusEntity<? extends ProgressusEntity<?>>> NAODAOLocal<T> getDAO(Class<T> entityClazz) throws ProgressusException {
+	protected <T extends ProgressusEntity<? extends ProgressusEntity<?>>> ProgressusDAOLocal<T> getDAO(Class<T> entityClazz) throws ProgressusException {
 		
 		ValidateHelper.validateFilling("entityClazz", entityClazz);
 		
 		try {
 			
-			return (NAODAOLocal<T>) 
+			return (ProgressusDAOLocal<T>) 
 				new InitialContext()
 					.lookup(
 						EJBHelper
@@ -96,7 +96,7 @@ public class NAOBO implements NAOBORemote {
 	private <T extends ProgressusEntity<? extends ProgressusEntity<?>>> String getDAOName(Class<T> entityClazz, boolean isGetSimpleName) throws ProgressusException {
 		ValidateHelper.validateFilling("entityClazz", entityClazz);
 		String daoName = isGetSimpleName ? entityClazz.getSimpleName() : entityClazz.getName();
-		return daoName.replace("br.com.nao.jpa.entity", "br.com.nao.ejb.sb.dao").replace("Entity", "DAO");
+		return daoName.replace("jpa.entity", "ejb.dao.sb").replace("Entity", "DAO");
 	}	
 	private String getUserTransactionStatus() throws ProgressusException {
 		
@@ -122,6 +122,6 @@ public class NAOBO implements NAOBORemote {
     	
     }
 	private void printTransaction() throws ProgressusException {
-		System.out.println("NAO.Transaction:\t" + this.getUserTransactionStatus());
+		System.out.println("Progressus.Transaction:\t" + this.getUserTransactionStatus());
 	}
 }

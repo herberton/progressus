@@ -96,7 +96,7 @@ public class JPQLHelper {
 		return where;
 	}
 	public static void println(String jpql, Map<String, Object> parameterMap) {
-		System.out.println("NAO.JPQL:\t" + jpql);
-		System.out.println("NAO.ParameterMap:\t" + parameterMap.toString());
+		System.out.println("Progressus.JPQL:\t" + jpql);
+		System.out.println("Progressus.ParameterMap:\t" + parameterMap.toString());
 	}
 }

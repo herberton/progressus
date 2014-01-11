@@ -11,7 +11,7 @@ import br.com.hcs.progressus.jpa.entity.common.ProgressusEntity;
 import br.com.hcs.progressus.to.OrderByTO;
 
 @Remote
-public interface NAOBOCRUDRemote<T extends ProgressusEntity<T>> 
+public interface ProgressusBOCRUDRemote<T extends ProgressusEntity<T>> 
 	extends
 		Serializable 
 {
