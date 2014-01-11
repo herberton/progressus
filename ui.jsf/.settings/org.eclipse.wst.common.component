@@ -6,9 +6,6 @@
         <dependent-module archiveName="helper-1.0.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/helper/helper">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="jpa-1.0.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/jpa/jpa">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
         <property name="context-root" value="ui.jsf"/>
         <property name="java-output-path" value="/ui.jsf/target/classes"/>
     </wb-module>

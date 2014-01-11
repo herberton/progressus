@@ -11,9 +11,6 @@
         <dependent-module archiveName="helper-1.0.0.0.jar" deploy-path="/" handle="module:/resource/helper/helper">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="jpa-1.0.0.0.jar" deploy-path="/" handle="module:/resource/jpa/jpa">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
         <dependent-module archiveName="hibernate-entitymanager-4.3.0.Final.jar" deploy-path="/" handle="module:/classpath/var/M2_REPO/org/hibernate/hibernate-entitymanager/4.3.0.Final/hibernate-entitymanager-4.3.0.Final.jar">
             <dependency-type>uses</dependency-type>
         </dependent-module>
