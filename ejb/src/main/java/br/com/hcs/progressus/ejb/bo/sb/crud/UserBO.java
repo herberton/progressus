@@ -4,14 +4,14 @@ import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 
 import br.com.hcs.progressus.client.bo.sb.crud.UserBORemote;
-import br.com.hcs.progressus.ejb.bo.sb.crud.common.NAOBOCRUD;
+import br.com.hcs.progressus.ejb.bo.sb.crud.common.ProgressusBOCRUD;
 import br.com.hcs.progressus.enumerator.Status;
 import br.com.hcs.progressus.exception.common.ProgressusException;
 import br.com.hcs.progressus.jpa.entity.UserEntity;
 
 @Stateless
 @LocalBean
-public class UserBO extends NAOBOCRUD<UserEntity> implements UserBORemote {
+public class UserBO extends ProgressusBOCRUD<UserEntity> implements UserBORemote {
 
    private static final long serialVersionUID = -3434597631856835762L;
 

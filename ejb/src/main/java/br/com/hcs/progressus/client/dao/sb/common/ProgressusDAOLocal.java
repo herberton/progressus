@@ -12,7 +12,7 @@ import br.com.hcs.progressus.to.OrderByTO;
 
 
 @Local
-public interface NAODAOLocal<T extends ProgressusEntity<? extends ProgressusEntity<?>>> extends Serializable {
+public interface ProgressusDAOLocal<T extends ProgressusEntity<? extends ProgressusEntity<?>>> extends Serializable {
 	
 	T insert(T entity) throws ProgressusException;
 	

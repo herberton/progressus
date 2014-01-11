@@ -20,5 +20,5 @@ public class ConfigurationHelper implements Serializable {
 	public static final String UI_WEB_SESSION_DEFAULT_MENU_MODEL = "";
 	
 	// JNDI
-	public static String JNDI_EJB_LOOKUP = "java:global/NAO.EJB.EAR/NAO.EJB/[class_simpleName]![class_name]";
+	public static String JNDI_EJB_LOOKUP = "java:global/ear/progressus.ejb/[class_simpleName]![class_name]";
 }

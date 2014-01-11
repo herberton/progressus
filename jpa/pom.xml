@@ -23,6 +23,9 @@
 				<configuration>
 					<source>1.7</source>
 					<target>1.7</target>
+					<includes>
+						<include>**/**</include>
+					</includes>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -33,6 +36,11 @@
 	<dependencies>
 		
 		<!-- HIBERNATE -->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-entitymanager</artifactId>
+			<version>4.3.0.Final</version>
+		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>

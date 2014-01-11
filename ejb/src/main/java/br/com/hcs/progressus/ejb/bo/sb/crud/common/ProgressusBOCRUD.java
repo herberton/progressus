@@ -6,8 +6,8 @@ import java.util.Map;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 
-import br.com.hcs.progressus.client.bo.sb.crud.common.NAOBOCRUDRemote;
-import br.com.hcs.progressus.ejb.bo.sb.common.NAOBO;
+import br.com.hcs.progressus.client.bo.sb.crud.common.ProgressusBOCRUDRemote;
+import br.com.hcs.progressus.ejb.bo.sb.common.ProgressusBO;
 import br.com.hcs.progressus.enumerator.Status;
 import br.com.hcs.progressus.exception.EntityNotFoundException;
 import br.com.hcs.progressus.exception.SaveException;
@@ -19,17 +19,17 @@ import br.com.hcs.progressus.to.OrderByTO;
 
 @Stateless
 @LocalBean
-public class NAOBOCRUD<T extends ProgressusEntity<T>> 
+public class ProgressusBOCRUD<T extends ProgressusEntity<T>> 
 	extends 
-		NAOBO 
+		ProgressusBO 
 	implements 
-		NAOBOCRUDRemote<T> 
+		ProgressusBOCRUDRemote<T> 
 {
 
     private static final long serialVersionUID = 7682571187985486249L;
     
     
-    public NAOBOCRUD() { super(); }
+    public ProgressusBOCRUD() { super(); }
     
     
     public T save(T entity) throws ProgressusException {

@@ -5,6 +5,6 @@ import java.io.Serializable;
 import javax.ejb.Remote;
 
 @Remote
-public interface NAOBORemote extends Serializable {
+public interface ProgressusBORemote extends Serializable {
 
 }
