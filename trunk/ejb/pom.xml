@@ -52,6 +52,13 @@
 	</properties>
 	<dependencies>
 		
+		<!-- JAVA ASSIST -->
+		<dependency>
+			<groupId>org.javassist</groupId>
+			<artifactId>javassist</artifactId>
+			<version>3.18.1-GA</version>
+		</dependency>
+            
 		<!-- HIBERNATE -->
 		<dependency>
 			<groupId>org.hibernate</groupId>

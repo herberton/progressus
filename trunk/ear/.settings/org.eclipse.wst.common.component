@@ -11,6 +11,9 @@
         <dependent-module archiveName="helper-1.0.0.0.jar" deploy-path="/" handle="module:/resource/helper/helper">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="javassist-3.18.1-GA.jar" deploy-path="/" handle="module:/classpath/var/M2_REPO/org/javassist/javassist/3.18.1-GA/javassist-3.18.1-GA.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <dependent-module archiveName="hibernate-entitymanager-4.3.0.Final.jar" deploy-path="/" handle="module:/classpath/var/M2_REPO/org/hibernate/hibernate-entitymanager/4.3.0.Final/hibernate-entitymanager-4.3.0.Final.jar">
             <dependency-type>uses</dependency-type>
         </dependent-module>
@@ -33,9 +36,6 @@
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="jboss-transaction-api_1.2_spec-1.0.0.Final.jar" deploy-path="/" handle="module:/classpath/var/M2_REPO/org/jboss/spec/javax/transaction/jboss-transaction-api_1.2_spec/1.0.0.Final/jboss-transaction-api_1.2_spec-1.0.0.Final.jar">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="javassist-3.18.1-GA.jar" deploy-path="/" handle="module:/classpath/var/M2_REPO/org/javassist/javassist/3.18.1-GA/javassist-3.18.1-GA.jar">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="hibernate-core-4.3.0.Final.jar" deploy-path="/" handle="module:/classpath/var/M2_REPO/org/hibernate/hibernate-core/4.3.0.Final/hibernate-core-4.3.0.Final.jar">

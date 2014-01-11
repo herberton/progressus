@@ -24,7 +24,7 @@
 			<configuration>
 				<failOnMissingWebXml>true</failOnMissingWebXml>
 				<filteringDeploymentDescriptors>true</filteringDeploymentDescriptors>
-				<warSourceDirectory>WebContent</warSourceDirectory>        
+				<warSourceDirectory>WebContent</warSourceDirectory> 
 				<webResources>
 					<resource>
 						<directory>src/main/webapp</directory>

@@ -42,7 +42,7 @@ public class ProgressusDAO<T extends ProgressusEntity<? extends ProgressusEntity
 	
 	
 	@Getter
-	@PersistenceContext(name="jpapu")
+	@PersistenceContext(name="progressus.pu")
 	private EntityManager entityManager;
 	
 	

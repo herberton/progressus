@@ -5,8 +5,8 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence 
 						http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
-	<persistence-unit name="jpapu" transaction-type="JTA">
-		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+	<persistence-unit name="progressus.pu" transaction-type="JTA">
+		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 		<jta-data-source>xa/progressus_dev</jta-data-source>
 		<!--<jta-data-source>xa/progressus_test</jta-data-source>-->
 		<!--<jta-data-source>xa/progressus_hom</jta-data-source>-->
@@ -17,9 +17,8 @@
   			<property name="hibernate.format_sql" value="true" />
   			<!--<property name="hibernate.hbm2ddl.auto" value="validate" />-->
   			<!--<property name="hibernate.hbm2ddl.auto" value="update" />-->
-  			<property name="hibernate.hbm2ddl.auto" value="create" />
-  			<!--<property name="hibernate.hbm2ddl.auto" value="create-drop" />-->
-  			<property name="hibernate.transaction.factory_class" value="org.hibernate.transaction.JTATransactionFactory" />
+  			<!--<property name="hibernate.hbm2ddl.auto" value="create" />-->
+  			<property name="hibernate.hbm2ddl.auto" value="create-drop" />
 			<property name="jta.UserTransaction" value="UserTransaction" />
 		</properties>
 	</persistence-unit>
