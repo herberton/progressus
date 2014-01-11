@@ -32,9 +32,9 @@
 				<configuration>
 					<ejbVersion>3.0</ejbVersion>
 					<generateClient>true</generateClient>
-					<clientIncludes>
-						<clientInclude>**/br/com/hcs/progressus/ejb/client/**</clientInclude>
-					</clientIncludes>
+					<clientExcludes>
+						<clientExclude>**/br/com/hcs/progressus/ejb/**</clientExclude>
+					</clientExcludes>
 					<archive>
 						<manifest>
 							<addClasspath>true</addClasspath>
@@ -78,14 +78,6 @@
 		<dependency>
 			<groupId>br.com.hcs.progressus</groupId>
 			<artifactId>helper</artifactId>
-			<version>1.0.0.0</version>
-			<type>jar</type>
-		</dependency>
-		
-		<!-- PROGRESSUS JPA -->
-		<dependency>
-			<groupId>br.com.hcs.progressus</groupId>
-			<artifactId>jpa</artifactId>
 			<version>1.0.0.0</version>
 			<type>jar</type>
 		</dependency>

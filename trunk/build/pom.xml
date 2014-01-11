@@ -27,7 +27,6 @@
 	</properties>
 	<modules>
 		<module>../helper</module>
-		<module>../jpa</module>
 		<module>../ejb</module>
 		<module>../ui.jsf</module>
 		<module>../ear</module>

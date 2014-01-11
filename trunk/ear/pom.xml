@@ -25,12 +25,6 @@
 		</dependency>
 		<dependency>
 			<groupId>br.com.hcs.progressus</groupId>
-			<artifactId>jpa</artifactId>
-			<version>1.0.0.0</version>
-			<type>jar</type>
-		</dependency>
-		<dependency>
-			<groupId>br.com.hcs.progressus</groupId>
 			<artifactId>ejb</artifactId>
 			<version>1.0.0.0</version>
 			<type>ejb</type>
