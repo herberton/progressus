@@ -102,6 +102,14 @@ public class LocaleTO implements Serializable {
 		return null;
 	}
 	
+	public static Locale getDefaultLocale(){
+		try {
+			return LocaleTO.newInstance(Language.PT_BR).getLocale();
+		} catch (Exception e) {
+			LocaleTO.logger.warn(e.getMessage());
+		}
+		return null;
+	}
 	
 	@Override
 	public boolean equals(Object object) {
