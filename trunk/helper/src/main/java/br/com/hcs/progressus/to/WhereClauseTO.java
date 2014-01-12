@@ -1,13 +1,22 @@
 package br.com.hcs.progressus.to;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import br.com.hcs.progressus.enumerator.WhereClauseOperator;
+import br.com.hcs.progressus.helper.StringHelper;
 import br.com.hcs.progressus.to.common.ProgressusTO;
 import lombok.Getter;
 import lombok.Setter;
 
-public class WhereClauseTO extends ProgressusTO<WhereClauseTO>  implements Comparable<WhereClauseTO> {
+public class WhereClauseTO 
+	extends 
+		ProgressusTO<WhereClauseTO>
+{
 	
 	private static final long serialVersionUID = -5114677701570112411L;
+	private static final Logger logger = LoggerFactory.getLogger(WhereClauseTO.class);
+	
 	
 	@Getter
 	@Setter
@@ -19,6 +28,7 @@ public class WhereClauseTO extends ProgressusTO<WhereClauseTO>  implements Compa
 	@Setter
 	private boolean addEntityPrefix = false;
 	
+	
 	public WhereClauseTO(String field, WhereClauseOperator operator, boolean addEntityPrefix) {
 		super();
 		this.setField(field);
@@ -26,55 +36,98 @@ public class WhereClauseTO extends ProgressusTO<WhereClauseTO>  implements Compa
 		this.setAddEntityPrefix(addEntityPrefix);
 	}
 	
-	private String getCorrectedField(String field) {
-		if (field.startsWith("entity.") && !this.isAddEntityPrefix()) {
-			return this.getField().replace("entity.", "");
-		}else if (!field.startsWith("entity.") && this.isAddEntityPrefix()) {
-			return String.format("entity.%s", this.getField());
+	
+	private String getCorrectedField() {
+		
+		try {
+			
+			if (StringHelper.isNullOrEmpty(this.getField())) {
+				return "";
+			}
+			
+			if (this.getField().startsWith("entity.") && !this.isAddEntityPrefix()) {
+				
+				return this.getField().replace("entity.", "");
+			
+			}else if (!this.getField().startsWith("entity.") && this.isAddEntityPrefix()) {
+				
+				return String.format("entity.%s", this.getField());
+			
+			}
+			
+			return this.getField();
+			
+		} catch (Exception e) {
+			WhereClauseTO.logger.warn(e.getMessage());
 		}
-		return field;
+		
+		return "";
 	}
+	
 	
 	@Override
 	public String toString() {
 		
-		if (this.getOperator().equals(WhereClauseOperator.IS_NULL) || 
-			this.getOperator().equals(WhereClauseOperator.IS_NOT_NULL) ||
-			this.getOperator().equals(WhereClauseOperator.IS_EMPTY) ||
-			this.getOperator().equals(WhereClauseOperator.IS_NOT_EMPTY)) {
+		try {
 			
-			return String.format("%s %s", this.getCorrectedField(this.getField()), this.getOperator().toString());
+			if (this.getOperator() == null) {
+				return "";
+			}
 			
+			if (StringHelper.isNullOrEmpty(this.getField())) {
+				return "";
+			}
+			
+			String correctedField = this.getCorrectedField();
+			
+			if (StringHelper.isNullOrEmpty(correctedField)) {
+				return "";
+			}
+			
+			if (this.getOperator().equals(WhereClauseOperator.IS_NULL) || 
+				this.getOperator().equals(WhereClauseOperator.IS_NOT_NULL) ||
+				this.getOperator().equals(WhereClauseOperator.IS_EMPTY) ||
+				this.getOperator().equals(WhereClauseOperator.IS_NOT_EMPTY)) {
+				
+				return String.format("%s %s", correctedField, this.getOperator().toString());
+				
+			}
+			
+			return String.format("%s %s :%s", correctedField, this.getOperator().toString(), this.getField().replace(".", "_"));
+		
+		} catch (Exception e) {
+			WhereClauseTO.logger.warn(e.getMessage());
 		}
 		
-		return String.format("%s %s :%s", this.getCorrectedField(this.getField()), this.getOperator().toString(), this.getField().replace(".", "_"));
+		return "";
 	}
 	
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(Object object) {
 		
-		if (obj == null) {
-			return false;
+		try {
+			
+			if (object == null) {
+				return false;
+			}
+			
+			if (!(object instanceof WhereClauseTO)) {
+				return false;
+			}
+			
+			WhereClauseTO other = (WhereClauseTO)object;
+			
+			return
+				other.getField().equals(this.getField()) &&
+				other.getOperator().equals(this.getOperator());
+			
+		} catch (Exception e) {
+			
+			WhereClauseTO.logger.warn(e.getMessage());
+		
 		}
 		
-		if (!(obj instanceof WhereClauseTO)) {
-			return false;
-		}
-		
-		WhereClauseTO other = (WhereClauseTO)obj;
-		
-		return 
-			other.getField().equals(this.getField()) &&
-			other.getOperator().equals(this.getOperator());
+		return false;
 	}
 	
-	@Override
-	public int hashCode() {
-		return this.toString().hashCode();
-	}
-
-	@Override
-	public int compareTo(WhereClauseTO other) {
-		return this.equals(other) ? 0 : this.toString().compareTo(other.toString());
-	}
 }

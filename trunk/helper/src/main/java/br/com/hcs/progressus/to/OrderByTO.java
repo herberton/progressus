@@ -1,18 +1,23 @@
 package br.com.hcs.progressus.to;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import lombok.Setter;
 import br.com.hcs.progressus.enumerator.OrderByType;
 import br.com.hcs.progressus.exception.InvalidParameterException;
+import br.com.hcs.progressus.helper.MapHelper;
+import br.com.hcs.progressus.helper.StringHelper;
 import br.com.hcs.progressus.to.common.ProgressusTO;
-import lombok.Setter;
 
 
 public class OrderByTO extends ProgressusTO<OrderByTO> {
 
 	private static final long serialVersionUID = -7062194474364983363L;
+	private static final Logger logger = LoggerFactory.getLogger(OrderByTO.class);
 	
 	
 	@Setter
@@ -20,10 +25,7 @@ public class OrderByTO extends ProgressusTO<OrderByTO> {
 	
 	
 	public Map<String, OrderByType> getOrderByMap() {
-		if (this.orderByMap == null) {
-			this.setOrderByMap(new HashMap<String, OrderByType>());
-		}
-		return this.orderByMap;
+		return MapHelper.isNullOrEmptyReplaceByNewHashMap(this.orderByMap) ;
 	}
 	
 	
@@ -40,39 +42,62 @@ public class OrderByTO extends ProgressusTO<OrderByTO> {
 	
 	public void addOrderBy(String field, OrderByType type) throws InvalidParameterException {
 		
-		field = 
-			field == null || field.trim().isEmpty() ? 
-				"id" : 
-				field;
+		try {
+			
+			field = 
+				field == null ?
+					field :
+					field.replaceAll(" ", "");
+			
+			field = StringHelper.isNullOrEmptyReplaceBy(field, "id");
+			
+		} catch (Exception e) {
+			OrderByTO.logger.warn(e.getMessage());
+		}
 		
 		if (this.getOrderByMap().containsKey(field)) {
 			throw new InvalidParameterException(field);
 		}
+		
 		this.getOrderByMap().put(field, type);
+		
 	}
+	
 	
 	@Override
 	public String toString() {
 		
-		if (this.getOrderByMap().size() <= 0) {
-			return "";
-		}
-		
-		StringBuffer jpql = new StringBuffer(" ORDER BY ");
-		
-		Iterator<String> iterator = this.getOrderByMap().keySet().iterator();
-		while (iterator.hasNext()) {
+		try {
 			
-			String field = (String)iterator.next();
-			OrderByType type = this.getOrderByMap().get(field);
-			
-			jpql.append(String.format("entity.%s %s", field, type.toString()));
-			
-			if (iterator.hasNext()) {
-				jpql.append(", ");
+			if (this.getOrderByMap().size() <= 0) {
+				return "";
 			}
+			
+			StringBuffer jpql = new StringBuffer(" ORDER BY ");
+			
+			Iterator<String> iterator = this.getOrderByMap().keySet().iterator();
+			while (iterator.hasNext()) {
+				
+				String field = (String)iterator.next();
+				OrderByType type = this.getOrderByMap().get(field);
+				
+				if (type == null) {
+					continue;
+				}
+				
+				jpql.append(String.format("entity.%s %s", field, type.toString()));
+				
+				if (iterator.hasNext()) {
+					jpql.append(", ");
+				}
+			}
+			
+			return jpql.toString();
+			
+		} catch (Exception e) {
+			OrderByTO.logger.warn(e.getMessage());
 		}
 		
-		return jpql.toString();
+		return "";
 	}
 }
