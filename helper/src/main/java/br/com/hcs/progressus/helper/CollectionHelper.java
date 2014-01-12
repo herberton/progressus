@@ -19,20 +19,28 @@ public class CollectionHelper
 	private static final Logger logger = LoggerFactory.getLogger(CollectionHelper.class);
 	
 	public static <T> boolean isNullOrEmpty(T[] array) {
+		
 		try {
+			
 			return array == null || array.length <= 0;
+			
 		} catch (Exception e) {
 			CollectionHelper.logger.warn(e.getMessage());
 		}
+		
 		return true;
 	}
 	
 	public static <T> boolean isNullOrEmpty(Collection<T> collection) {
+		
 		try {
+			
 			return collection == null || collection.size() <= 0;
+			
 		} catch (Exception e) {
 			CollectionHelper.logger.warn(e.getMessage());
 		}
+		
 		return true;
 	}
 	
@@ -50,7 +58,11 @@ public class CollectionHelper
 			CollectionHelper.logger.warn(e.getMessage());
 		}
 		
-		return new ArrayList<T>();
+		if (list == null) {
+			list = new ArrayList<T>();	
+		}
+		
+		return list;
 	}
 	
 	public static <T> Set<T> isNullReplaceByNewHashSet(Set<T> set) {
@@ -67,6 +79,10 @@ public class CollectionHelper
 			CollectionHelper.logger.warn(e.getMessage());
 		}
 		
-		return new HashSet<T>();
+		if (set == null) {
+			set = new HashSet<T>();	
+		}
+		
+		return set;
 	}
 }

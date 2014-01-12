@@ -1,5 +1,7 @@
 package br.com.hcs.progressus.contract;
 
-public interface ClassValidator {
+import java.io.Serializable;
+
+public interface ClassValidator extends Serializable {
 	boolean isValidClass(Class<?> clazz);
 }

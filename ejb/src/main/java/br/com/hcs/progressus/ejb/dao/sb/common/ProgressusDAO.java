@@ -15,6 +15,9 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import lombok.Getter;
 import br.com.hcs.progressus.client.dao.sb.common.ProgressusDAOLocal;
 import br.com.hcs.progressus.enumerator.Status;
@@ -26,10 +29,12 @@ import br.com.hcs.progressus.exception.SelectException;
 import br.com.hcs.progressus.exception.UpdateException;
 import br.com.hcs.progressus.exception.common.ProgressusException;
 import br.com.hcs.progressus.helper.JPQLHelper;
+import br.com.hcs.progressus.helper.ObjectHelper;
 import br.com.hcs.progressus.helper.StringHelper;
-import br.com.hcs.progressus.helper.ValidateHelper;
+import br.com.hcs.progressus.helper.ValidatorHelper;
 import br.com.hcs.progressus.jpa.entity.common.ProgressusEntity;
 import br.com.hcs.progressus.to.OrderByTO;
+import br.com.hcs.progressus.to.common.ProgressusTO;
 
 
 @Stateless
@@ -39,6 +44,7 @@ import br.com.hcs.progressus.to.OrderByTO;
 public class ProgressusDAO<T extends ProgressusEntity<? extends ProgressusEntity<?>>> implements ProgressusDAOLocal<T> {
 
 	private static final long serialVersionUID = 6836058369612935358L;
+	private static final Logger logger = LoggerFactory.getLogger(ProgressusDAO.class);
 	
 	
 	@Getter
@@ -52,7 +58,7 @@ public class ProgressusDAO<T extends ProgressusEntity<? extends ProgressusEntity
    	@Override
 	public T insert(T entity) throws ProgressusException {
 		
-		ValidateHelper.validateFilling("entity", entity);
+		ValidatorHelper.validateFilling("entity", entity);
 		
 		try {
 			
@@ -60,6 +66,7 @@ public class ProgressusDAO<T extends ProgressusEntity<? extends ProgressusEntity
 			return entity;
 			
 		} catch (Exception e) {
+			ProgressusDAO.logger.warn(e.getMessage());
 			throw new InsertException(StringHelper.getI18N(entity.getClass()), e);
 		}
 	}
@@ -67,7 +74,7 @@ public class ProgressusDAO<T extends ProgressusEntity<? extends ProgressusEntity
 	@Override
 	public T update(T entity) throws ProgressusException {
 
-		ValidateHelper.validateFilling("entity", entity);
+		ValidatorHelper.validateFilling("entity", entity);
 		
 		try {
 			
@@ -76,6 +83,7 @@ public class ProgressusDAO<T extends ProgressusEntity<? extends ProgressusEntity
 			return this.getEntityManager().merge(entity);
 			
 		} catch (Exception e) {
+			ProgressusDAO.logger.warn(e.getMessage());
 			throw new UpdateException(StringHelper.getI18N(entity.getClass()), e);
 		}
 	}
@@ -83,7 +91,7 @@ public class ProgressusDAO<T extends ProgressusEntity<? extends ProgressusEntity
 	@Override
 	public void delete(T entity) throws ProgressusException {
 
-		ValidateHelper.validateFilling("entity", entity);
+		ValidatorHelper.validateFilling("entity", entity);
 		
 		try {
 			
@@ -94,6 +102,7 @@ public class ProgressusDAO<T extends ProgressusEntity<? extends ProgressusEntity
 			this.getEntityManager().merge(entity);
 			
 		} catch (Exception e) {
+			ProgressusDAO.logger.warn(e.getMessage());
 			throw new DeleteException(StringHelper.getI18N(entity.getClass()), e);
 		}
 
@@ -102,11 +111,12 @@ public class ProgressusDAO<T extends ProgressusEntity<? extends ProgressusEntity
 	@Override
 	public void remove(T entity) throws ProgressusException {
 		
-		ValidateHelper.validateFilling("entity", entity);
+		ValidatorHelper.validateFilling("entity", entity);
 		
 		try {
 			this.getEntityManager().remove(entity);
 		} catch (Exception e) {
+			ProgressusDAO.logger.warn(e.getMessage());
 			throw new RemoveException(StringHelper.getI18N(entity.getClass()), e);
 		}
 		
@@ -115,8 +125,8 @@ public class ProgressusDAO<T extends ProgressusEntity<? extends ProgressusEntity
 	@Override
 	public List<T> selectList(Class<T> clazz, Map<String, Object> parameterMap, Integer firstResult, Integer maxResult, OrderByTO orderBy) throws ProgressusException {
 		
-		ValidateHelper.validateFilling("clazz", clazz);
-		ValidateHelper.validateFilling("parameterMap", parameterMap);
+		ValidatorHelper.validateFilling("clazz", clazz);
+		ValidatorHelper.validateFilling("parameterMap", parameterMap);
 		
 		try {
 			
@@ -133,6 +143,7 @@ public class ProgressusDAO<T extends ProgressusEntity<? extends ProgressusEntity
 			return list;
 			
 		} catch (Exception e) {
+			ProgressusDAO.logger.warn(e.getMessage());
 			throw new SelectException(StringHelper.getI18N(clazz), e);
 		}
 	}
@@ -149,35 +160,79 @@ public class ProgressusDAO<T extends ProgressusEntity<? extends ProgressusEntity
 			return ((Long) this.createQuery(clazz, parameterMap, jpql).getSingleResult()).intValue();
 			
 		} catch (Exception e) {
+			ProgressusDAO.logger.warn(e.getMessage());
 			throw new CountException(StringHelper.getI18N(clazz), e);
 		}
 	}
 	
-	protected <X extends ProgressusEntity<? extends ProgressusEntity<?>>> TypedQuery<X> createTypedQuery(Class<X> clazz, Map<String, Object> parameterMap, String jpql)  throws ProgressusException {
-		return this.createTypedQuery(clazz, parameterMap, jpql, 0, -1);
-	}
-	@SuppressWarnings("unchecked")
-	protected <X extends ProgressusEntity<? extends ProgressusEntity<?>>> TypedQuery<X> createTypedQuery(Class<X> clazz, Map<String, Object> parameterMap, String jpql, Integer firstResult, Integer maxResult)  throws ProgressusException {
-		return (TypedQuery<X>) this.createQuery(clazz, parameterMap, jpql, firstResult, maxResult);
+	
+	protected <X extends ProgressusTO<? extends ProgressusTO<?>>> TypedQuery<X> createTypedQuery(Class<X> clazz, Map<String, Object> parameterMap, String jpql)  throws ProgressusException {
+		try {
+			
+			if (ObjectHelper.isNullOrEmpty(clazz)) {
+				return null;
+			}
+			
+			return this.createTypedQuery(clazz, parameterMap, jpql, 0, -1);
+		} catch (Exception e) {
+			ProgressusDAO.logger.warn(e.getMessage());
+		}
+		return null;
 	}
 	
-	protected <X extends ProgressusEntity<? extends ProgressusEntity<?>>> Query createQuery(Class<X> clazz, Map<String, Object> parameterMap, String jpql)  throws ProgressusException {
-		return this.createQuery(clazz, parameterMap, jpql, 0, -1);
-	}
-	protected <X extends ProgressusEntity<? extends ProgressusEntity<?>>> Query createQuery(Class<X> clazz, Map<String, Object> parameterMap, String jpql, Integer firstResult, Integer maxResult) throws ProgressusException {
-		
-		JPQLHelper.println(jpql, parameterMap);
-		
-		Query query = JPQLHelper.bindParameter(this.getEntityManager().createQuery(jpql, clazz), parameterMap);
+	@SuppressWarnings("unchecked")
+	protected <X extends ProgressusTO<? extends ProgressusTO<?>>> TypedQuery<X> createTypedQuery(Class<X> clazz, Map<String, Object> parameterMap, String jpql, Integer firstResult, Integer maxResult)  throws ProgressusException {
+		try {
 			
-		if (firstResult != null && firstResult > -1) {
-			query.setFirstResult(firstResult);	
+			if (ObjectHelper.isNullOrEmpty(clazz)) {
+				return null;
+			}
+			
+			return (TypedQuery<X>) this.createQuery(clazz, parameterMap, jpql, firstResult, maxResult);
+		} catch (Exception e) {
+			ProgressusDAO.logger.warn(e.getMessage());
+		}
+		return null;
+	}
+	
+	protected <X extends ProgressusTO<? extends ProgressusTO<?>>> Query createQuery(Class<X> clazz, Map<String, Object> parameterMap, String jpql)  throws ProgressusException {
+		try {
+			
+			if (ObjectHelper.isNullOrEmpty(clazz)) {
+				return null;
+			}
+			
+			return this.createQuery(clazz, parameterMap, jpql, 0, -1);
+		} catch (Exception e) {
+			ProgressusDAO.logger.warn(e.getMessage());
+		}
+		return null;
+	}
+	
+	protected <X extends ProgressusTO<? extends ProgressusTO<?>>> Query createQuery(Class<X> clazz, Map<String, Object> parameterMap, String jpql, Integer firstResult, Integer maxResult) throws ProgressusException {
+		
+		try {
+			
+			Query query = JPQLHelper.bindParameter(this.getEntityManager().createQuery(jpql, clazz), parameterMap);
+			
+			if (ObjectHelper.isNullOrEmpty(query)) {
+				return null;
+			}
+			
+			if (firstResult != null && firstResult > -1) {
+				query.setFirstResult(firstResult);	
+			}
+			
+			if(maxResult != null && maxResult > 0) {
+				query.setMaxResults(maxResult);
+			}
+			
+			return query;
+			
+		} catch (Exception e) {
+			ProgressusDAO.logger.warn(e.getMessage());
 		}
 		
-		if(maxResult != null && maxResult > 0) {
-			query.setMaxResults(maxResult);
-		}
-		
-		return query;
+		return null;
 	}
 }

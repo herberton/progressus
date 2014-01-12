@@ -1,9 +1,17 @@
 package br.com.hcs.progressus.helper;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StringHelper {
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class StringHelper implements Serializable {
+	
+	private static final long serialVersionUID = 6548625649992900890L;
+	private static final Logger logger = LoggerFactory.getLogger(StringHelper.class);
+	
 	
 	public static <T> String getI18N(Class<T> clazz){
 		
@@ -16,7 +24,7 @@ public class StringHelper {
 			return clazz.getSimpleName().substring(0, 1).toLowerCase() + clazz.getSimpleName().subSequence(1, clazz.getSimpleName().length());
 		
 		} catch (Exception e) {
-			e.printStackTrace();
+			StringHelper.logger.warn(e.getMessage());
 		}
 		
 		return "";
@@ -33,7 +41,7 @@ public class StringHelper {
 			return String.format("get%s", fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1, fieldName.length()));
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			StringHelper.logger.warn(e.getMessage());
 		}
 		
 		return "";
@@ -51,7 +59,7 @@ public class StringHelper {
 			return String.format("set%s", fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1, fieldName.length()));
 		
 		} catch (Exception e) {
-			e.printStackTrace();
+			StringHelper.logger.warn(e.getMessage());
 		}
 	
 		return "";
@@ -61,7 +69,7 @@ public class StringHelper {
 		try {
 			return string == null || string.isEmpty();
 		} catch (Exception e) {
-			e.printStackTrace();
+			StringHelper.logger.warn(e.getMessage());
 		}
 		return true;
 	}
@@ -86,7 +94,7 @@ public class StringHelper {
 			}
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			StringHelper.logger.warn(e.getMessage());
 		}
 		
 		return string;
@@ -103,7 +111,7 @@ public class StringHelper {
 			return string.matches("[-+]?\\d*\\.?\\d+"); // "((-|\\+)?[0-9]+(\\.[0-9]+)?)+"  
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			StringHelper.logger.warn(e.getMessage());
 		}
 		
 		return false;
