@@ -11,11 +11,11 @@ public class SaveException extends ProgressusException {
 
 	
 	public SaveException(String entityName) {
-		super(SaveException.class);
+		super();
 		super.getParameterList().add(new ParameterTO<>(0, entityName));
 	}
 	public SaveException(String entityName, Throwable cause) throws ProgressusException {
-		super(SaveException.class, cause);
+		super(cause);
 		super.getParameterList().add(new ParameterTO<>(0, entityName));
 	}
 }

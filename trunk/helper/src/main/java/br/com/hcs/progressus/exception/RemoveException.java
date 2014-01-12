@@ -11,11 +11,11 @@ public class RemoveException extends ProgressusException {
 
 	
 	public RemoveException(String entityName) {
-		super(RemoveException.class);
+		super();
 		super.getParameterList().add(new ParameterTO<>(0, entityName));
 	}
 	public RemoveException(String entityName, Throwable cause) throws ProgressusException {
-		super(RemoveException.class, cause);
+		super(cause);
 		super.getParameterList().add(new ParameterTO<>(0, entityName));
 	}
 }

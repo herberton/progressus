@@ -11,11 +11,11 @@ public class InsertException extends ProgressusException {
 	
 	
 	public InsertException(String entityName) {
-		super(InsertException.class);
+		super();
 		super.getParameterList().add(new ParameterTO<>(0, entityName));
 	}
 	public InsertException(String entityName, Throwable cause) throws ProgressusException {
-		super(InsertException.class, cause);
+		super(cause);
 		super.getParameterList().add(new ParameterTO<>(0, entityName));
 	}
 }

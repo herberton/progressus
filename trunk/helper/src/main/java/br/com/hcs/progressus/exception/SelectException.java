@@ -12,11 +12,11 @@ public class SelectException extends ProgressusException {
 
 	
 	public SelectException(String entityName) {
-		super(SelectException.class);
+		super();
 		super.getParameterList().add(new ParameterTO<>(0, entityName));
 	}
 	public SelectException(String entityName, Throwable cause) throws ProgressusException {
-		super(SelectException.class, cause);
+		super(cause);
 		super.getParameterList().add(new ParameterTO<>(0, entityName));
 	}
 }

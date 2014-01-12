@@ -12,11 +12,11 @@ public class DeleteException extends ProgressusException {
 
 	
 	public DeleteException(String entityName) {
-		super(DeleteException.class);
+		super();
 		super.getParameterList().add(new ParameterTO<>(0, entityName));
 	}
 	public DeleteException(String entityName, Throwable cause) throws ProgressusException {
-		super(DeleteException.class, cause);
+		super(cause);
 		super.getParameterList().add(new ParameterTO<>(0, entityName));
 	}
 }

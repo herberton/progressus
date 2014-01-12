@@ -15,23 +15,36 @@ public class MapHelper
 	private static final Logger logger = LoggerFactory.getLogger(MapHelper.class);
 	
 	public static <K, V> boolean isNullOrEmpty(Map<K, V> map) {
+		
 		try {
+			
 			return map == null || map.size() <= 0;
+			
 		} catch (Exception e) {
 			MapHelper.logger.warn(e.getMessage());
 		}
+		
 		return true;
 	}
 	
 	public static <K, V> Map<K, V> isNullOrEmptyReplaceByNewHashMap(Map<K, V> map) {
+		
 		try {
+			
 			if (MapHelper.isNullOrEmpty(map)) {
 				map = new HashMap<>();
 			}
+			
 			return map;
+			
 		} catch (Exception e) {
 			MapHelper.logger.warn(e.getMessage());
 		}
-		return new HashMap<>();
+		
+		if (map == null) {
+			map = new HashMap<>();
+		}
+		
+		return map;
 	}
 }

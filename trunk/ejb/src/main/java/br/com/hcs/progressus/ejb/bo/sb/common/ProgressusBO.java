@@ -9,6 +9,9 @@ import javax.naming.InitialContext;
 import javax.transaction.Status;
 import javax.transaction.UserTransaction;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 import br.com.hcs.progressus.client.bo.sb.common.ProgressusBORemote;
@@ -20,7 +23,7 @@ import br.com.hcs.progressus.exception.RollbackTransactionException;
 import br.com.hcs.progressus.exception.common.ProgressusException;
 import br.com.hcs.progressus.helper.EJBHelper;
 import br.com.hcs.progressus.helper.StringHelper;
-import br.com.hcs.progressus.helper.ValidateHelper;
+import br.com.hcs.progressus.helper.ValidatorHelper;
 import br.com.hcs.progressus.jpa.entity.common.ProgressusEntity;
 
 @Stateless
@@ -29,6 +32,7 @@ import br.com.hcs.progressus.jpa.entity.common.ProgressusEntity;
 public class ProgressusBO implements ProgressusBORemote {
 
 	private static final long serialVersionUID = -8263350772481901387L;
+	private static final Logger logger = LoggerFactory.getLogger(ProgressusBO.class);
 	
 	
 	@Getter(value=AccessLevel.PROTECTED)
@@ -46,6 +50,7 @@ public class ProgressusBO implements ProgressusBORemote {
 				this.printTransaction();
 			}	
 		} catch (Exception e) {
+			ProgressusBO.logger.warn(e.getMessage());
 			throw new BeginTransactionException(e);
 		}
 	}
@@ -56,6 +61,7 @@ public class ProgressusBO implements ProgressusBORemote {
 				this.printTransaction();
 			}
 		} catch (Exception e) {
+			ProgressusBO.logger.warn(e.getMessage());
 			this.rollbackTransaction();
 			throw new CommitTransactionException(e);
 		}
@@ -67,14 +73,16 @@ public class ProgressusBO implements ProgressusBORemote {
 				this.printTransaction();
 			}
 		} catch (Exception e) {
+			ProgressusBO.logger.warn(e.getMessage());
 			throw new RollbackTransactionException(e);
 		}
 	}
     
+	
 	@SuppressWarnings("unchecked")
 	protected <T extends ProgressusEntity<? extends ProgressusEntity<?>>> ProgressusDAOLocal<T> getDAO(Class<T> entityClazz) throws ProgressusException {
 		
-		ValidateHelper.validateFilling("entityClazz", entityClazz);
+		ValidatorHelper.validateFilling("entityClazz", entityClazz);
 		
 		try {
 			
@@ -89,16 +97,30 @@ public class ProgressusBO implements ProgressusBORemote {
 					);
 			
 		} catch (Exception e) {
+			ProgressusBO.logger.warn(e.getMessage());
 			throw new GetDAOException(StringHelper.getI18N(entityClazz), e);
 		}
 	}
 	
+	
 	private <T extends ProgressusEntity<? extends ProgressusEntity<?>>> String getDAOName(Class<T> entityClazz, boolean isGetSimpleName) throws ProgressusException {
-		ValidateHelper.validateFilling("entityClazz", entityClazz);
-		String daoName = isGetSimpleName ? entityClazz.getSimpleName() : entityClazz.getName();
-		return daoName.replace("jpa.entity", "ejb.dao.sb").replace("Entity", "DAO");
+		
+		try {
+			
+			ValidatorHelper.validateFilling("entityClazz", entityClazz);
+			
+			String daoName = isGetSimpleName ? entityClazz.getSimpleName() : entityClazz.getName();
+			
+			return daoName.replace("jpa.entity", "ejb.dao.sb").replace("Entity", "DAO");
+			
+		} catch (Exception e) {
+			ProgressusBO.logger.warn(e.getMessage());
+		}
+		
+		return "";
 	}	
-	private String getUserTransactionStatus() throws ProgressusException {
+	
+	private String getUserTransactionStatus() {
 		
     	try {
     		
@@ -117,10 +139,13 @@ public class ProgressusBO implements ProgressusBORemote {
 			}
 			
 		} catch (Exception e) {
-			throw new ProgressusException(ProgressusException.class, e);
+			ProgressusBO.logger.warn(e.getMessage());
 		}
     	
+    	return "";
+    	
     }
+	
 	private void printTransaction() throws ProgressusException {
 		System.out.println("Progressus.Transaction:\t" + this.getUserTransactionStatus());
 	}

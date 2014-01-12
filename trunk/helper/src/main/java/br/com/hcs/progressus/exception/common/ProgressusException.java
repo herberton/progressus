@@ -1,11 +1,14 @@
 package br.com.hcs.progressus.exception.common;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import lombok.Getter;
 import lombok.Setter;
 import br.com.hcs.progressus.contract.Converter;
+import br.com.hcs.progressus.helper.CollectionHelper;
 import br.com.hcs.progressus.helper.StringHelper;
 import br.com.hcs.progressus.to.MessageTO;
 import br.com.hcs.progressus.to.ParameterTO;
@@ -16,47 +19,42 @@ public class ProgressusException
 	implements 
 		Converter<MessageTO>
 {
-	
-	
 	private static final long serialVersionUID = -6010950482595141978L;
+	private static final Logger logger = LoggerFactory.getLogger(ProgressusException.class);
 	
 	
 	@Getter
 	@Setter
 	private MessageTO detail;
-	@Getter
-	@Setter
-	private Class<? extends ProgressusException> clazz;
 	@Setter
 	private List<ParameterTO<String>> parameterList; 
 	
 	
 	public List<ParameterTO<String>> getParameterList() {
-		if (this.parameterList == null) {
-			this.setParameterList(new ArrayList<ParameterTO<String>>());
-		}
-		return parameterList;
+		return CollectionHelper.isNullReplaceByNewArrayList(this.parameterList);
 	}
 	
 	
-	public ProgressusException(Class<? extends ProgressusException> clazz) {
+	public ProgressusException() {
 		super();
-		this.setClazz(clazz);
 	}
-	public ProgressusException(Class<? extends ProgressusException> clazz, String message) {
+	public ProgressusException(String message) {
 		super(message);
-		this.setClazz(clazz);
 		this.setDetail(new MessageTO(message));
 	}
-	public ProgressusException(Class<? extends ProgressusException> clazz, Throwable cause) throws ProgressusException {
+	public ProgressusException(Throwable cause) throws ProgressusException {
 		super(cause);
-		this.setClazz(clazz);
 		this.setDetail(new MessageTO(cause));
 	}
 	
 	
 	@Override
 	public MessageTO convert() throws ProgressusException {
-		return new MessageTO(StringHelper.getI18N(this.getClazz()), this.getParameterList());
+		try {
+			return new MessageTO(StringHelper.getI18N(this.getClass()), this.getParameterList());
+		} catch (Exception e) {
+			ProgressusException.logger.warn(e.getMessage());
+		}
+		return null;
 	}
 }

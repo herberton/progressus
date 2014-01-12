@@ -10,11 +10,11 @@ public class InvalidParameterException extends ProgressusException {
 	private static final long serialVersionUID = 455564452605760207L;
 
 	public InvalidParameterException(String parameter) {
-		super(InvalidParameterException.class);
+		super();
 		super.getParameterList().add(new ParameterTO<>(0, parameter));
 	}
 	public InvalidParameterException(String parameter, Throwable cause) throws ProgressusException {
-		super(InvalidParameterException.class, cause);
+		super(cause);
 		super.getParameterList().add(new ParameterTO<>(0, parameter));
 	}
 }

@@ -1,6 +1,5 @@
 package br.com.hcs.progressus.jpa.entity.common;
 
-import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.HashMap;
@@ -19,6 +18,8 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
+import lombok.Getter;
+import lombok.Setter;
 import br.com.hcs.progressus.annotation.Audited;
 import br.com.hcs.progressus.annotation.Display;
 import br.com.hcs.progressus.contract.ClassInformer;
@@ -29,8 +30,6 @@ import br.com.hcs.progressus.jpa.el.AuditEL;
 import br.com.hcs.progressus.jpa.entity.AuditEntity;
 import br.com.hcs.progressus.jpa.entity.UserEntity;
 import br.com.hcs.progressus.to.common.ProgressusTO;
-import lombok.Getter;
-import lombok.Setter;
 
 @Audited
 @MappedSuperclass
@@ -38,9 +37,7 @@ import lombok.Setter;
 public class ProgressusEntity<T extends ProgressusEntity<T>> 
 	extends 
 		ProgressusTO<ProgressusEntity<T>> 
-	implements 
-		Serializable, 
-		Comparable<T>,
+	implements
 		ClassInformer
 {
 
@@ -123,11 +120,6 @@ public class ProgressusEntity<T extends ProgressusEntity<T>>
 		return 
 			this.getClass().isAnnotationPresent(Audited.class) && 
 			this.getClass().getAnnotation(Audited.class).value();
-	}
-	
-	@Override
-	public int compareTo(T other) {
-		return 0;
 	}
 	
 	@Override

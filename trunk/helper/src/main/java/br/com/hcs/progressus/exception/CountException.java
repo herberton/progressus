@@ -8,11 +8,11 @@ public class CountException extends ProgressusException {
 	private static final long serialVersionUID = 4085471892199750157L;
 	
 	public CountException(String entityName) {
-		super(CountException.class);
+		super();
 		super.getParameterList().add(new ParameterTO<>(0, entityName));
 	}
 	public CountException(String entityName, Throwable cause) throws ProgressusException {
-		super(CountException.class, cause);
+		super(cause);
 		super.getParameterList().add(new ParameterTO<>(0, entityName));
 	}
 }
