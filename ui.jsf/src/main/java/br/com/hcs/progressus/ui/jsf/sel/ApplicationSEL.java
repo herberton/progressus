@@ -9,6 +9,9 @@ import javax.faces.event.PostConstructApplicationEvent;
 import javax.faces.event.SystemEvent;
 import javax.faces.event.SystemEventListener;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import lombok.Getter;
 import br.com.hcs.progressus.client.bo.sb.SystemBORemote;
 import br.com.hcs.progressus.ui.jsf.helper.JSFHelper;
@@ -16,6 +19,7 @@ import br.com.hcs.progressus.ui.jsf.helper.JSFHelper;
 public class ApplicationSEL implements SystemEventListener, Serializable {
 
 	private static final long serialVersionUID = 1963329710530192750L;
+	private static final Logger logger = LoggerFactory.getLogger(ApplicationSEL.class); 
 
 	@Getter
 	@EJB
@@ -28,13 +32,19 @@ public class ApplicationSEL implements SystemEventListener, Serializable {
 	
 	@Override
 	public void processEvent(SystemEvent event) throws AbortProcessingException {
+		
 		if(event instanceof PostConstructApplicationEvent) {
+			
 			try {
+				
 				JSFHelper.putApplicationAttribute("menuList", this.getSystemBO().getMenuList(true));
+				
 			} catch (Exception e) {
-				e.printStackTrace();
+				ApplicationSEL.logger.warn(e.getMessage());
 			}
+			
 		}
+		
 	}
 }
 
