@@ -10,10 +10,10 @@ import java.util.ResourceBundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import br.com.hcs.progressus.enumerator.Language;
 import br.com.hcs.progressus.helper.ConfigurationHelper;
 import br.com.hcs.progressus.helper.ObjectHelper;
 import br.com.hcs.progressus.helper.StringHelper;
-import br.com.hcs.progressus.to.LocaleTO;
 import br.com.hcs.progressus.to.MessageTO;
 import br.com.hcs.progressus.to.ParameterTO;
 
@@ -30,7 +30,7 @@ public class I18NHelper implements Serializable {
 			
 			if (ObjectHelper.isNullOrEmpty(locale)) {
 				
-				locale = LocaleTO.getDefaultLocale();
+				locale = Language.getDefault().getLocale();
 				
 				if (ObjectHelper.isNullOrEmpty(locale)) {
 					return null;
@@ -163,7 +163,7 @@ public class I18NHelper implements Serializable {
 			
 			if (ObjectHelper.isNullOrEmpty(locale)) {
 				
-				locale = LocaleTO.getDefaultLocale();
+				locale = Language.getDefault().getLocale();
 				
 				if (ObjectHelper.isNullOrEmpty(locale)) {
 					return "";
