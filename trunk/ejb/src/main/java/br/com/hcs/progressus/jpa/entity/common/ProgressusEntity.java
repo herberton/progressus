@@ -36,7 +36,7 @@ import br.com.hcs.progressus.to.common.ProgressusTO;
 @EntityListeners({AuditEL.class})
 public class ProgressusEntity<T extends ProgressusEntity<T>> 
 	extends 
-		ProgressusTO<ProgressusEntity<T>> 
+		ProgressusTO<T> 
 	implements
 		ClassInformer
 {

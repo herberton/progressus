@@ -10,14 +10,14 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.gson.Gson;
-
 import br.com.hcs.progressus.contract.ClassInformer;
 import br.com.hcs.progressus.contract.ClassValidator;
 import br.com.hcs.progressus.helper.CollectionHelper;
 import br.com.hcs.progressus.helper.ObjectHelper;
 import br.com.hcs.progressus.helper.ReflectionHelper;
 import br.com.hcs.progressus.helper.StringHelper;
+
+import com.google.gson.Gson;
 
 public class ProgressusTO<T extends ProgressusTO<T>> 
 	implements 
@@ -28,9 +28,10 @@ public class ProgressusTO<T extends ProgressusTO<T>>
 	
 	private static final long serialVersionUID = -6638017139073613384L;
 	private static Logger logger = LoggerFactory.getLogger(ProgressusTO.class);
+
 	
 	public ProgressusTO() { super(); }
-
+	
 	
 	public Object get(String fieldName) {
 		
@@ -238,5 +239,20 @@ public class ProgressusTO<T extends ProgressusTO<T>>
 		}
 		
 		return -1;
+	}
+
+	
+	public static <X extends ProgressusTO<X>> X getInstance(Class<X> clazz) {
+		
+		try {
+			
+			return ProgressusTO.getInstance(clazz);
+			
+		} catch (Exception e) {
+			ProgressusTO.logger.warn(e.getMessage());
+		}
+		
+		return null;
+		
 	}
 }

@@ -12,9 +12,16 @@ import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import br.com.hcs.progressus.helper.ObjectHelper;
+import br.com.hcs.progressus.to.common.ProgressusTO;
 import br.com.hcs.progressus.ui.jsf.mb.session.SessionMB;
 
-public abstract class ProgressusMB<T extends ProgressusMB<T>> implements Serializable {
+public abstract class ProgressusMB<T extends ProgressusMB<T>>
+	extends
+		ProgressusTO<T>
+	implements 
+		Serializable
+{
 
 	
 	private static final long serialVersionUID = 3997670404725951348L;
@@ -29,8 +36,11 @@ public abstract class ProgressusMB<T extends ProgressusMB<T>> implements Seriali
 	private Class<T> clazz;
 	
 	
-	public ProgressusMB(Class<T> clazz){
+	private ProgressusMB(){
 		super();
+	}
+	public ProgressusMB(Class<T> clazz){
+		this();
 		this.setClazz(clazz);
 	}
 	
@@ -134,15 +144,27 @@ public abstract class ProgressusMB<T extends ProgressusMB<T>> implements Seriali
 		
 		return null;
 	}
-
-	public static <T extends ProgressusMB<T>> T getInstance(Class<T> clazz) {
+	
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public static <X extends ProgressusTO<X>> X getInstance(Class<X> clazz) {
 		
 		try {
 			
-			return clazz.newInstance();
+			X to = ProgressusTO.getInstance(clazz);
+			
+			if (ObjectHelper.isNullOrEmpty(to)) {
+				return null;
+			}
+			
+			if (to instanceof ProgressusMB) {
+				((ProgressusMB)to).setClazz(clazz);
+			}
+			
+			return to;
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			ProgressusMB.logger.warn(e.getMessage());
 		}
 		
 		return null;
