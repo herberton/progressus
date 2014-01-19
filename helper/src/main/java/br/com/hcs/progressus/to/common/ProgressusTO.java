@@ -242,11 +242,12 @@ public class ProgressusTO<T extends ProgressusTO<T>>
 	}
 
 	
+	@SuppressWarnings("unchecked")
 	public static <X extends ProgressusTO<X>> X getInstance(Class<X> clazz) {
 		
 		try {
 			
-			return ProgressusTO.getInstance(clazz);
+			return (X) ReflectionHelper.newInstance(clazz);
 			
 		} catch (Exception e) {
 			ProgressusTO.logger.warn(e.getMessage());

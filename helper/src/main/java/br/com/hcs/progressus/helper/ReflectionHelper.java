@@ -197,6 +197,14 @@ public class ReflectionHelper implements Serializable {
 		return null;
 	}
 
+	public static Object newInstance(Class<?> clazz) {
+		try {
+			return ReflectionHelper.newInstance(clazz, null);
+		} catch (Exception e) {
+			ReflectionHelper.logger.warn(e.getMessage());
+		}
+		return null;
+	}
 	
 	public static Object newInstance(Class<?> clazz, List<ParameterTO<?>> parameterMethodList) {
 		

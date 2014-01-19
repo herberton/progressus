@@ -13,6 +13,7 @@ import javax.persistence.EntityListeners;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToOne;
@@ -49,7 +50,7 @@ public class ProgressusEntity<T extends ProgressusEntity<T>>
 	@Setter
 	@Display
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long id;
 	@Getter
 	@Setter

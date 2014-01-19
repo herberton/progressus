@@ -46,6 +46,7 @@ public class ProgressusBO implements ProgressusBORemote {
     protected void beginTransaction() throws ProgressusException {
 		try {
 			if (this.getUserTransaction().getStatus() == Status.STATUS_NO_TRANSACTION) {
+				this.printTransaction();
 				this.getUserTransaction().begin();
 				this.printTransaction();
 			}	
@@ -57,6 +58,7 @@ public class ProgressusBO implements ProgressusBORemote {
     protected void commitTransaction() throws ProgressusException {
     	try {
 			if (this.getUserTransaction().getStatus() != Status.STATUS_NO_TRANSACTION) {
+				this.printTransaction();
 				this.getUserTransaction().commit();
 				this.printTransaction();
 			}
@@ -69,6 +71,7 @@ public class ProgressusBO implements ProgressusBORemote {
 	protected void rollbackTransaction() throws ProgressusException {
 		try {
 			if (this.getUserTransaction().getStatus() != Status.STATUS_NO_TRANSACTION) {
+				this.printTransaction();
 				this.getUserTransaction().rollback();
 				this.printTransaction();
 			}

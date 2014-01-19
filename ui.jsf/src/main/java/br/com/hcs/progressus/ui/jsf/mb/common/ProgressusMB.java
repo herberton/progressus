@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import br.com.hcs.progressus.helper.ObjectHelper;
 import br.com.hcs.progressus.to.common.ProgressusTO;
+import br.com.hcs.progressus.ui.jsf.helper.JSFHelper;
 import br.com.hcs.progressus.ui.jsf.mb.session.SessionMB;
 
 public abstract class ProgressusMB<T extends ProgressusMB<T>>
@@ -131,23 +132,20 @@ public abstract class ProgressusMB<T extends ProgressusMB<T>>
 		return "";
 		
 	}
-		
-	public T getInstance() {
-		
-		try {
-			
-			return ProgressusMB.getInstance(this.getClazz());
-		
-		} catch (Exception e) {
-			ProgressusMB.logger.warn(e.getMessage());
-		}
-		
-		return null;
-	}
 	
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static <X extends ProgressusTO<X>> X getInstance(Class<X> clazz) {
+		
+		if (ObjectHelper.isNullOrEmpty(clazz)) {
+			return null;
+		}
+		
+		try {
+			return JSFHelper.getContainerInstance(clazz);
+		} catch (Exception e) {
+			ProgressusMB.logger.warn(e.getMessage());
+		}
 		
 		try {
 			

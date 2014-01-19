@@ -36,7 +36,7 @@ public class UserBO extends ProgressusBOCRUD<UserEntity> implements UserBORemote
 			System.out.println("count is " + this.count(new UserEntity()));
 			
 	   } catch (ProgressusException e) {
-		   e.printStackTrace();
+		   //e.printStackTrace();
 	   }
 	   
 	   return "number is " + number;

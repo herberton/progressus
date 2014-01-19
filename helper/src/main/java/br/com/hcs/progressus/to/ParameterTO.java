@@ -29,7 +29,7 @@ public class ParameterTO<T>
 	
 	@Getter
 	@Setter
-	private Class<T> type;
+	private Class<?> type;
 	
 	@Getter
 	@Setter
@@ -41,11 +41,10 @@ public class ParameterTO<T>
 	
 	
 	public ParameterTO() { super(); }
-	@SuppressWarnings("unchecked")
 	public ParameterTO(Integer index, T value) {
 		this();
 		this.setIndex(index);
-		this.setType((Class<T>)value.getClass());
+		this.setType(value.getClass());
 		this.setValue(value);
 	}
 

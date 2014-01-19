@@ -18,7 +18,7 @@ public class AuditEntity extends ProgressusEntity<AuditEntity> implements Serial
 	
 	@Getter
 	@Setter
-	@ManyToOne(optional=false, cascade={CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+	@ManyToOne(optional=true, cascade={CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
 	private UserEntity userCreation;
 	
 	@Getter

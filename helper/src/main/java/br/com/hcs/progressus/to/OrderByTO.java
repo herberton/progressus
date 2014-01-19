@@ -1,5 +1,6 @@
 package br.com.hcs.progressus.to;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -25,7 +26,10 @@ public class OrderByTO extends ProgressusTO<OrderByTO> {
 	
 	
 	public Map<String, OrderByType> getOrderByMap() {
-		return MapHelper.isNullOrEmptyReplaceByNewHashMap(this.orderByMap) ;
+		if (MapHelper.isNullOrEmpty(this.orderByMap)) {
+			this.setOrderByMap(new HashMap<String, OrderByType>());
+		}
+		return this.orderByMap;
 	}
 	
 	

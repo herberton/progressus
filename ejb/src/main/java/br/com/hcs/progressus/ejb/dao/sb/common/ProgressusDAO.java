@@ -134,6 +134,8 @@ public class ProgressusDAO<T extends ProgressusEntity<? extends ProgressusEntity
 			
 			String jpql = JPQLHelper.getSelect(clazz, parameterMap, orderBy);
 
+			this.print(jpql);
+			
 			List<T> list = this.createTypedQuery(clazz, parameterMap, jpql, firstResult, maxResult).getResultList();
 			
 			if (list == null) {
@@ -157,7 +159,15 @@ public class ProgressusDAO<T extends ProgressusEntity<? extends ProgressusEntity
 			
 			String jpql = JPQLHelper.getSelectCount(clazz, parameterMap);
 			
-			return ((Long) this.createQuery(clazz, parameterMap, jpql).getSingleResult()).intValue();
+			this.print(jpql);
+			
+			Object count = this.createQuery(clazz, parameterMap, jpql).getSingleResult();
+			
+			if (ObjectHelper.isNullOrEmpty(count)) {
+				return 0; 
+			}
+			
+			return Integer.parseInt(count.toString());
 			
 		} catch (Exception e) {
 			ProgressusDAO.logger.warn(e.getMessage());
@@ -234,5 +244,10 @@ public class ProgressusDAO<T extends ProgressusEntity<? extends ProgressusEntity
 		}
 		
 		return null;
+	}
+	
+	
+	protected void print(String jpql) {
+		ProgressusDAO.logger.info("\n\nProgressus.JPQL:\n[\n\t" + jpql + "\n]\n");
 	}
 }

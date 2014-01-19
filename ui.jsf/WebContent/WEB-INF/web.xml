@@ -20,7 +20,7 @@
 	</error-page>
 	<context-param>
 		<param-name>primefaces.THEME</param-name>
-		<param-value>#{sessionMB.theme}</param-value>
+		<param-value>#{sessionMB.themeName}</param-value>
 	</context-param>
 	<filter>
 		<filter-name>PrimeFacesFileUploadFilter</filter-name>

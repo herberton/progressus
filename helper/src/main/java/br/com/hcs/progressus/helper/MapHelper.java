@@ -1,7 +1,6 @@
 package br.com.hcs.progressus.helper;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -25,26 +24,5 @@ public class MapHelper
 		}
 		
 		return true;
-	}
-	
-	public static <K, V> Map<K, V> isNullOrEmptyReplaceByNewHashMap(Map<K, V> map) {
-		
-		try {
-			
-			if (MapHelper.isNullOrEmpty(map)) {
-				map = new HashMap<>();
-			}
-			
-			return map;
-			
-		} catch (Exception e) {
-			MapHelper.logger.warn(e.getMessage());
-		}
-		
-		if (map == null) {
-			map = new HashMap<>();
-		}
-		
-		return map;
 	}
 }
