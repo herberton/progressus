@@ -15,10 +15,11 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
+import lombok.Getter;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import lombok.Getter;
 import br.com.hcs.progressus.client.dao.sb.common.ProgressusDAOLocal;
 import br.com.hcs.progressus.enumerator.Status;
 import br.com.hcs.progressus.exception.CountException;
@@ -34,7 +35,6 @@ import br.com.hcs.progressus.helper.StringHelper;
 import br.com.hcs.progressus.helper.ValidatorHelper;
 import br.com.hcs.progressus.jpa.entity.common.ProgressusEntity;
 import br.com.hcs.progressus.to.OrderByTO;
-import br.com.hcs.progressus.to.common.ProgressusTO;
 
 
 @Stateless
@@ -151,7 +151,7 @@ public class ProgressusDAO<T extends ProgressusEntity<? extends ProgressusEntity
 	}
 	
 	@Override
-	public int count(Class<T> clazz, Map<String, Object> parameterMap) throws ProgressusException {
+	public long count(Class<T> clazz, Map<String, Object> parameterMap) throws ProgressusException {
 		
 		try {
 			
@@ -161,13 +161,13 @@ public class ProgressusDAO<T extends ProgressusEntity<? extends ProgressusEntity
 			
 			this.print(jpql);
 			
-			Object count = this.createQuery(clazz, parameterMap, jpql).getSingleResult();
+			Object count = this.createQuery(Long.class, parameterMap, jpql).getSingleResult();
 			
 			if (ObjectHelper.isNullOrEmpty(count)) {
 				return 0; 
 			}
 			
-			return Integer.parseInt(count.toString());
+			return Long.parseLong(count.toString());
 			
 		} catch (Exception e) {
 			ProgressusDAO.logger.warn(e.getMessage());
@@ -176,7 +176,7 @@ public class ProgressusDAO<T extends ProgressusEntity<? extends ProgressusEntity
 	}
 	
 	
-	protected <X extends ProgressusTO<? extends ProgressusTO<?>>> TypedQuery<X> createTypedQuery(Class<X> clazz, Map<String, Object> parameterMap, String jpql)  throws ProgressusException {
+	protected <X> TypedQuery<X> createTypedQuery(Class<X> clazz, Map<String, Object> parameterMap, String jpql)  throws ProgressusException {
 		try {
 			
 			if (ObjectHelper.isNullOrEmpty(clazz)) {
@@ -191,7 +191,7 @@ public class ProgressusDAO<T extends ProgressusEntity<? extends ProgressusEntity
 	}
 	
 	@SuppressWarnings("unchecked")
-	protected <X extends ProgressusTO<? extends ProgressusTO<?>>> TypedQuery<X> createTypedQuery(Class<X> clazz, Map<String, Object> parameterMap, String jpql, Integer firstResult, Integer maxResult)  throws ProgressusException {
+	protected <X> TypedQuery<X> createTypedQuery(Class<X> clazz, Map<String, Object> parameterMap, String jpql, Integer firstResult, Integer maxResult)  throws ProgressusException {
 		try {
 			
 			if (ObjectHelper.isNullOrEmpty(clazz)) {
@@ -205,7 +205,7 @@ public class ProgressusDAO<T extends ProgressusEntity<? extends ProgressusEntity
 		return null;
 	}
 	
-	protected <X extends ProgressusTO<? extends ProgressusTO<?>>> Query createQuery(Class<X> clazz, Map<String, Object> parameterMap, String jpql)  throws ProgressusException {
+	protected <X> Query createQuery(Class<X> clazz, Map<String, Object> parameterMap, String jpql)  throws ProgressusException {
 		try {
 			
 			if (ObjectHelper.isNullOrEmpty(clazz)) {
@@ -219,7 +219,7 @@ public class ProgressusDAO<T extends ProgressusEntity<? extends ProgressusEntity
 		return null;
 	}
 	
-	protected <X extends ProgressusTO<? extends ProgressusTO<?>>> Query createQuery(Class<X> clazz, Map<String, Object> parameterMap, String jpql, Integer firstResult, Integer maxResult) throws ProgressusException {
+	protected <X> Query createQuery(Class<X> clazz, Map<String, Object> parameterMap, String jpql, Integer firstResult, Integer maxResult) throws ProgressusException {
 		
 		try {
 			
@@ -248,6 +248,6 @@ public class ProgressusDAO<T extends ProgressusEntity<? extends ProgressusEntity
 	
 	
 	protected void print(String jpql) {
-		ProgressusDAO.logger.info("\n\nProgressus.JPQL:\n[\n\t" + jpql + "\n]\n");
+		ProgressusDAO.logger.info("\n\nProgressus.JPQL\n[\n\t" + jpql + "\n]\n");
 	}
 }
