@@ -42,9 +42,8 @@ public class ProgressusEntity<T extends ProgressusEntity<T>>
 		ClassInformer
 {
 
+	private static final long serialVersionUID = 448832084179354783L;
 	
-	private static final long serialVersionUID = 1873055400152243177L;
-
 	
 	@Getter
 	@Setter

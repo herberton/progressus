@@ -41,7 +41,7 @@ public class SessionMB extends ProgressusMB<SessionMB> {
 	
 	
 	public SessionMB() {
-		super(SessionMB.class);
+		super();
 	}
 	
 	

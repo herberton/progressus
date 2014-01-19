@@ -9,8 +9,10 @@ import lombok.Setter;
 @MappedSuperclass
 public class NameEntity<T extends NameEntity<T>> extends ProgressusEntity<T> {
 
-	private static final long serialVersionUID = -1528509804969712225L;
-
+	
+	private static final long serialVersionUID = -7851023524301897159L;
+	
+	
 	@Getter
 	@Setter
 	@Column

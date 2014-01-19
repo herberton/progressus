@@ -10,13 +10,11 @@ import br.com.hcs.progressus.ui.jsf.mb.common.ProgressusMB;
 public class IndexMB extends ProgressusMB<IndexMB> {
 
 	private static final long serialVersionUID = -95650203654029480L;
-
+	
 	public IndexMB() {
-		super(IndexMB.class);
+		super();
 	}
 
 	@Override
-	public void init() { }
-	
-	
+	public void init() { }	
 }

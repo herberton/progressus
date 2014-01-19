@@ -5,10 +5,6 @@ import java.util.Locale;
 
 import javax.annotation.PostConstruct;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,17 +28,8 @@ public abstract class ProgressusMB<T extends ProgressusMB<T>>
 	public abstract void init();
 	
 	
-	@Getter
-	@Setter(AccessLevel.PRIVATE)
-	private Class<T> clazz;
-	
-	
-	private ProgressusMB(){
+	public ProgressusMB(){
 		super();
-	}
-	public ProgressusMB(Class<T> clazz){
-		this();
-		this.setClazz(clazz);
 	}
 	
 	
@@ -134,7 +121,6 @@ public abstract class ProgressusMB<T extends ProgressusMB<T>>
 	}
 	
 	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static <X extends ProgressusTO<X>> X getInstance(Class<X> clazz) {
 		
 		if (ObjectHelper.isNullOrEmpty(clazz)) {
@@ -142,7 +128,13 @@ public abstract class ProgressusMB<T extends ProgressusMB<T>>
 		}
 		
 		try {
-			return JSFHelper.getContainerInstance(clazz);
+			
+			X object = JSFHelper.getContainerInstance(clazz);
+			
+			if (!ObjectHelper.isNullOrEmpty(object)) {
+				return object;
+			}
+			
 		} catch (Exception e) {
 			ProgressusMB.logger.warn(e.getMessage());
 		}
@@ -153,10 +145,6 @@ public abstract class ProgressusMB<T extends ProgressusMB<T>>
 			
 			if (ObjectHelper.isNullOrEmpty(to)) {
 				return null;
-			}
-			
-			if (to instanceof ProgressusMB) {
-				((ProgressusMB)to).setClazz(clazz);
 			}
 			
 			return to;
