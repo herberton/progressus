@@ -33,7 +33,7 @@ public interface ProgressusBOCRUDRemote<T extends ProgressusEntity<T>>
 	List<T> selectList(Class<T> clazz, Map<String, Object> parameterMap) throws ProgressusException;
 	List<T> selectList(Class<T> clazz, Map<String, Object> parameterMap, Integer firstResult, Integer maxResult, OrderByTO orderBy) throws ProgressusException;
 	
-	int count(T entity) throws ProgressusException;
-	int count(Class<T> clazz, Map<String, Object> parameterMap) throws ProgressusException;
+	long count(T entity) throws ProgressusException;
+	long count(Class<T> clazz, Map<String, Object> parameterMap) throws ProgressusException;
 
 }

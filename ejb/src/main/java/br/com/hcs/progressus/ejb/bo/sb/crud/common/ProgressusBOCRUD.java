@@ -243,7 +243,7 @@ public class ProgressusBOCRUD<T extends ProgressusEntity<T>>
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public int count(T entity) throws ProgressusException {
+	public long count(T entity) throws ProgressusException {
 
 		try {
 			ValidatorHelper.validateFilling("entity", entity);
@@ -256,7 +256,7 @@ public class ProgressusBOCRUD<T extends ProgressusEntity<T>>
 		return 0;
 	}
 	@Override
-	public int count(Class<T> clazz, Map<String, Object> parameterMap) throws ProgressusException {
+	public long count(Class<T> clazz, Map<String, Object> parameterMap) throws ProgressusException {
 		
 		try {
 			ValidatorHelper.validateFilling("clazz", clazz);

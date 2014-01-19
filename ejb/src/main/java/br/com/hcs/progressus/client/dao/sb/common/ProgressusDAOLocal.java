@@ -24,5 +24,5 @@ public interface ProgressusDAOLocal<T extends ProgressusEntity<? extends Progres
 	
 	List<T> selectList(Class<T> clazz, Map<String, Object> parameterMap, Integer firstResult, Integer maxResult, OrderByTO orderBy) throws ProgressusException;
 	
-	int count(Class<T> clazz, Map<String, Object> parameterMap) throws ProgressusException;
+	long count(Class<T> clazz, Map<String, Object> parameterMap) throws ProgressusException;
 }
