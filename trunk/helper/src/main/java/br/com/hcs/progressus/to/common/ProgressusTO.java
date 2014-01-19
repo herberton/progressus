@@ -7,6 +7,9 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,9 +31,19 @@ public class ProgressusTO<T extends ProgressusTO<T>>
 	
 	private static final long serialVersionUID = -6638017139073613384L;
 	private static Logger logger = LoggerFactory.getLogger(ProgressusTO.class);
-
 	
-	public ProgressusTO() { super(); }
+	
+	@Getter
+	@Setter
+	private String clazz;
+	
+	
+	
+	public ProgressusTO() { 
+		super(); 
+		this.setClazz(this.getClass().getName());
+	}
+	
 	
 	
 	public Object get(String fieldName) {
@@ -217,13 +230,6 @@ public class ProgressusTO<T extends ProgressusTO<T>>
 	
 	@Override
 	public int hashCode() {
-		
-		try {
-			return this.toString().hashCode();
-		} catch (Exception e) {
-			ProgressusTO.logger.warn(e.getMessage());
-		}
-		
 		return super.hashCode();
 	}
 	

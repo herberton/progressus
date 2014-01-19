@@ -12,7 +12,7 @@ public class LoginMB extends ProgressusMB<LoginMB> {
 	private static final long serialVersionUID = -6188814102857690751L;
 
 	public LoginMB() {
-		super(LoginMB.class);
+		super();
 	}
 
 	@Override
