@@ -1,5 +1,6 @@
 package br.com.hcs.progressus.ejb.bo.sb;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.LocalBean;
@@ -23,14 +24,23 @@ public class SystemBO extends ProgressusBO implements SystemBORemote {
 	@Override
 	public List<MenuEntity> getMenuList(final boolean create) throws ProgressusException {
 		
-		
-		
-		if (create) {
-			// TODO: Criar lista de menus
+		try {
+			
+			if (create) {
+				
+				
+				
+			}
+			
+			// TODO: Retornar lista de menus
+			return null;
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
-		// TODO: Retornar lista de menus
-		return null;
+		return new ArrayList<>();
 	}
 
 }
