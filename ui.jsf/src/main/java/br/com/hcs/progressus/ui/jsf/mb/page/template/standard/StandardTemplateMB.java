@@ -17,5 +17,9 @@ public class StandardTemplateMB extends ProgressusMB<StandardTemplateMB> {
 	}
 	
 	@Override
-	public void init() { }
+	public void init() {
+		
+		
+		
+	}
 }
