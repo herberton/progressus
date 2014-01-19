@@ -1,5 +1,6 @@
 package br.com.hcs.progressus.to;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -29,7 +30,10 @@ public class MessageTO
 	
 	
 	public List<ParameterTO<String>> getParameterList() {
-		return CollectionHelper.isNullReplaceByNewArrayList(this.parameterList);
+		if (CollectionHelper.isNullOrEmpty(this.parameterList)) {
+			this.setParameterList(new ArrayList<ParameterTO<String>>());
+		}
+		return this.parameterList;
 	}
 	
 	

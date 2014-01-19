@@ -30,7 +30,10 @@ public class WhereTO extends ProgressusTO<WhereTO> {
 	
 	
 	public Map<String, WhereClauseTO> getClauseMap() {
-		return MapHelper.isNullOrEmptyReplaceByNewHashMap(this.clauseMap);
+		if (MapHelper.isNullOrEmpty(this.clauseMap)) {
+			this.setClauseMap(new HashMap<String, WhereClauseTO>());
+		}
+		return this.clauseMap;
 	}
 	
 	
@@ -46,10 +49,6 @@ public class WhereTO extends ProgressusTO<WhereTO> {
 		try {
 			
 			if (CollectionHelper.isNullOrEmpty(clauseArray)) {
-				return;
-			}
-			
-			if (MapHelper.isNullOrEmpty(this.getClauseMap())) {
 				return;
 			}
 			

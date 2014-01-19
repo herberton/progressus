@@ -1,6 +1,7 @@
 package br.com.hcs.progressus.helper;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -33,7 +34,9 @@ public class JPQLHelper implements Serializable {
 				return null;
 			}
 			
-			parameterMap = MapHelper.isNullOrEmptyReplaceByNewHashMap(parameterMap);
+			if (MapHelper.isNullOrEmpty(parameterMap)) {
+				parameterMap = new HashMap<String, Object>();
+			}
 			
 			return (TypedQuery<T>) JPQLHelper.bindParameter((Query)typedQuery, parameterMap);
 			
@@ -52,7 +55,9 @@ public class JPQLHelper implements Serializable {
 				return null;
 			}
 			
-			parameterMap = MapHelper.isNullOrEmptyReplaceByNewHashMap(parameterMap);
+			if (MapHelper.isNullOrEmpty(parameterMap)) {
+				parameterMap = new HashMap<String, Object>();
+			}
 			
 			Iterator<String> iterator = parameterMap.keySet().iterator();
 			
@@ -84,7 +89,9 @@ public class JPQLHelper implements Serializable {
 				return "";
 			}
 			
-			parameterMap = MapHelper.isNullOrEmptyReplaceByNewHashMap(parameterMap);
+			if (MapHelper.isNullOrEmpty(parameterMap)) {
+				parameterMap = new HashMap<String, Object>();
+			}
 			
 			WhereTO where = JPQLHelper.getWhere(parameterMap);
 			
@@ -136,7 +143,9 @@ public class JPQLHelper implements Serializable {
 				return "";
 			}
 			
-			parameterMap = MapHelper.isNullOrEmptyReplaceByNewHashMap(parameterMap);
+			if (MapHelper.isNullOrEmpty(parameterMap)) {
+				parameterMap = new HashMap<String, Object>();
+			}
 			
 			return JPQLHelper.getSelectCount(clazz, JPQLHelper.getWhere(parameterMap));
 			

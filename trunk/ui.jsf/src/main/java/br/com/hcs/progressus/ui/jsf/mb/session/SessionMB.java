@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import br.com.hcs.progressus.enumerator.Language;
 import br.com.hcs.progressus.enumerator.Theme;
+import br.com.hcs.progressus.helper.ObjectHelper;
 import br.com.hcs.progressus.jpa.entity.UserEntity;
 import br.com.hcs.progressus.ui.jsf.mb.common.ProgressusMB;
 
@@ -23,6 +24,7 @@ public class SessionMB extends ProgressusMB<SessionMB> {
 	
 	private static final long serialVersionUID = -6271401735990466088L;
 	private static final Logger logger = LoggerFactory.getLogger(SessionMB.class);
+	
 	
 	
 	@Setter
@@ -37,13 +39,17 @@ public class SessionMB extends ProgressusMB<SessionMB> {
  	private UserEntity user;
 	
 	
+	
 	public SessionMB() {
 		super(SessionMB.class);
 	}
 	
 	
+	
 	@Override
 	public void init() { }
+	
+	
 	
 	public Language getLanguage() {
 		
@@ -72,7 +78,7 @@ public class SessionMB extends ProgressusMB<SessionMB> {
 		
 		try {
 			
-			if (this.getTheme() == null) {
+			if (ObjectHelper.isNullOrEmpty(this.getTheme())) {
 
 				this.setTheme(Theme.getDefault());
 			}

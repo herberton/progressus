@@ -21,8 +21,10 @@ import br.com.hcs.progressus.helper.StringHelper;
 
 public class JSFHelper implements Serializable {
 
+	
 	private static final long serialVersionUID = -835929172494155533L;
 	private static final Logger logger = LoggerFactory.getLogger(JSFHelper.class);
+	
 	
 	public static FacesContext getFacesContext() { 
 		
@@ -139,6 +141,32 @@ public class JSFHelper implements Serializable {
 	}
 	
 	
+	public static String getExpressionLanguage(Class<?> clazz) {
+		try {
+			return "#{" + StringHelper.getI18N(clazz) + "}";
+		} catch (Exception e) {
+			JSFHelper.logger.warn(e.getMessage());
+		}
+		return null;
+	}
+	public static <T> T getContainerInstance(Class<T> clazz) {
+		try {
+			FacesContext facesContext = JSFHelper.getFacesContext();
+			if (facesContext == null) {
+				return null;
+			}
+			Application application = JSFHelper.getApplication();
+			if (application == null) {
+				return null;
+			}
+			return application.evaluateExpressionGet(facesContext, JSFHelper.getExpressionLanguage(clazz), clazz);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	
 	public static Map<String, Object> getSessionMap(){
 		
 		try {
@@ -249,7 +277,11 @@ public class JSFHelper implements Serializable {
 				return new HashMap<String, Object>();
 			}
 			
-			return MapHelper.isNullOrEmptyReplaceByNewHashMap(externalContext.getApplicationMap());
+			Map<String, Object> applicationMap = externalContext.getApplicationMap();
+			
+			if (!MapHelper.isNullOrEmpty(applicationMap)) {
+				return applicationMap;
+			}
 			
 		} catch (Exception e) {
 			JSFHelper.logger.warn(e.getMessage());
@@ -261,7 +293,9 @@ public class JSFHelper implements Serializable {
 		
 		try {
 			
-			mapValues = MapHelper.isNullOrEmptyReplaceByNewHashMap(mapValues);
+			if (MapHelper.isNullOrEmpty(mapValues)) {
+				mapValues = new HashMap<>();
+			}
 			
 			Map<String, Object> applicationMap = JSFHelper.getApplicationMap();
 			if (applicationMap == null) {
