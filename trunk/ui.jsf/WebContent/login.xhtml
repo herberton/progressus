@@ -8,7 +8,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 	<h:head>
-		<title>#{i18n.systemName}</title>
+		<title>#{i18n.progressus}</title>
 		<h:outputStylesheet 
 			library="css" 
 			name="progressus.css"/>
@@ -17,19 +17,23 @@
 			href="resources/images/shortcut.icon.ico" />
 		<link 
 			rel="icon" 
-			type="image/gif" 
-			href="resources/images/shortcut.icon.gif" />
+			href="resources/images/shortcut.icon.ico" />
 		<style>
-			.login-fieldset {
-				background-color: #EBEBEB;
+			.login-panel {
 				position: absolute; 
     			top: 0px; 
     			bottom: 0px; 
     			left: 0px; 
     			right: 0px;
 				margin: auto; 				
-				width: 420px;
-				height: 250px;
+				width: 350px;
+				height: 205px;
+			}
+			.language-select-one-menu {
+				width: 152px !important;
+			}
+			.enter-split-button {
+				padding-left: 59px !important;
 			}
 			div.form-div {
 				float: left;
@@ -37,14 +41,22 @@
 			}
 			div.logo-div {
 				float: right;
-				padding-top: 13%;
+				padding-top: 10%;
 			}
 		</style>
 	</h:head>
 	<h:body>
-		<p:fieldset 
-			legend="#{i18n.doTheAuthentication}"
-			styleClass="login-fieldset">
+		<p:panel 
+			header="#{i18n.userIdentification}"
+			styleClass="login-panel"
+			closable="false"
+			toggleable="false">
+			<div 
+				class="logo-div">
+				<p:graphicImage
+					url="#{resource['images:progressus.png']}"
+					height="100" />
+			</div>
 			<div 
 				class="form-div">
 				<h:form>
@@ -52,7 +64,7 @@
 						for="login"/>
 					<p:watermark 
 						for="login" 
-						value="#{i18n.typeTheUserName}" />
+						value="#{i18n.typeTheLogin}" />
 					<p:watermark 
 						for="password" 
 						value="#{i18n.typeThePassword}" />
@@ -66,7 +78,8 @@
 							id="language"
 							value="#{loginMB.user.preference.supportedLocale}"
 							converter="supportedLocaleConverter"
-							var="selection">
+							var="selection"
+							styleClass="language-select-one-menu">
 							<f:selectItems
 								value="#{loginMB.supportedLocaleList}"
 							 	var="supportedLocale"
@@ -88,7 +101,7 @@
 							size="24" 
 							id="login" 
 							required="true"
-							requiredMessage="#{i18n.typeTheUserName}" />
+							requiredMessage="#{i18n.typeTheLogin}" />
 						<p:outputLabel 
 							for="password" 
 							value="#{i18n.password}" />
@@ -98,25 +111,22 @@
 							value="#{loginMB.user.password}"
 							required="true"
 							requiredMessage="#{i18n.typeThePassword}" />
+						<p:spacer/>
+						<p:splitButton
+							value="#{i18n.enter}"
+							action="#{loginMB.authenticate}"
+							update="@form"
+							icon="icon_login"
+							styleClass="enter-split-button">
+							<p:menuitem
+								value="#{i18n.forgotMyPassword}"
+								action="#{loginMB.forgotMyPassword}" 
+								update="@form"
+								icon="icon_help" />
+						</p:splitButton>
 					</h:panelGrid>
-					<p:commandButton 
-						value="#{i18n.authenticate}" 
-						action="#{loginMB.authenticate}" 
-						update="@form" />
-					<p:spacer 
-						width="5" />
-					<p:commandButton 
-						value="#{i18n.forgotMyPassword}" 
-						action="#{loginMB.forgotMyPassword}" 
-						update="@form" />
 				</h:form>
 			</div>
-			<div 
-				class="logo-div">
-				<p:graphicImage
-					url="#{resource['images:progressus.png']}"
-					height="100" />
-			</div>
-		</p:fieldset>
+		</p:panel>
 	</h:body>
 </html>

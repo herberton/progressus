@@ -60,7 +60,7 @@ public enum Theme {
 	
 	
 	public static final Theme getDefault() {
-		return Theme.ARISTO;
+		return Theme.HOT_SNEAKS;
 	}
 	
 	
