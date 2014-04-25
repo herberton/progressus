@@ -33,7 +33,7 @@
 					<ejbVersion>3.0</ejbVersion>
 					<generateClient>true</generateClient>
 					<clientExcludes>
-						<clientExclude>**/br/com/hcs/progressus/ejb/**</clientExclude>
+						<clientExclude>**/br/com/hcs/progressus/server/**</clientExclude>
 					</clientExcludes>
 					<archive>
 						<manifest>
