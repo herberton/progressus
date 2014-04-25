@@ -2,203 +2,138 @@ package br.com.hcs.progressus.ui.jsf.helper;
 
 import java.io.Serializable;
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import br.com.hcs.progressus.enumerator.Language;
-import br.com.hcs.progressus.helper.ConfigurationHelper;
-import br.com.hcs.progressus.helper.ObjectHelper;
+import lombok.extern.slf4j.Slf4j;
+import br.com.hcs.progressus.enumerator.Setting;
+import br.com.hcs.progressus.enumerator.SupportedLocale;
+import br.com.hcs.progressus.exception.EmptyParameterException;
+import br.com.hcs.progressus.exception.I18NNotFoundException;
+import br.com.hcs.progressus.exception.InvalidI18NMessageException;
+import br.com.hcs.progressus.exception.ProgressusException;
 import br.com.hcs.progressus.helper.StringHelper;
-import br.com.hcs.progressus.to.MessageTO;
-import br.com.hcs.progressus.to.ParameterTO;
+import br.com.hcs.progressus.ui.jsf.mb.ProgressusMB;
+import br.com.hcs.progressus.ui.jsf.mb.SessionMB;
 
-public class I18NHelper implements Serializable {
+@Slf4j
+public final class I18NHelper implements Serializable {
+
+	private static final long serialVersionUID = 7274889604582319546L;
 
 	
-	private static final long serialVersionUID = 1000445796467032107L;
-	private static final Logger logger = LoggerFactory.getLogger(I18NHelper.class);
-
-	
-	private static ResourceBundle getI18NResourceBundle(Locale locale) {
+	public static final ResourceBundle getResourceBundle(Locale locale) {
 		
 		try {
 			
-			if (ObjectHelper.isNullOrEmpty(locale)) {
-				
-				locale = Language.getDefault().getLocale();
-				
-				if (ObjectHelper.isNullOrEmpty(locale)) {
-					return null;
-				}
-				
-			}
+			locale = 
+				locale == null ? 
+					SupportedLocale.getDefault().getLocale() :
+					locale;
 			
-			return ResourceBundle.getBundle(ConfigurationHelper.UI_WEB_PACKAGE_I18N_PROPERTIES_BASE_NAME, locale);
+			return ResourceBundle.getBundle(Setting.WEB_PACKAGE_I18N_RESOURCE_BUNDLE.toString(), locale);
 			
 		} catch (Exception e) {
-			I18NHelper.logger.warn(e.getMessage());
+			I18NHelper.log.error(e.getMessage(), e);
 		}
 		
 		return null;
 	}
 	
-	public static String getText(MessageTO message){
-		
-		try {
-		
-			if (ObjectHelper.isNullOrEmpty(message)) {
-				return "";
-			}
-			
-			return I18NHelper.getText(JSFHelper.getLocale(), message);
-		
-		} catch (Exception e) {
-			I18NHelper.logger.warn(e.getMessage());
-		}
-		
-		return "";
-	}
-	public static String getText(ParameterTO<String> parameter){
+	public static final String getText(Locale locale, String key, Object...argumentArray) throws ProgressusException {
 		
 		try {
 			
-			if (ObjectHelper.isNullOrEmpty(parameter)) {
-				return "";
+			if (argumentArray == null || argumentArray.length <= 0) {
+				return I18NHelper.getText(locale, key);
 			}
 			
-			return I18NHelper.getText(JSFHelper.getLocale(), parameter);
-		
-		} catch (Exception e) {
-			I18NHelper.logger.warn(e.getMessage());
-		}
-		
-		return "";
-	}
-	public static String getText(String i18n){
-		
-		try {
-		
-			i18n = i18n == null ? i18n : i18n.replaceAll(" ", "");
-			
-			if (StringHelper.isNullOrEmpty(i18n)) {
-				return "";
-			}
-			
-			return I18NHelper.getText(JSFHelper.getLocale(), i18n);
-		
-		} catch (Exception e) {
-			I18NHelper.logger.warn(e.getMessage());
-		}
-		
-		return "";
-	}
-	private static String getText(Locale locale, MessageTO message) {
-		
-		try {
-			
-			if (ObjectHelper.isNullOrEmpty(locale)) {
-				return "";
-			}
-			
-			if (ObjectHelper.isNullOrEmpty(message)) {
-				return "";
-			}
-			
-			List<Object> parameterList = new ArrayList<>();
-			
-			for (ParameterTO<String> parameter : message.getParameterList()) {
-				parameterList.add(I18NHelper.getText(locale, parameter));
-			}
-			
-			return MessageFormat.format(I18NHelper.getText(locale, message.getText()), parameterList.toArray());
-			
-		} catch(Exception e){
-			
-			try {
+			for (int i = 0; i < argumentArray.length; i++) {
 				
-				return locale.toString().concat(".").concat(message.getText());
-				
-			} catch (Exception e1) {
-				I18NHelper.logger.warn(e.getMessage());
-				I18NHelper.logger.warn(e1.getMessage());
-			}
-			
-		}
-		
-		return "";
-		
-	}
-	private static String getText(Locale locale, ParameterTO<String> parameter) {
-		
-		try {
-			
-			if (ObjectHelper.isNullOrEmpty(parameter)) {
-				return "";
-			}
-			
-			return I18NHelper.getText(locale, parameter.getValue());
-			
-		} catch(Exception e){
-			
-			try {
-				
-				return locale.toString().concat(".").concat(parameter.getValue());
-				
-			} catch (Exception e1) {
-				I18NHelper.logger.warn(e.getMessage());
-				I18NHelper.logger.warn(e1.getMessage());
-			}
-		}
-		
-		return "";
-	}
-	private static String getText(Locale locale, String i18n) {
-		
-		try {
-			
-			if (ObjectHelper.isNullOrEmpty(locale)) {
-				
-				locale = Language.getDefault().getLocale();
-				
-				if (ObjectHelper.isNullOrEmpty(locale)) {
-					return "";
+				if (argumentArray[i] == null) {
+					throw new EmptyParameterException("argument");
 				}
 				
+				if (argumentArray[i] instanceof String) {
+					
+					if (StringHelper.isNullOrEmpty(argumentArray[i].toString())) {
+						throw new EmptyParameterException("argument");
+					}
+					
+					String argumentMessageBundle = "";
+					
+					try {
+						argumentMessageBundle = I18NHelper.getText(locale, argumentArray[i].toString());
+					} catch (Exception e) {
+						argumentMessageBundle = argumentArray[i].toString();
+						continue;
+					}
+					
+					if (StringHelper.isNullOrEmpty(argumentMessageBundle)) {
+						continue;
+					}
+					
+					argumentArray[i] = argumentMessageBundle;
+					continue;
+				}
+				
+				if (argumentArray[i] instanceof Class<?>) {
+					
+					String argumentMessageBundle = "";
+					
+					try {
+						argumentMessageBundle = I18NHelper.getText(locale, StringHelper.getI18N((Class<?>)argumentArray[i]));
+					} catch (Exception e) {
+						continue;
+					}
+					
+					if (StringHelper.isNullOrEmpty(argumentMessageBundle)) {
+						continue;
+					}
+					
+					argumentArray[i] = argumentMessageBundle;
+					continue;
+				}
 			}
 			
-			ResourceBundle resourceBundle = I18NHelper.getI18NResourceBundle(locale);
+			return MessageFormat.format(I18NHelper.getResourceBundle(locale).getString(key), argumentArray);
 			
-			if (ObjectHelper.isNullOrEmpty(resourceBundle)) {
-				return "";
-			}
+		} catch(ProgressusException pe){
+			throw pe;
+		} catch(Exception e) {
+			throw new I18NNotFoundException(key, locale);
+		}
+	}
+	
+	public static final String getText(Locale locale, String propertyName) throws ProgressusException {
+		try {
 			
-			i18n = i18n == null ? i18n : i18n.replaceAll(" ", ""); 
-			
-			if (StringHelper.isNullOrEmpty(i18n)) {
-				return "";
-			}
-			
-			return resourceBundle.getString(i18n);
+			return I18NHelper.getResourceBundle(locale).getString(propertyName);
 			
 		} catch(Exception e){
-			
-			try {
-				
-				return locale.toString().concat(".").concat(i18n);
-				
-			} catch (Exception e1) {
-				
-				I18NHelper.logger.warn(e.getMessage());
-				I18NHelper.logger.warn(e1.getMessage());
-			}
-			
+			throw new InvalidI18NMessageException(propertyName, locale);
 		}
+	}
+	
+	public static final String getText(String key, Object...argumentArray) throws ProgressusException {
+		Locale locale = null;
 		
-		return "";
+		try {
+			
+			SessionMB session = ProgressusMB.getInstance(SessionMB.class);
+			
+			locale =
+				session == null ? 
+					SupportedLocale.getDefault().getLocale() : 
+					session.getLocale();
+					
+			return I18NHelper.getText(locale, key, argumentArray);
+			
+		} catch(ProgressusException pe) {
+			throw pe;
+		} catch (Exception e) {
+			I18NHelper.log.error(e.getMessage(), e);
+			throw new I18NNotFoundException(key, locale);
+		}
 	}
 }
