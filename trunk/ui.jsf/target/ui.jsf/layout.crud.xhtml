@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" 
+	xmlns:pe="http://primefaces.org/ui/extensions">
+	<ui:composition 
+		template="/layout.xhtml">
+		<ui:param 
+			name="toolbarRendered" 
+			value="true"/>
+		<ui:define 
+			name="title">
+			#{title}
+		</ui:define>
+		<ui:define 
+			name="body">
+			<h:form
+				id="crudForm"
+				prependId="false">
+				<p:toolbar 
+					rendered="#{toolbarRendered}">
+					<p:toolbarGroup 
+						align="left">
+						<p:commandButton 
+							action="#{mb.preSave}"
+							process=":crudForm, @this"
+							update=":headerForm, :crudForm, :dataTableForm"
+							icon="save.icon" 
+							value="#{i18n.save}" 
+							title="#{i18n.save}" />
+						<p:commandButton 
+							onclick="deleteConfirmDialog.show()" 
+							icon="delete.icon" 
+							value="#{i18n.delete}" 
+							title="#{i18n.delete}" />
+						<p:commandButton 
+							immediate="true"
+							action="#{mb.clean}"
+							update=":headerForm, :crudForm, :dataTableForm" 
+							icon="clean.icon"
+							value="#{i18n.clean}" 
+							title="#{i18n.clean}" />
+					</p:toolbarGroup>
+				</p:toolbar>
+				<p:spacer 
+					height="5"/>
+				<p:fieldset 
+					legend="#{crudFieldset}">
+					<ui:insert 
+						name="form"/>
+				</p:fieldset>
+			</h:form>
+			<p:spacer 
+				height="5"/>
+			<h:form
+				id="dataTableForm"
+				prependId="false">
+				<ui:insert 
+					name="table"/>
+				<p:dataTable 
+					var="entity" 
+					value="#{mb.ldm}" 
+					paginator="true" 
+					rows="10" 
+					lazy="true"
+					dynamic="true"
+					selectionMode="multiple" 
+					selection="#{mb.selectedArray}" 
+					emptyMessage="#{i18n.noRecordsFound}" 
+					paginatorPosition="top"
+					rendered="#{useLDM}" >
+					<p:ajax 
+						event="rowSelect" 
+						update=":crudForm, :dataTableForm"/>
+					<p:columns 
+						value="#{mb.columnList}" 
+						var="column" 
+						columnIndexVar="index"   
+			            sortBy="#{entity[column.property]}" 
+						filterBy="#{entity[column.property]}" 
+						filterMatchMode="contains">
+						<f:facet 
+							name="header">
+			                #{column.header}
+			            </f:facet>  
+			           	#{entity[column.property]}
+			        </p:columns>
+				</p:dataTable>
+			</h:form>
+			<p:confirmDialog
+				widgetVar="deleteConfirmDialog" 
+				message="#{i18n.areYouSureToRemove}" 
+				header="#{i18n.delete}" 
+				severity="alert" >
+				<p:commandButton
+					id="confirm" 
+					onclick="deleteConfirmDialog.hide()" 
+					actionListener="#{mb.preDelete}" 
+					update=":headerForm, :crudForm, :dataTableForm"  
+					immediate="true" 
+					value="#{i18n.yes}" />
+				<p:commandButton 
+					id="decline" 
+					onclick="deleteConfirmDialog.hide()" 
+					value="#{i18n.no}" />
+			</p:confirmDialog>
+		</ui:define>
+	</ui:composition>
+</html>
