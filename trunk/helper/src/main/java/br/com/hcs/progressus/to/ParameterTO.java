@@ -3,80 +3,75 @@ package br.com.hcs.progressus.to;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import br.com.hcs.progressus.helper.CollectionHelper;
-import br.com.hcs.progressus.helper.ObjectHelper;
-import br.com.hcs.progressus.to.common.ProgressusTO;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+import br.com.hcs.progressus.exception.ProgressusException;
+import br.com.hcs.progressus.exception.UnableToCompleteOperationException;
+import br.com.hcs.progressus.helper.CollectionHelper;
 
-public class ParameterTO<T> 
-	extends 
-		ProgressusTO<ParameterTO<T>>
-	implements
-		Comparable<ParameterTO<T>>
-{
-	
-	private static final long serialVersionUID = 744591423483048198L;
-	private static final Logger logger = LoggerFactory.getLogger(ParameterTO.class);
-	
-	
+@Slf4j
+@AllArgsConstructor
+@NoArgsConstructor
+public class ParameterTO<T>  extends ProgressusTO<ParameterTO<T>> {
+
+	private static final long serialVersionUID = -4466697084820407L;
+
+
 	@Getter
 	@Setter
-	private Integer index;
-	
+	private int index;
 	@Getter
 	@Setter
-	private Class<?> type;
-	
+	private Class<T> type;
 	@Getter
 	@Setter
 	private String name;
-	
 	@Getter
 	@Setter
 	private T value;
 	
 	
-	public ParameterTO() { super(); }
-	public ParameterTO(Integer index, T value) {
+	public ParameterTO(Class<T> type, String name, T value) throws ProgressusException {
 		this();
-		this.setIndex(index);
-		this.setType(value.getClass());
-		this.setValue(value);
+		try {
+			this.setIndex(0);
+			this.setType(type);
+			this.setName(name);
+			this.setValue(value);
+		} catch (Exception e) {
+			ParameterTO.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("ParameterTO");
+		}
 	}
-
+	@SuppressWarnings("unchecked")
+	public ParameterTO(int index, T value) throws ProgressusException {
+		this((Class<T>)value.getClass(), null, value);
+		try {
+			this.setIndex(index);
+		} catch (Exception e) {
+			ParameterTO.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("ParameterTO");
+		}
+	}
 	
 	@Override
 	public int compareTo(ParameterTO<T> other) {
-		
 		try {
-			
 			if (other == null) {
 				return -1;
 			}
-			
-			if (other.getIndex() == null) {
-				return -1;
-			}
-			
-			if (this.getIndex() == null) {
-				return -1;
-			}
-			
-			return this.getIndex().compareTo(other.getIndex());
-			
+			return new Integer(this.getIndex()).compareTo(new Integer(other.getIndex()));
 		} catch (Exception e) {
-			ParameterTO.logger.warn(e.getMessage());
+			ParameterTO.log.error(e.getMessage(), e);
 		}
-		
-		return -1;
+		return super.compareTo(other);
 	}
 	
-	
-	public static Class<?>[] getTypeArray(List<ParameterTO<?>> parameterMethodList) {
+
+	public static final Class<?>[] getTypeArray(List<ParameterTO<?>> parameterMethodList) {
 		
 		try {
 			
@@ -88,7 +83,7 @@ public class ParameterTO<T>
 			
 			for (ParameterTO<?> parameterMethod : parameterMethodList) {
 				
-				if (ObjectHelper.isNullOrEmpty(parameterMethod)) {
+				if (parameterMethod == null) {
 					continue;
 				}
 				
@@ -98,14 +93,14 @@ public class ParameterTO<T>
 			return list.toArray(new Class<?>[]{});
 			
 		} catch (Exception e) {
-			ParameterTO.logger.warn(e.getMessage());
+			ParameterTO.log.error(e.getMessage(), e);
 		}
 		
 		return new Class<?>[]{};
 		
 	}
 	
-	public static String[] getNameArray(List<ParameterTO<?>> parameterMethodList) {
+	public static final String[] getNameArray(List<ParameterTO<?>> parameterMethodList) {
 		
 		try {
 			
@@ -117,7 +112,7 @@ public class ParameterTO<T>
 			
 			for (ParameterTO<?> parameterMethod : parameterMethodList) {
 				
-				if (ObjectHelper.isNullOrEmpty(parameterMethod)) {
+				if (parameterMethod == null) {
 					continue;
 				}
 				
@@ -127,13 +122,13 @@ public class ParameterTO<T>
 			return list.toArray(new String[]{});
 
 		} catch (Exception e) {
-			ParameterTO.logger.warn(e.getMessage());
+			ParameterTO.log.warn(e.getMessage(), e);
 		}
 		
 		return new String[]{};
 	}
 
-	public static Object[] getValueArray(List<ParameterTO<?>> parameterMethodList) {
+	public static final Object[] getValueArray(List<ParameterTO<?>> parameterMethodList) {
 		
 		try {
 			
@@ -145,7 +140,7 @@ public class ParameterTO<T>
 			
 			for (ParameterTO<?> parameterMethod : parameterMethodList) {
 				
-				if (ObjectHelper.isNullOrEmpty(parameterMethod)) {
+				if (parameterMethod == null) {
 					continue;
 				}
 				
@@ -155,9 +150,24 @@ public class ParameterTO<T>
 			return list.toArray(new Object[]{});
 		
 		} catch (Exception e) {
-			ParameterTO.logger.warn(e.getMessage());
+			ParameterTO.log.error(e.getMessage(), e);
 		}
 		
 		return new Object[]{};
+	}
+
+	
+	public static final ParameterTO<?> getInstance(int index, Object value) throws ProgressusException {
+		try {
+			if (value == null) {
+				return null;
+			}
+			return new ParameterTO<>(index, value);
+		} catch (ProgressusException pe) {
+			throw pe;
+		} catch (Exception e) {
+			ParameterTO.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("getInstance");
+		}
 	}
 }

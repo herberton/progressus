@@ -1,51 +1,40 @@
 package br.com.hcs.progressus.to;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import br.com.hcs.progressus.exception.common.ProgressusException;
-import br.com.hcs.progressus.helper.CollectionHelper;
+import lombok.extern.slf4j.Slf4j;
+import br.com.hcs.progressus.enumerator.MessageType;
+import br.com.hcs.progressus.exception.ProgressusException;
 import br.com.hcs.progressus.helper.StringHelper;
-import br.com.hcs.progressus.to.common.ProgressusTO;
 
-public class MessageTO 
-	extends 
-		ProgressusTO<MessageTO> 
-{
-	
-	private static final long serialVersionUID = -7411047647290080089L;
-	private static final Logger logger = LoggerFactory.getLogger(MessageTO.class);
-	
+@Slf4j
+@AllArgsConstructor
+@RequiredArgsConstructor
+@NoArgsConstructor
+public class MessageTO extends ProgressusTO<MessageTO> {
+
+	private static final long serialVersionUID = -1861271656563151750L;
 	
 	@Getter
 	@Setter
-	private String text;
+	@NonNull
+	private MessageType type;
+	@Getter
 	@Setter
-	private List<ParameterTO<String>> parameterList;
+	@NonNull
+	private String key;
+	@Getter
+	@Setter
+	private List<ParameterTO<?>> parameterList;
 	
 	
-	public List<ParameterTO<String>> getParameterList() {
-		if (CollectionHelper.isNullOrEmpty(this.parameterList)) {
-			this.setParameterList(new ArrayList<ParameterTO<String>>());
-		}
-		return this.parameterList;
-	}
-	
-	
-	public MessageTO() { super(); }
-	public MessageTO(String text) {
-		this();
-		this.setText(text);
-	}
-	public MessageTO(String text, List<ParameterTO<String>> parameterList) {
-		this(text);
-		this.setParameterList(parameterList);
-	}
 	public MessageTO(Throwable throwable) throws ProgressusException {
 		
 		this();
@@ -57,15 +46,45 @@ public class MessageTO
 			}
 			
 			if (throwable instanceof ProgressusException) {
-				ProgressusException ProgressusException = (ProgressusException)throwable;
-				this.setText(ProgressusException.convert().getText());
-				this.setParameterList(ProgressusException.convert().getParameterList());
+				ProgressusException exception = (ProgressusException)throwable;
+				MessageTO to = exception.convert();
+				this.setType(to.getType());
+				this.setKey(to.getKey());
+				this.setParameterList(to.getParameterList());
 			}
 			
-			this.setText(StringHelper.getI18N(throwable.getClass()));
+			this.setKey(StringHelper.getI18N(throwable.getClass()));
 			
 		} catch (Exception e) {
-			MessageTO.logger.warn(e.getMessage());
+			MessageTO.log.error(e.getMessage(), e);
 		}
+	}
+	
+	
+	public static final MessageTO getInstance(String key) {
+		try {
+			return MessageTO.getInstance(MessageType.INFORMATION, key);
+		} catch (Exception e) {
+			MessageTO.log.error(e.getMessage(), e);
+		}
+		return null;
+	}
+	
+	public static final MessageTO getInstance(MessageType type, String key, ParameterTO<?>...parameterArray) {
+		try {
+			if (type == null) {
+				type = MessageType.INFORMATION;
+			}
+			if (StringHelper.isNullOrEmpty(key)) {
+				return null;
+			}
+			if (parameterArray == null) {
+				return new MessageTO(type, key);
+			}
+			return new MessageTO(type, key, Arrays.asList(parameterArray));
+		} catch (Exception e) {
+			MessageTO.log.error(e.getMessage(), e);
+		}
+		return null;
 	}
 }

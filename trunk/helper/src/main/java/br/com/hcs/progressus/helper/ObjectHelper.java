@@ -1,26 +1,52 @@
-package br.com.hcs.progressus.helper;
+package  br.com.hcs.progressus.helper;
 
 import java.io.Serializable;
+import java.util.Collection;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import br.com.hcs.progressus.exception.ProgressusException;
+import br.com.hcs.progressus.exception.UnableToCompleteOperationException;
 
-
+@Slf4j
 public class ObjectHelper implements Serializable {
-	
-	private static final long serialVersionUID = -7307157509687124897L;
-	private static final Logger logger = LoggerFactory.getLogger(ObjectHelper.class);
 
-	public static boolean isNullOrEmpty(Object object) {
-		
+	private static final long serialVersionUID = 539195880585172943L;
+
+	public static final boolean isNullOrEmpty(Object object) throws ProgressusException {
 		try {
-		
-			return object == null || object.toString().equals("0") || StringHelper.isNullOrEmpty(object.toString());
-		
+			
+			if (object == null) {
+				return true;
+			}
+			
+			if (object.getClass().isPrimitive()) {
+				
+				if (object instanceof Number) {
+					return ((Number)object).intValue() == 0;
+				}
+				
+				return StringHelper.isNullOrEmpty(object.toString());
+			}
+			
+			if (object instanceof String) {
+				return StringHelper.isNullOrEmpty(object.toString());
+			}
+			
+			if (object instanceof Collection) {
+				return CollectionHelper.isNullOrEmpty((Collection<?>)object);
+			}
+			
+			if (object.getClass().isArray()) {
+				return CollectionHelper.isNullOrEmpty((Object[])object);
+			}
+			
+			return false; 
+				
+		} catch (ProgressusException pe) {
+			throw pe;
 		} catch (Exception e) {
-			ObjectHelper.logger.warn(e.getMessage());
+			ObjectHelper.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("isNullOrEmpty");
 		}
-		
-		return true;
 	}
 }

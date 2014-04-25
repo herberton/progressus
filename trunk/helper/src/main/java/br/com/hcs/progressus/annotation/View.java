@@ -14,6 +14,7 @@ import br.com.hcs.progressus.enumerator.Separator;
 @Target(value={ElementType.TYPE})
 @Retention(value=RetentionPolicy.RUNTIME)
 public @interface View {
+	String module() default "";
 	String menu() default "";
 	String name() default "";
 	String description() default "";

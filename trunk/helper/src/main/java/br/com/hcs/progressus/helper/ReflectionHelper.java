@@ -1,30 +1,37 @@
-package br.com.hcs.progressus.helper;
+package  br.com.hcs.progressus.helper;
 
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.AbstractList;
+import java.util.AbstractSet;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
+import br.com.hcs.progressus.contract.ClassValidator;
+import br.com.hcs.progressus.exception.ProgressusException;
+import br.com.hcs.progressus.exception.UnableToCompleteOperationException;
 import br.com.hcs.progressus.to.ParameterTO;
 
+@Slf4j
+public final class ReflectionHelper implements Serializable {
 
+	private static final long serialVersionUID = 3631371700571515093L;
 
-public class ReflectionHelper implements Serializable {
-
-	private static final long serialVersionUID = 5990122009250665993L;
-	private static final Logger logger = LoggerFactory.getLogger(ReflectionHelper.class);
 	
-	
-	public static List<Method> findMethodList(Class<?> clazz, String methodName, Class<? extends Annotation> methodAnnotation, Class<?>[] parameterTypeArray) {
+	public static final List<Method> findMethodList(Class<?> clazz, String methodName, Class<? extends Annotation> methodAnnotation, Class<?>[] parameterTypeArray) throws ProgressusException {
 		
 		try {
 			
-			if (ObjectHelper.isNullOrEmpty(clazz)) {
+			if (clazz == null) {
 				return new ArrayList<>();
 			}
 			
@@ -95,35 +102,63 @@ public class ReflectionHelper implements Serializable {
 			
 			return foundMethodCollection;
 			
-		} catch (SecurityException e) {
-			ReflectionHelper.logger.warn(e.getMessage());
+		} catch (ProgressusException pe) {
+			throw pe;
+		} catch (Exception e) {
+			ReflectionHelper.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("findMethodList");
 		}
-		
-		return new ArrayList<>();
 	}
+		
 	
-	
-	public static Method findMethod(Class<?> clazz, String methodName) {
+	public static final Method findMethod(Class<?> clazz, String methodName) throws ProgressusException {
 		
 		try {
 			
-			if (ObjectHelper.isNullOrEmpty(clazz)) {
+			if (clazz == null) {
+				return null;
+			}
+			
+			if (StringHelper.isNullOrEmpty(methodName)) {
 				return null;
 			}
 			
 			return ReflectionHelper.findMethod(clazz, methodName, null, null);
 			
+		} catch (ProgressusException pe) {
+			throw pe;
 		} catch (Exception e) {
-			ReflectionHelper.logger.warn(e.getMessage());
+			ReflectionHelper.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("findMethod");
 		}
-		
-		return null;
 	}
 	
-	public static Method findMethod(Class<?> clazz, String methodName, Class<? extends Annotation> methodAnnotation, Class<?>[] parameterTypeArray) {
+	public static final Method findMethod(Class<?> clazz, String methodName, Class<?>[] parameterTypeArray) throws ProgressusException {
+		
+		try {
+			
+			if (clazz == null) {
+				return null;
+			}
+			
+			if (StringHelper.isNullOrEmpty(methodName)) {
+				return null;
+			}
+			
+			return ReflectionHelper.findMethod(clazz, methodName, null, parameterTypeArray);
+			
+		} catch (ProgressusException pe) {
+			throw pe;
+		} catch (Exception e) {
+			ReflectionHelper.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("findMethod");
+		}
+	}
+	
+	public static final Method findMethod(Class<?> clazz, String methodName, Class<? extends Annotation> methodAnnotation, Class<?>[] parameterTypeArray) throws ProgressusException {
 		
 		
-		if (ObjectHelper.isNullOrEmpty(clazz)) {
+		if (clazz == null) {
 			return null;
 		}
 		
@@ -141,78 +176,87 @@ public class ReflectionHelper implements Serializable {
 					false :
 					true;
 			
-			foundMethod = clazz.getMethod(methodName, parameterTypeArray);
+			
+			
+			try {
+				foundMethod = clazz.getMethod(methodName, parameterTypeArray);
+			} catch (Exception e) {
+				return null;
+			}
 			
 			if (isSerchByAnnotation && !foundMethod.isAnnotationPresent(methodAnnotation)) {
 				return null;
 			}
 			
 		} catch (Exception e) {
-			ReflectionHelper.logger.warn(e.getMessage());
+			ReflectionHelper.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("findMethod");
 		}
 		
 		return foundMethod;
 	}
 
 	
-	public static Object executeMethod(Object object, Method method, Object...parameterArgumentArray) {
+	public static final Object executeMethod(Object object, Method method, Object...parameterArgumentArray) throws ProgressusException {
 		
 		try {
 			
-			if (ObjectHelper.isNullOrEmpty(object)) {
+			if (object == null) {
 				return null;
 			}
 			
-			if (ObjectHelper.isNullOrEmpty(method)) {
+			if (method == null) {
 				return null;
 			}
 			
 			return method.invoke(object, parameterArgumentArray);
 			
 		} catch (Exception e) {
-			ReflectionHelper.logger.warn(e.getMessage());
+			ReflectionHelper.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("executeMethod");
 		}
-		
-		return null;
 	}
 	
-	public static Object executeMethod(Object object, Method method) {
+	public static final Object executeMethod(Object object, Method method) throws ProgressusException {
 		
 		try {
 			
-			if (ObjectHelper.isNullOrEmpty(object)) {
+			if (object == null) {
 				return null;
 			}
 			
-			if (ObjectHelper.isNullOrEmpty(method)) {
+			if (method == null) {
 				return null;
 			}
 			
 			return method.invoke(object);
 			
 		} catch (Exception e) {
-			ReflectionHelper.logger.warn(e.getMessage());
+			ReflectionHelper.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("executeMethod");
 		}
-		
-		return null;
 	}
 
-	public static Object newInstance(Class<?> clazz) {
+	
+	public static final <T> T newInstance(Class<T> clazz) throws ProgressusException {
 		try {
 			return ReflectionHelper.newInstance(clazz, null);
+		} catch (ProgressusException pe) {
+			throw pe;
 		} catch (Exception e) {
-			ReflectionHelper.logger.warn(e.getMessage());
+			ReflectionHelper.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("newInstance");
 		}
-		return null;
 	}
 	
-	public static Object newInstance(Class<?> clazz, List<ParameterTO<?>> parameterMethodList) {
+	@SuppressWarnings("unchecked")
+	public static final <T> T newInstance(Class<T> clazz, List<ParameterTO<?>> parameterMethodList) throws ProgressusException {
 		
 		if (parameterMethodList == null || parameterMethodList.size() <= 0) {
 			try {
 				return clazz.newInstance();
 			} catch (Exception e) {
-				ReflectionHelper.logger.warn(e.getMessage());
+				ReflectionHelper.log.error(e.getMessage(), e);
 			}
 		}
 		
@@ -236,13 +280,400 @@ public class ReflectionHelper implements Serializable {
 				return null;
 			}
 			
-			return constructor.newInstance(valueArray);
+			return (T) constructor.newInstance(valueArray);
 			
+		} catch (ProgressusException pe) {
+			throw pe;
 		} catch (Exception e) {
-			ReflectionHelper.logger.warn(e.getMessage());
+			ReflectionHelper.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("newInstance");
+		}
+	}
+	
+	
+	public static final List<Field> getPublicFieldList(Class<?> clazz) throws ProgressusException {
+		try {
+			return ReflectionHelper.getPublicFieldList(clazz, null);
+		} catch (ProgressusException pe) {
+			throw pe;
+		} catch (Exception e) {
+			ReflectionHelper.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("getPublicFieldList");
+		}
+	}
+	
+	public static final List<Field> getPublicFieldList(Class<?> clazz, ClassValidator validator) throws ProgressusException {
+		
+		try {
+			
+			if (clazz == null) {
+				return null;
+			}
+			
+			List<Field> fieldList = new ArrayList<Field>();
+			
+			do {
+				
+				Field[] declaredFieldArray = clazz.getDeclaredFields();
+				
+				if (CollectionHelper.isNullOrEmpty(declaredFieldArray)) {
+					return new ArrayList<>();
+				}
+				
+				for (Field field : declaredFieldArray) {
+					
+					Method method = ReflectionHelper.findMethod(clazz, StringHelper.getGetter(field.getName()));
+					
+					if (method == null) {
+						continue;
+					}
+					
+					if (!Modifier.isPublic(method.getModifiers())) {
+						continue;
+					}
+					
+					fieldList.add(field);
+				}
+				
+				
+				clazz = clazz.getSuperclass();
+				
+				
+			} while(validator == null || clazz == null ? clazz != null : validator.isValidClass(clazz));
+			
+			
+			return fieldList;
+			
+		} catch (ProgressusException pe) {
+			throw pe;
+		} catch (Exception e) {
+			ReflectionHelper.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("getPublicFieldList");
+		}
+	}
+	
+	
+	public static final Object executeGetter(Object object, Field field) throws ProgressusException {
+		try {
+			
+			if (object == null) {
+				return null;
+			}
+			
+			if (field == null) {
+				return null;
+			}
+			
+			Method method =
+				ReflectionHelper
+					.findMethod(
+						object.getClass(), 
+						StringHelper.getGetter(field.getName())
+					);
+			
+			if (method == null) {
+				return null;
+			}
+			
+			return 
+				ReflectionHelper.executeMethod(object, method);
+			
+		} catch (ProgressusException pe) {
+			throw pe;
+		} catch (Exception e) {
+			ReflectionHelper.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("executeGetter");
+		}
+	}
+	
+	public static final void executeSetter(Object object, Field field, Object value) throws ProgressusException {
+		
+		try {
+			
+			if (object == null) {
+				return;
+			}
+			
+			if (field == null) {
+				return;
+			}
+			
+			Method method =
+				ReflectionHelper
+					.findMethod(
+						object.getClass(), 
+						StringHelper.getSetter(field.getName()), 
+						new Class<?> [] { field.getType() }
+					);
+			
+			if (method == null) {
+				return;
+			}
+			
+			ReflectionHelper.executeMethod(object, method, new Object[] { value });
+			
+		} catch (ProgressusException pe) {
+			throw pe;
+		} catch (Exception e) {
+			ReflectionHelper.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("executeSetter");
+		}
+	}
+	
+	
+	public static final <T> T parse(Object object, Class<T> returnClazz) throws ProgressusException {
+		
+		try {
+			
+			if (object == null) { 
+				return null; 
+			}
+			
+			if (returnClazz == null) { 
+				return null; 
+			}
+			
+			T objectReturn = returnClazz.newInstance();
+			
+			ClassValidator 
+				delegate = 
+					object instanceof ClassValidator ? (ClassValidator)object : null,
+				returnDelegate =
+					objectReturn instanceof ClassValidator ? (ClassValidator)objectReturn : null;
+			
+			List<Field> returnFieldList = ReflectionHelper.getPublicFieldList(returnClazz, returnDelegate);
+			for (Field	returnField : returnFieldList) {
+				
+				List<Field> fieldList = ReflectionHelper.getPublicFieldList(object.getClass(), delegate);
+				for (Field field :  fieldList){
+					
+					if (field.getName().equals(returnField.getName())) {
+						
+						Object value = ReflectionHelper.executeGetter(object, field);
+						
+						if (value == null) {
+							break;
+						}
+						
+						Object returnValue = null;
+						
+						if (ReflectionHelper.isCompatible(value, returnField) || 
+							ReflectionHelper.isPrimitiveOrWrapper(value.getClass(), true, true)) {
+							returnValue = ReflectionHelper.cast(value, returnField);
+						} else {
+							returnValue = ReflectionHelper.parse(value, returnField.getType());
+						}
+						
+						ReflectionHelper.executeSetter(objectReturn, returnField, returnValue);	
+						break;
+					}
+				}
+			}
+			
+			return objectReturn;
+			
+		} catch (ProgressusException pe) {
+			throw pe;
+		} catch (Exception e) {
+			ReflectionHelper.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("parse");
+		}
+	}
+	
+	
+	public static final Object cast(Object value, Field field) throws ProgressusException {
+		
+		try {
+		
+			if (value == null) { 
+				return null; 
+			}
+			
+			if (field == null) { 
+				return null; 
+			}
+			
+			if (ReflectionHelper.isCollectionOrArray(value.getClass()) && ReflectionHelper.isCollectionOrArray(field.getType())) {
+				
+				Object array =
+					value.getClass().isArray() ?
+						value :
+						((Collection<?>)value).toArray();
+				
+				if (field.getType().isArray()) {
+					
+					Object returnArray = Array.newInstance(field.getType().getComponentType(), Array.getLength(array));
+					for (int i = 0; i < Array.getLength(array); i++) {
+						Array.set(returnArray, i, ReflectionHelper.parse(Array.get(array, i), field.getType().getComponentType()));
+					}
+					
+					return returnArray;
+					
+				} 
+
+				List<Object> list = (List<Object>) new ArrayList<Object>();
+				ParameterizedType parameterizedType = (ParameterizedType)field.getGenericType();
+				
+				for (int i = 0; i < Array.getLength(array); i++) {
+					((List<Object>)list).add(ReflectionHelper.parse(Array.get(array, i), (Class<?>)parameterizedType.getActualTypeArguments()[0]));
+				}
+				
+				return list;
+			}
+			
+			if (ReflectionHelper.isWrapper(value.getClass(), false) && ReflectionHelper.isPrimitiveOrWrapper(field.getType(), false, false)) {
+				return value;
+			}
+			
+		    return field.getType().cast(value);
+		    
+		} catch (ProgressusException pe) {
+			throw pe;
+		} catch (Exception e) {
+			ReflectionHelper.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("cast");
+		}
+	}
+	
+	
+	public static final boolean isCompatible(Object object, Field field) throws ProgressusException {
+		
+		try {
+			
+			if (field == null) { 
+				return false; 
+			}
+			
+			if (object == null) { 
+				return true; 
+			}
+			
+			if (ReflectionHelper.isPrimitiveOrWrapper(object.getClass(), true, true) && 
+				ReflectionHelper.isPrimitiveOrWrapper(field.getType(), true, true)) {
+				return ReflectionHelper.cast(object, field) != null;
+			}
+			
+			if (ReflectionHelper.isCollectionOrArray(field.getType()) && 
+				ReflectionHelper.isCollectionOrArray(object.getClass())) {
+				return true;
+			}
+			
+		} catch (ProgressusException pe) {
+			throw pe;
+		} catch (Exception e) {
+			ReflectionHelper.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("isCompatible");
 		}
 		
-		return null;
+		return false;
+	}
+		
+	public static final boolean isPrimitiveOrWrapper(Class<?> clazz, boolean verifyIsString, boolean verifyIsEnum) throws ProgressusException {
+		
+		try {
+			
+			if (clazz == null) { 
+				return false; 
+			}
+			
+			boolean result = clazz.isPrimitive() || ReflectionHelper.isWrapper(clazz, verifyIsString);
+			
+			if (verifyIsEnum) {
+				result = result || clazz.isEnum();
+			}
+			
+			return result;
+			
+		} catch (ProgressusException pe) {
+			throw pe;
+		} catch (Exception e) {
+			ReflectionHelper.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("isPrimitiveOrWrapper");
+		}
+	}
+		
+	public static final boolean isWrapper(Class<?> clazz, boolean verifyIsString) throws ProgressusException {
+		try {
+			
+			if (clazz == null) { 
+				return false; 
+			}
+			
+			List<Class<?>> wrapperList =  new ArrayList<Class<?>>();
+			
+			wrapperList.add(Boolean.class);
+			wrapperList.add(Byte.class);
+			wrapperList.add(Character.class);
+			wrapperList.add(Short.class);
+			wrapperList.add(Integer.class);
+			wrapperList.add(Long.class);
+			wrapperList.add(Float.class);
+			wrapperList.add(Double.class);
+			
+			if (verifyIsString) {
+				wrapperList.add(String.class);
+			}
+			
+			return wrapperList.contains(clazz);
+			
+		} catch (Exception e) {
+			ReflectionHelper.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("isWrapper");
+		}
+	}
+	
+	public static final boolean isCollectionOrArray(Class<?> clazz) throws ProgressusException {
+		try {
+			if (clazz == null) { 
+				return false; 
+			}
+			return ReflectionHelper.isCollection(clazz) || clazz.isArray();
+		} catch (ProgressusException pe) {
+			throw pe;
+		} catch (Exception e) {
+			ReflectionHelper.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("isCollectionOrArray");
+		}
+	}
+	
+	
+	public static final boolean isCollection(Class<?> clazz) throws ProgressusException {
+		try {
+			if (clazz == null) { 
+				return false; 
+			}
+			if(clazz.getSuperclass() == null) {
+				return clazz.equals(Collection.class);
+			}
+			return clazz.getSuperclass().equals(AbstractList.class) || clazz.getSuperclass().equals(AbstractSet.class);
+		} catch (Exception e) {
+			ReflectionHelper.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("isCollection");
+		}
 	}
 
+	
+	public static final List<Class<?>> getGenericClassList(Class<?> clazz) throws ProgressusException {
+		
+		List<Class<?>> genericClasLsist = new ArrayList<>();
+		
+		try {
+			
+			if (clazz == null) {
+				return genericClasLsist;
+			}
+			
+			Type[] actualTypeArgumentArray = ((ParameterizedType)clazz.getGenericSuperclass()).getActualTypeArguments();
+			
+			for (Type actualTypeArgument : actualTypeArgumentArray) {
+				genericClasLsist.add((Class<?>)actualTypeArgument);
+			}
+			
+		} catch (Exception e) {
+			ReflectionHelper.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("getGenericClassList");
+		}
+		
+		return genericClasLsist;	
+	}
 }

@@ -1,6 +1,14 @@
 package br.com.hcs.progressus.enumerator;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+import br.com.hcs.progressus.helper.StringHelper;
+
+@Slf4j
 public enum Theme {
+	
 	AFTERDARK("afterdark"),
 	AFTERNOON("afternoon"),
 	AFTERWORK("afterwork"),
@@ -40,25 +48,29 @@ public enum Theme {
 	UI_LIGHTNESS("ui-lightness"),
 	VADER("vader");
 	
-	private String name; 
 	
-	public String getName() {
-		return name;
-	}
-	private void setName(String name) {
-		this.name = name;
-	}
+	@Getter(AccessLevel.PRIVATE)
+	@Setter(AccessLevel.PRIVATE)
+	private String text;
 	
-	private Theme(String name) {
-		this.setName(name);
+	
+	private Theme(String text) {
+		this.setText(text);
 	}
 	
-	public static Theme getDefault() {
-		return Theme.CRUZE;
+	
+	public static final Theme getDefault() {
+		return Theme.ARISTO;
 	}
+	
 	
 	@Override
 	public String toString() {
-		return this.getName();
+		try {
+			return StringHelper.isNullOrEmpty(this.getText()) ? "" : this.getText();
+		} catch (Exception e) {
+			Theme.log.error(e.getMessage(), e);
+		}
+		return "";
 	}
 }

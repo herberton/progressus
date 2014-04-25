@@ -1,39 +1,27 @@
 package br.com.hcs.progressus.to;
 
-import java.util.HashMap;
+import java.security.InvalidParameterException;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import br.com.hcs.progressus.enumerator.OrderByType;
-import br.com.hcs.progressus.exception.InvalidParameterException;
-import br.com.hcs.progressus.helper.MapHelper;
 import br.com.hcs.progressus.helper.StringHelper;
-import br.com.hcs.progressus.to.common.ProgressusTO;
 
-
+@Slf4j
+@NoArgsConstructor
 public class OrderByTO extends ProgressusTO<OrderByTO> {
 
-	private static final long serialVersionUID = -7062194474364983363L;
-	private static final Logger logger = LoggerFactory.getLogger(OrderByTO.class);
+	private static final long serialVersionUID = 2933581165238344379L;
 	
-	
+	@Getter
 	@Setter
 	private Map<String, OrderByType> orderByMap;
 	
 	
-	public Map<String, OrderByType> getOrderByMap() {
-		if (MapHelper.isNullOrEmpty(this.orderByMap)) {
-			this.setOrderByMap(new HashMap<String, OrderByType>());
-		}
-		return this.orderByMap;
-	}
-	
-	
-	public OrderByTO() { super(); }
 	public OrderByTO(String field, OrderByType type) throws InvalidParameterException {
 		this();
 		this.addOrderBy(field, type);
@@ -53,18 +41,17 @@ public class OrderByTO extends ProgressusTO<OrderByTO> {
 					field :
 					field.replaceAll(" ", "");
 			
-			field = StringHelper.isNullOrEmptyReplaceBy(field, "id");
+			field = StringHelper.isNullOrEmpty(field) ? "id" : field;
+			
+			if (this.getOrderByMap().containsKey(field)) {
+				throw new InvalidParameterException(field);
+			}
+			
+			this.getOrderByMap().put(field, type);
 			
 		} catch (Exception e) {
-			OrderByTO.logger.warn(e.getMessage());
+			OrderByTO.log.error(e.getMessage());
 		}
-		
-		if (this.getOrderByMap().containsKey(field)) {
-			throw new InvalidParameterException(field);
-		}
-		
-		this.getOrderByMap().put(field, type);
-		
 	}
 	
 	
@@ -99,7 +86,7 @@ public class OrderByTO extends ProgressusTO<OrderByTO> {
 			return jpql.toString();
 			
 		} catch (Exception e) {
-			OrderByTO.logger.warn(e.getMessage());
+			OrderByTO.log.error(e.getMessage());
 		}
 		
 		return "";

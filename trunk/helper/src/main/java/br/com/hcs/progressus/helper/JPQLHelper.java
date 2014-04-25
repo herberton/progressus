@@ -1,4 +1,4 @@
-package br.com.hcs.progressus.helper;
+package  br.com.hcs.progressus.helper;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -8,25 +8,23 @@ import java.util.Map;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import br.com.hcs.progressus.enumerator.WhereClauseOperator;
-import br.com.hcs.progressus.exception.InvalidParameterException;
+import br.com.hcs.progressus.exception.ProgressusException;
+import br.com.hcs.progressus.exception.UnableToCompleteOperationException;
 import br.com.hcs.progressus.to.OrderByTO;
+import br.com.hcs.progressus.to.ProgressusTO;
 import br.com.hcs.progressus.to.WhereClauseTO;
 import br.com.hcs.progressus.to.WhereTO;
-import br.com.hcs.progressus.to.common.ProgressusTO;
 
+@Slf4j
+public final class JPQLHelper implements Serializable {
 
-public class JPQLHelper implements Serializable {
+	private static final long serialVersionUID = 3962812252308941950L;
 	
-	private static final long serialVersionUID = 3143156680236714463L;
-	private static final Logger logger = LoggerFactory.getLogger(JPQLHelper.class);
 	
-	// bind
 	@SuppressWarnings("unchecked")
-	public static <T extends ProgressusTO<? extends ProgressusTO<?>>> TypedQuery<T> bindParameter(TypedQuery<? extends T> typedQuery, Map<String, Object> parameterMap) {
+	public static final <T extends ProgressusTO<? extends ProgressusTO<?>>> TypedQuery<T> bindParameter(TypedQuery<? extends T> typedQuery, Map<String, Object> parameterMap) throws ProgressusException {
 		
 		try {
 			
@@ -34,20 +32,19 @@ public class JPQLHelper implements Serializable {
 				return null;
 			}
 			
-			if (MapHelper.isNullOrEmpty(parameterMap)) {
-				parameterMap = new HashMap<String, Object>();
-			}
+			parameterMap = MapHelper.isNullOrEmpty(parameterMap) ? new HashMap<String, Object>() : parameterMap;
 			
 			return (TypedQuery<T>) JPQLHelper.bindParameter((Query)typedQuery, parameterMap);
 			
+		} catch (ProgressusException pe) {
+			throw pe;
 		} catch (Exception e) {
-			JPQLHelper.logger.warn(e.getMessage());
+			JPQLHelper.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("bindParameter");
 		}
-		
-		return null;
 	}
 	
-	public static Query bindParameter(Query query, Map<String, Object> parameterMap) {
+	public static final Query bindParameter(Query query, Map<String, Object> parameterMap) throws ProgressusException {
 		
 		try {
 			
@@ -55,9 +52,7 @@ public class JPQLHelper implements Serializable {
 				return null;
 			}
 			
-			if (MapHelper.isNullOrEmpty(parameterMap)) {
-				parameterMap = new HashMap<String, Object>();
-			}
+			parameterMap = MapHelper.isNullOrEmpty(parameterMap) ? new HashMap<String, Object>() : parameterMap;
 			
 			Iterator<String> iterator = parameterMap.keySet().iterator();
 			
@@ -72,16 +67,16 @@ public class JPQLHelper implements Serializable {
 			
 			return query;
 			
+		} catch (ProgressusException pe) {
+			throw pe;
 		} catch (Exception e) {
-			JPQLHelper.logger.warn(e.getMessage());
+			JPQLHelper.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("bindParameter");
 		}
-		
-		return null;
 	}
 		
 	
-	// getSelect
-	public static <T extends ProgressusTO<? extends ProgressusTO<?>>> String getSelect(Class<? extends T> clazz, Map<String, Object> parameterMap, OrderByTO orderBy) throws InvalidParameterException {
+	public static final <T extends ProgressusTO<? extends ProgressusTO<?>>> String getSelect(Class<? extends T> clazz, Map<String, Object> parameterMap, OrderByTO orderBy) throws ProgressusException {
 		
 		try {
 			
@@ -89,9 +84,7 @@ public class JPQLHelper implements Serializable {
 				return "";
 			}
 			
-			if (MapHelper.isNullOrEmpty(parameterMap)) {
-				parameterMap = new HashMap<String, Object>();
-			}
+			parameterMap = MapHelper.isNullOrEmpty(parameterMap) ? new HashMap<String, Object>() : parameterMap;
 			
 			WhereTO where = JPQLHelper.getWhere(parameterMap);
 			
@@ -101,13 +94,15 @@ public class JPQLHelper implements Serializable {
 			
 			return JPQLHelper.getSelect(clazz, where, orderBy);
 		
+		} catch (ProgressusException pe) {
+			throw pe;
 		} catch (Exception e) {
-			JPQLHelper.logger.warn(e.getMessage());
+			JPQLHelper.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("getSelect");
 		}
-		
-		return "";
 	}
-	public static <T extends ProgressusTO<? extends ProgressusTO<?>>> String getSelect(Class<? extends T> clazz, WhereTO where, OrderByTO orderBy) {
+
+	public static final <T extends ProgressusTO<? extends ProgressusTO<?>>> String getSelect(Class<? extends T> clazz, WhereTO where, OrderByTO orderBy) throws ProgressusException {
 		
 		try {
 			
@@ -127,15 +122,16 @@ public class JPQLHelper implements Serializable {
 			
 			return jpql.toString();
 			
+		} catch (ProgressusException pe) {
+			throw pe;
 		} catch (Exception e) {
-			JPQLHelper.logger.warn(e.getMessage());
+			JPQLHelper.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("getSelect");
 		}
-		
-		return "";
 	}
 	
-	// getSelectCount
-	public static <T extends ProgressusTO<? extends ProgressusTO<?>>> String getSelectCount(Class<? extends T> clazz, Map<String, Object> parameterMap) throws InvalidParameterException {
+	
+	public static final <T extends ProgressusTO<? extends ProgressusTO<?>>> String getSelectCount(Class<? extends T> clazz, Map<String, Object> parameterMap) throws ProgressusException {
 		
 		try {
 			
@@ -143,19 +139,19 @@ public class JPQLHelper implements Serializable {
 				return "";
 			}
 			
-			if (MapHelper.isNullOrEmpty(parameterMap)) {
-				parameterMap = new HashMap<String, Object>();
-			}
+			parameterMap = MapHelper.isNullOrEmpty(parameterMap) ? new HashMap<String, Object>() : parameterMap;
 			
 			return JPQLHelper.getSelectCount(clazz, JPQLHelper.getWhere(parameterMap));
 			
+		} catch (ProgressusException pe) {
+			throw pe;
 		} catch (Exception e) {
-			JPQLHelper.logger.warn(e.getMessage());
+			JPQLHelper.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("getSelectCount");
 		}
-		
-		return "";
 	}
-	public static <T extends ProgressusTO<? extends ProgressusTO<?>>> String getSelectCount(Class<? extends T> clazz, WhereTO where) {
+
+	public static final <T extends ProgressusTO<? extends ProgressusTO<?>>> String getSelectCount(Class<? extends T> clazz, WhereTO where) throws ProgressusException {
 		
 		try {
 			
@@ -171,47 +167,50 @@ public class JPQLHelper implements Serializable {
 			
 			return jpql.toString();
 			
+		} catch (ProgressusException pe) {
+			throw pe;
 		} catch (Exception e) {
-			JPQLHelper.logger.warn(e.getMessage());
+			JPQLHelper.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("getSelectCount");
 		}
-		
-		return "";
 	}
+
 	
-	public static WhereTO getWhere(Map<String, Object> parameterMap) throws InvalidParameterException {
-		
-		try {
+	public static final WhereTO getWhere(Map<String, Object> parameterMap) throws ProgressusException {
 			
-			WhereTO where = new WhereTO();
-			
-			if (MapHelper.isNullOrEmpty(parameterMap)) {
-				return where;
-			}
-			
-			Iterator<String> iterator = parameterMap.keySet().iterator();
-
-			while(iterator.hasNext()){
-
-				String key = iterator.next();
-				Object value = parameterMap.get(key);
+			try {
 				
-				if (value instanceof String) {
-					
-					where.addClause(new WhereClauseTO(key, WhereClauseOperator.LIKE, true));
-					parameterMap.put(key, "%" + value.toString() + "%");
-					
-					continue;
+				WhereTO where = new WhereTO();
+				
+				if (MapHelper.isNullOrEmpty(parameterMap)) {
+					return where;
 				}
 				
-				where.addClause(new WhereClauseTO(key, WhereClauseOperator.EQUAL, true));
+				Iterator<String> iterator = parameterMap.keySet().iterator();
+
+				while(iterator.hasNext()){
+
+					String key = iterator.next();
+					Object value = parameterMap.get(key);
+					
+					if (value instanceof String) {
+						
+						where.addClause(new WhereClauseTO(key, WhereClauseOperator.LIKE, true));
+						parameterMap.put(key, "%" + value.toString() + "%");
+						
+						continue;
+					}
+					
+					where.addClause(new WhereClauseTO(key, WhereClauseOperator.EQUAL, true));
+				}
+				
+				return where;
+				
+			} catch (ProgressusException pe) {
+				throw pe;
+			} catch (Exception e) {
+				JPQLHelper.log.error(e.getMessage(), e);
+				throw new UnableToCompleteOperationException("getWhere");
 			}
-			
-			return where;
-			
-		} catch (java.security.InvalidParameterException e) {
-			JPQLHelper.logger.warn(e.getMessage());
 		}
-		
-		return null;
-	}
 }

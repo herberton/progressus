@@ -1,20 +1,45 @@
 package br.com.hcs.progressus.exception;
 
-import br.com.hcs.progressus.exception.common.ProgressusException;
+import lombok.extern.slf4j.Slf4j;
+import br.com.hcs.progressus.helper.StringHelper;
 import br.com.hcs.progressus.to.ParameterTO;
 
-
-
+@Slf4j
 public class UpdateException extends ProgressusException {
 
-	private static final long serialVersionUID = 3765249947269339026L;
+	private static final long serialVersionUID = 3346563383831877564L;
 
+	
 	public UpdateException(String entityName) {
 		super();
-		super.getParameterList().add(new ParameterTO<>(0, entityName));
+		try {
+			super.getParameterList().add(new ParameterTO<>(0, entityName));
+		} catch (ProgressusException e) {
+			UpdateException.log.error(e.getMessage(), e);
+		}
 	}
-	public UpdateException(String entityName, Throwable cause) throws ProgressusException {
+	public UpdateException(Class<?> entityClazz) {
+		super();
+		try {
+			super.getParameterList().add(new ParameterTO<>(0, StringHelper.getI18N(entityClazz)));
+		} catch (ProgressusException e) {
+			UpdateException.log.error(e.getMessage(), e);
+		}
+	}
+	public UpdateException(String entityName, Throwable cause) {
 		super(cause);
-		super.getParameterList().add(new ParameterTO<>(0, entityName));
+		try {
+			super.getParameterList().add(new ParameterTO<>(0, entityName));
+		} catch (ProgressusException e) {
+			UpdateException.log.error(e.getMessage(), e);
+		}
+	}
+	public UpdateException(Class<?> entityClazz, Throwable cause) {
+		super(cause);
+		try {
+			super.getParameterList().add(new ParameterTO<>(0, StringHelper.getI18N(entityClazz)));
+		} catch (ProgressusException e) {
+			UpdateException.log.error(e.getMessage(), e);
+		}
 	}
 }
