@@ -1,5 +1,6 @@
 package br.com.hcs.progressus.ui.jsf.pl;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -11,12 +12,8 @@ import javax.faces.event.PhaseListener;
 import javax.faces.render.ResponseStateManager;
 import javax.servlet.http.HttpServletRequest;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import br.com.hcs.progressus.helper.CollectionHelper;
-import br.com.hcs.progressus.helper.ConfigurationHelper;
-import br.com.hcs.progressus.helper.ObjectHelper;
+import lombok.extern.slf4j.Slf4j;
+import br.com.hcs.progressus.enumerator.Setting;
 import br.com.hcs.progressus.helper.StringHelper;
 import br.com.hcs.progressus.ui.jsf.helper.JSFHelper;
 
@@ -24,125 +21,144 @@ import com.sun.faces.RIConstants;
 import com.sun.faces.renderkit.RenderKitUtils;
 import com.sun.faces.util.ComponentStruct;
 
-public class RestoreDynamicActionsObserverPL implements PhaseListener { 
+@Slf4j
+public class RestoreDynamicActionsObserverPL implements PhaseListener, Serializable {
 
-    private static final long serialVersionUID = -4634057340724844798L;
-    private static final Logger logger = LoggerFactory.getLogger(RestoreDynamicActionsObserverPL.class);
+	private static final long serialVersionUID = 2570874698055551508L;
 	
-    
-
-    @Override
-    public PhaseId getPhaseId() {
-        return PhaseId.RESTORE_VIEW;
-    }
-
-    @Override
-    public void beforePhase(PhaseEvent event) {
- 
-        try {
-        	
-        	FacesContext facesContext = event.getFacesContext();
-        	
-        	if (ObjectHelper.isNullOrEmpty(facesContext)) {
+	
+	@Override
+	public void afterPhase(PhaseEvent event) {
+		
+		try {
+			
+			if (event == null) {
 				return;
 			}
-        	
-			ResponseStateManager responseStateManager =
+			
+			FacesContext facesContext = event.getFacesContext(); 
+			
+			if (facesContext == null) {
+				return;
+			}
+			
+			ResponseStateManager responseStateManager = 
 				RenderKitUtils
 					.getResponseStateManager(
 						facesContext, 
-						ConfigurationHelper.UI_WEB_DYNAMIC_ACTIONS_RENDERKIT
+						Setting.WEB_DYNAMIC_ACTIONS_RENDERKIT.toString()
 					);
 			
-			if (ObjectHelper.isNullOrEmpty(responseStateManager)) {
+			if (responseStateManager == null) {
 				return;
 			}
 			
 			HttpServletRequest httpServletRequest = JSFHelper.getHttpServletRequest();
-			
-			if (ObjectHelper.isNullOrEmpty(httpServletRequest)) {
+			if (httpServletRequest == null) {
 				return;
 			}
 			
-			String 
-				requestURI = httpServletRequest.getRequestURI(),
-				contextPath = httpServletRequest.getContextPath();
+			String contextPath = httpServletRequest.getContextPath();
+			String requestURI = httpServletRequest.getRequestURI();
 			
-			if (StringHelper.isNullOrEmpty(requestURI) || StringHelper.isNullOrEmpty(contextPath)) {
-				return;
+			if (StringHelper.isNullOrEmpty(requestURI)) {
+				requestURI = "";
 			}
 			
-			Object[] rawState = (Object[]) 
+			if (StringHelper.isNullOrEmpty(contextPath)) {
+				contextPath = "";
+			}
+			
+			Object state = 
 				responseStateManager
-					.getState(
+					.getState (
 						facesContext, 
 						requestURI.replaceFirst(contextPath, "").split("\\?")[0]
 					);
 			
-			if (CollectionHelper.isNullOrEmpty(rawState)) {
-			    return;
+			
+			if (state == null) {
+				return;
 			}
 			
+			Object[] stateArray = (Object[])state;
+			
+			if (stateArray == null || stateArray.length <= 0 || !(stateArray[1] instanceof Map)) {
+			    return;
+			}
+
 			@SuppressWarnings("unchecked")
-			Map<String, Object> state = (Map<String,Object>) rawState[1];
-			
-			if(ObjectHelper.isNullOrEmpty(state)){
+			Map<String, Object> stateMap = (Map<String,Object>) stateArray[1];
+
+			if(stateMap == null){
 			    return;
 			}
 			
-			Object savedActionObject = state.get(RIConstants.DYNAMIC_ACTIONS);
+			state = stateMap.get(RIConstants.DYNAMIC_ACTIONS);
 			
-			if (ObjectHelper.isNullOrEmpty(savedActionObject) || !(savedActionObject instanceof List)) {
+			if (state == null || !(state instanceof List)) {
 				return;
 			}
 			
 			@SuppressWarnings("unchecked")
-			List<Object> savedActionList = (List<Object>) savedActionObject;
-
-			if(CollectionHelper.isNullOrEmpty(savedActionList)){
-			    return;
-			}
-
+			List<Object> savedActionList = (List<Object>) state;
+ 
 			Iterator<Object> iterator = savedActionList.iterator();
 			while(iterator.hasNext()) {
 				
 			    Object object = iterator.next();
 			    
-			    if (ObjectHelper.isNullOrEmpty(object)) {
+			    if (object == null) {
 					continue;
 				}
 			    
 			    ComponentStruct action = new ComponentStruct();
-			    action.restoreState(facesContext, object); 
-
-			    if (ObjectHelper.isNullOrEmpty(action)) {
+			    
+			    try {
+					action.restoreState(facesContext, object);
+				} catch (Exception e) {
+					RestoreDynamicActionsObserverPL.log.error(e.getMessage(), e);
 					continue;
-				}
+				} 
 			    
 			    if(ComponentStruct.ADD.equals(action.action)){
 			        continue;
-			    }			    
+			    }
 			    
 			    if (StringHelper.isNullOrEmpty(action.clientId)) {
 					continue;
 				}
-			    
-			    if (action.clientId.startsWith(ConfigurationHelper.UI_WEB_MENU_ID_PREFIX) || 
-			    	action.clientId.startsWith(ConfigurationHelper.UI_WEB_VIEW_ID_PREFIX) ||
-			    	action.clientId.startsWith(ConfigurationHelper.UI_WEB_PERMISSION_ID_PREFIX) ||
-			    	action.clientId.startsWith(ConfigurationHelper.UI_WEB_ITEM_MENU_ID_PREFIX)) {             
-			        iterator.remove();
-			    }           
+
+	            if (action.clientId.startsWith(Setting.WEB_MENU_ID_PREFIX.toString()) || 
+	            	action.clientId.startsWith(Setting.WEB_VIEW_ID_PREFIX.toString()) ||
+	            	action.clientId.startsWith(Setting.WEB_PERMISSION_ID_PREFIX.toString()) ||
+	            	action.clientId.startsWith(Setting.WEB_ITEM_MENU_ID_PREFIX.toString())) {
+	                iterator.remove();
+	            }
 			}
 			
 		} catch (Exception e) {
-			RestoreDynamicActionsObserverPL.logger.warn(e.getMessage());
+			RestoreDynamicActionsObserverPL.log.error(e.getMessage(), e);
 		}
-    }
+	}
+	
+	@Override
+	public void beforePhase(PhaseEvent event) {
+		try {
+			RestoreDynamicActionsObserverPL.log.trace("RestoreDynamicActionsObserverPL.beforePhase(PhaseEvent event)", event);
+		} catch (Exception e) {
+			RestoreDynamicActionsObserverPL.log.error(e.getMessage(), e);
+		}
+	}
 
-    @Override
-    public void afterPhase(PhaseEvent event) {
-        
-    }
+	@Override
+	public PhaseId getPhaseId() {
+		try {
+			return PhaseId.RESTORE_VIEW;
+		} catch (Exception e) {
+			RestoreDynamicActionsObserverPL.log.error(e.getMessage(), e);
+		}
+		return null;
+	}
+
 }
-
