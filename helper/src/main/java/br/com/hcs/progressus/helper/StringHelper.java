@@ -1,120 +1,95 @@
-package br.com.hcs.progressus.helper;
+package  br.com.hcs.progressus.helper;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import br.com.hcs.progressus.exception.ProgressusException;
+import br.com.hcs.progressus.exception.UnableToCompleteOperationException;
 
-public class StringHelper implements Serializable {
+@Slf4j
+public final class StringHelper implements Serializable {
+
+	private static final long serialVersionUID = -6703583757542354987L;
 	
-	private static final long serialVersionUID = 6548625649992900890L;
-	private static final Logger logger = LoggerFactory.getLogger(StringHelper.class);
 	
-	
-	public static <T> String getI18N(Class<T> clazz){
-		
+	public static final <T> String getI18N(Class<T> clazz) throws ProgressusException {
 		try {
-		
 			if (clazz == null) {
 				return "";
 			}
-			
 			return clazz.getSimpleName().substring(0, 1).toLowerCase() + clazz.getSimpleName().subSequence(1, clazz.getSimpleName().length());
-		
 		} catch (Exception e) {
-			StringHelper.logger.warn(e.getMessage());
+			StringHelper.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("getI18N");
 		}
-		
-		return "";
 	}
 	
-	public static String getGetter(String fieldName) {
-		
+	public static final <E extends Enum<E>> String getI18N(Enum<E> enumerate) throws ProgressusException {
 		try {
-			
-			if (StringHelper.isNullOrEmpty(fieldName)) {
+			if (enumerate == null) {
 				return "";
 			}
-			
-			return String.format("get%s", fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1, fieldName.length()));
-			
+			return "enum." + enumerate.name();
 		} catch (Exception e) {
-			StringHelper.logger.warn(e.getMessage());
+			StringHelper.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("getI18N");
 		}
-		
-		return "";
-		
 	}
 	
-	public static String getSetter(String fieldName) {
-		
-		try {
-			
-			if (StringHelper.isNullOrEmpty(fieldName)) {
-				return "";
-			}
-			
-			return String.format("set%s", fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1, fieldName.length()));
-		
-		} catch (Exception e) {
-			StringHelper.logger.warn(e.getMessage());
-		}
 	
-		return "";
-	}
-	
-	public static boolean isNullOrEmpty(String string) {
+	public static final boolean isNullOrEmpty(String string) throws ProgressusException {
 		try {
 			return string == null || string.isEmpty();
 		} catch (Exception e) {
-			StringHelper.logger.warn(e.getMessage());
+			StringHelper.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("isNullOrEmpty");
 		}
-		return true;
 	}
 	
-	public static String isNullOrEmptyReplaceBy(String string, String...valueArray) {
+	
+	public static final boolean isNumeric(String string) throws ProgressusException {
 		
-		try {
-			
-			if (StringHelper.isNullOrEmpty(string)) {
-				
-				if (valueArray == null || valueArray.length <= 0) {
-					return string;
-				}
-				
-				List<String> stringList = new ArrayList<String>();
-				
-				for (int i = 1; i < valueArray.length ; i++) {
-					stringList.add(valueArray[i]);
-				}
-				
-				return StringHelper.isNullOrEmptyReplaceBy(valueArray[0], stringList.toArray(new String[]{}));
-			}
-			
-		} catch (Exception e) {
-			StringHelper.logger.warn(e.getMessage());
+		if (StringHelper.isNullOrEmpty(string)) {
+			return false;
 		}
 		
-		return string;
-	}
-
-	public static boolean isNumeric(String string) { 
-		
 		try {
-			
-			if (StringHelper.isNullOrEmpty(string)) {
-				return false;
-			}
-			
-			return string.matches("[-+]?\\d*\\.?\\d+"); // "((-|\\+)?[0-9]+(\\.[0-9]+)?)+"  
-			
+			// "((-|\\+)?[0-9]+(\\.[0-9]+)?)+"
+			return string.matches("[-+]?\\d*\\.?\\d+");
 		} catch (Exception e) {
-			StringHelper.logger.warn(e.getMessage());
+			StringHelper.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("isNumeric");
 		}
-		
-		return false;
     }
+
 	
+	public static final String getGetter(String fieldName) throws ProgressusException {
+		
+		if (StringHelper.isNullOrEmpty(fieldName)) {
+			return "";
+		}
+		
+		try {
+			
+			return String.format("get%s", fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1, fieldName.length()));
+		} catch (Exception e) {
+			StringHelper.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("getGetter");
+		}
+		
+	}
+	
+	public static final String getSetter(String fieldName) throws ProgressusException {
+		
+		if (StringHelper.isNullOrEmpty(fieldName)) {
+			return "";
+		}
+		
+		try {
+			return String.format("set%s", fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1, fieldName.length()));
+		} catch (Exception e) {
+			StringHelper.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("getSetter");
+		}
+	}
 }

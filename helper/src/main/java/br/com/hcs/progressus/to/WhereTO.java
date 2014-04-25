@@ -1,6 +1,5 @@
 package br.com.hcs.progressus.to;
 
-import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -11,33 +10,36 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+import br.com.hcs.progressus.exception.InvalidParameterException;
 import br.com.hcs.progressus.helper.CollectionHelper;
 import br.com.hcs.progressus.helper.MapHelper;
 import br.com.hcs.progressus.helper.ObjectHelper;
-import br.com.hcs.progressus.to.common.ProgressusTO;
-import lombok.Setter;
 
+@Slf4j
+@NoArgsConstructor
 public class WhereTO extends ProgressusTO<WhereTO> {
 
-	private static final long serialVersionUID = 2906302393621217859L;
-	private static final Logger logger = LoggerFactory.getLogger(WhereTO.class);
-	
+	private static final long serialVersionUID = 4249856917662367846L;
+
 	@Setter
 	private Map<String, WhereClauseTO> clauseMap = null;
 	
 	
 	public Map<String, WhereClauseTO> getClauseMap() {
-		if (MapHelper.isNullOrEmpty(this.clauseMap)) {
-			this.setClauseMap(new HashMap<String, WhereClauseTO>());
+		try {
+			if (this.clauseMap == null) {
+				this.setClauseMap(new HashMap<String, WhereClauseTO>());
+			}
+		} catch (Exception e) {
+			WhereTO.log.error(e.getMessage(), e);
 		}
 		return this.clauseMap;
 	}
 	
 	
-	public WhereTO(){ super(); }
 	public WhereTO(Collection<WhereClauseTO> clauseCollection){
 		this();
 		this.setClauseMapCollection(clauseCollection);
@@ -63,7 +65,7 @@ public class WhereTO extends ProgressusTO<WhereTO> {
 			this.setClauseMapCollection(clauseList);
 			
 		} catch (Exception e) {
-			WhereTO.logger.warn(e.getMessage());
+			WhereTO.log.error(e.getMessage(), e);
 		}
 	}
 	
@@ -78,7 +80,7 @@ public class WhereTO extends ProgressusTO<WhereTO> {
 			this.setClauseMap(this.loadClauseMap(clauseCollection));
 		
 		} catch (Exception e) {
-			WhereTO.logger.warn(e.getMessage());
+			WhereTO.log.error(e.getMessage(), e);
 		}
 		
 	}
@@ -109,7 +111,7 @@ public class WhereTO extends ProgressusTO<WhereTO> {
 			return clauseMap;
 			
 		} catch (Exception e) {
-			WhereTO.logger.warn(e.getMessage());
+			WhereTO.log.error(e.getMessage(), e);
 		}
 		
 		return new HashMap<>();
@@ -138,7 +140,7 @@ public class WhereTO extends ProgressusTO<WhereTO> {
 			return clauseList;
 			
 		} catch (Exception e) {
-			WhereTO.logger.warn(e.getMessage());
+			WhereTO.log.error(e.getMessage(), e);
 		}
 		
 		return new ArrayList<>();
@@ -173,7 +175,7 @@ public class WhereTO extends ProgressusTO<WhereTO> {
 			return jpql.toString();
 			
 		} catch (Exception e) {
-			WhereTO.logger.warn(e.getMessage());
+			WhereTO.log.error(e.getMessage(), e);
 		}
 		
 		return "";

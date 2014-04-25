@@ -1,34 +1,57 @@
-package br.com.hcs.progressus.helper;
+package  br.com.hcs.progressus.helper;
 
 import java.io.Serializable;
 
+import lombok.extern.slf4j.Slf4j;
 import br.com.hcs.progressus.exception.EmptyParameterException;
-import br.com.hcs.progressus.exception.common.ProgressusException;
+import br.com.hcs.progressus.exception.ProgressusException;
+import br.com.hcs.progressus.exception.UnableToCompleteOperationException;
 
-public class ValidatorHelper implements Serializable {
+@Slf4j
+public final class ValidatorHelper implements Serializable {
+
+	private static final long serialVersionUID = 8679178811646057572L;
 	
-	private static final long serialVersionUID = -1490813784562560132L;
 	
-	public static <T> void validateFilling(String name, T parameter) throws ProgressusException {
-		
-		if (StringHelper.isNullOrEmpty(name) && parameter == null) {
-			throw new EmptyParameterException();
+	public static final <T> void validateFilling(String name, T parameter) throws ProgressusException {
+		try {
+			if (StringHelper.isNullOrEmpty(name) && parameter == null) {
+				throw new EmptyParameterException();
+			}
+			
+			if (parameter == null) {
+				throw new EmptyParameterException(name);
+			}
+		} catch (ProgressusException pe) {
+			throw pe;
+		} catch (Exception e) {
+			ValidatorHelper.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("validateFilling");
 		}
-		
-		if (parameter == null) {
-			throw new EmptyParameterException(name);
-		}
-		
 	}
 	
-	public static <T> void validateFilling(T parameter) throws ProgressusException {
-		ValidatorHelper.validateFilling("", parameter);
+	public static final <T> void validateFilling(T parameter) throws ProgressusException {
+		try {
+			ValidatorHelper.validateFilling("", parameter);
+		} catch (ProgressusException pe) {
+			throw pe;
+		} catch (Exception e) {
+			ValidatorHelper.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("validateFilling");
+		}
 	}
 
-	public static <T> void validateFilling(Class<T> clazz, T parameter) throws ProgressusException {
-		if (clazz == null) {
-			ValidatorHelper.validateFilling(parameter); 
+	public static final <T> void validateFilling(Class<T> clazz, T parameter) throws ProgressusException {
+		try {
+			if (clazz == null) {
+				ValidatorHelper.validateFilling(parameter); 
+			}
+			ValidatorHelper.validateFilling(StringHelper.getI18N(clazz), parameter);
+		} catch (ProgressusException pe) {
+			throw pe;
+		} catch (Exception e) {
+			ValidatorHelper.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("validateFilling");
 		}
-		ValidatorHelper.validateFilling(StringHelper.getI18N(clazz), parameter);
 	}
 }

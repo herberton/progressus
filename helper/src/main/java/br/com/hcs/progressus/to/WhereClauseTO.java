@@ -1,23 +1,18 @@
 package br.com.hcs.progressus.to;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import br.com.hcs.progressus.enumerator.WhereClauseOperator;
-import br.com.hcs.progressus.helper.StringHelper;
-import br.com.hcs.progressus.to.common.ProgressusTO;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+import br.com.hcs.progressus.enumerator.WhereClauseOperator;
+import br.com.hcs.progressus.helper.StringHelper;
 
-public class WhereClauseTO 
-	extends 
-		ProgressusTO<WhereClauseTO>
-{
-	
-	private static final long serialVersionUID = -5114677701570112411L;
-	private static final Logger logger = LoggerFactory.getLogger(WhereClauseTO.class);
-	
-	
+@Slf4j
+@AllArgsConstructor
+public class WhereClauseTO extends ProgressusTO<WhereClauseTO> {
+
+	private static final long serialVersionUID = -7179092103491131997L;
+
 	@Getter
 	@Setter
 	private String field;
@@ -27,14 +22,6 @@ public class WhereClauseTO
 	@Getter
 	@Setter
 	private boolean addEntityPrefix = false;
-	
-	
-	public WhereClauseTO(String field, WhereClauseOperator operator, boolean addEntityPrefix) {
-		super();
-		this.setField(field);
-		this.setOperator(operator);
-		this.setAddEntityPrefix(addEntityPrefix);
-	}
 	
 	
 	private String getCorrectedField() {
@@ -58,7 +45,7 @@ public class WhereClauseTO
 			return this.getField();
 			
 		} catch (Exception e) {
-			WhereClauseTO.logger.warn(e.getMessage());
+			WhereClauseTO.log.error(e.getMessage(), e);
 		}
 		
 		return "";
@@ -96,12 +83,12 @@ public class WhereClauseTO
 			return String.format("%s %s :%s", correctedField, this.getOperator().toString(), this.getField().replace(".", "_"));
 		
 		} catch (Exception e) {
-			WhereClauseTO.logger.warn(e.getMessage());
+			WhereClauseTO.log.error(e.getMessage(), e);
 		}
 		
 		return "";
 	}
-	
+
 	@Override
 	public boolean equals(Object object) {
 		
@@ -123,11 +110,10 @@ public class WhereClauseTO
 			
 		} catch (Exception e) {
 			
-			WhereClauseTO.logger.warn(e.getMessage());
+			WhereClauseTO.log.error(e.getMessage(), e);
 		
 		}
 		
 		return false;
 	}
-	
 }

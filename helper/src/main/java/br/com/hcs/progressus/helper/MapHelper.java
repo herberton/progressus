@@ -1,28 +1,24 @@
-package br.com.hcs.progressus.helper;
+package  br.com.hcs.progressus.helper;
 
 import java.io.Serializable;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import br.com.hcs.progressus.exception.ProgressusException;
+import br.com.hcs.progressus.exception.UnableToCompleteOperationException;
 
-public class MapHelper 
-	implements 
-		Serializable 
-{
-	private static final long serialVersionUID = 3079023090526467773L;
-	private static final Logger logger = LoggerFactory.getLogger(MapHelper.class);
+@Slf4j
+public final class MapHelper implements Serializable {
+
+	private static final long serialVersionUID = 1114599505122531801L;
+
 	
-	public static <K, V> boolean isNullOrEmpty(Map<K, V> map) {
-		
+	public static final <K, V> boolean isNullOrEmpty(Map<K, V> map) throws ProgressusException {
 		try {
-			
 			return map == null || map.size() <= 0;
-			
 		} catch (Exception e) {
-			MapHelper.logger.warn(e.getMessage());
+			MapHelper.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("isNullOrEmpty");
 		}
-		
-		return true;
 	}
 }

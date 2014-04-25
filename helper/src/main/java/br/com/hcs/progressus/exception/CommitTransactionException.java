@@ -1,12 +1,11 @@
 package br.com.hcs.progressus.exception;
 
-import br.com.hcs.progressus.exception.common.ProgressusException;
-
 public class CommitTransactionException extends ProgressusException {
 
-	private static final long serialVersionUID = -5890444826197928272L;
+	private static final long serialVersionUID = 4499014084656751571L;
 
-	public CommitTransactionException(Throwable cause) throws ProgressusException {
+	
+	public CommitTransactionException(Throwable cause) {
 		super(cause);
 	}
 }

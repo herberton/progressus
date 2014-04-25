@@ -31,4 +31,5 @@ public enum WhereClauseOperator {
 	public String toString() {
 		return this.getOperator();
 	}
+	
 }
