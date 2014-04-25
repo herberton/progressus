@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" 
+	xmlns:pe="http://primefaces.org/ui/extensions">
+	<style>
+		.mail-command-link {
+			margin-left: 30px;
+		}
+	</style>
+	<ui:composition 
+		template="/layout.crud.xhtml">
+		<ui:param 
+			name="useLDM" 
+			value="true"/>
+		<ui:param 
+			name="title" 
+			value="#{i18n.usersCrud}"/>
+		<ui:param 
+			name="mb" 
+			value="#{userMB}"/>
+		<ui:param 
+			name="crudFieldset" 
+			value="#{i18n.systemUser}"/>
+		<ui:define 
+			name="form">
+			<p:panelGrid 
+				columns="4" 
+				columnClasses="labelFields, dataFields, labelFields, dataFields">
+				<p:outputLabel 
+					for="name" 
+					value="#{i18n.name}"/>
+				<p:inputText 
+					id="name" 
+					value="#{userMB.entity.name}" 
+					required="true" 
+					size="50"/>
+				<p:outputLabel 
+					for="username" 
+					value="#{i18n.userName}"/>
+				<p:inputText 
+					id="username" 
+					value="#{userMB.entity.login}" 
+					required="true" 
+					disabled="#{userMB.entity.id != null}"
+					size="50">
+						<f:validateLength 
+							minimum="5" 
+							maximum="15"/>
+				</p:inputText>
+				<p:outputLabel 
+					for="passwd" 
+					value="#{i18n.password}"/>
+				<p:password 
+					redisplay="true" 
+					id="passwd" 
+					value="#{userMB.entity.password}" 
+					required="true"
+					size="50">
+						<f:validateLength 
+							minimum="5" 
+							maximum="15"/>
+				</p:password>
+				<p:outputLabel 
+					for="email" 
+					value="#{i18n.email}"/>
+				<p:column >
+					<p:inputText 
+						id="email" 
+						value="#{userMB.entity.email.description}" 
+						size="50" 
+						validator="emailValidator" 
+						required="true" 
+						validatorMessage="#{i18n.invalidEmail}"/>
+				</p:column>
+				<h:outputLabel 
+					value="#{i18n.relatedTagId}" 
+					required="true" />
+				<h:outputLabel 
+					id="linkTag" 
+					value="#{userMB.entity.tag.epc == null ? i18n.selectTag : userMB.entity.tag.epc}" />
+				<h:outputText 
+					value="#{i18n.emailReciever}"/>
+				<p:selectBooleanCheckbox 
+					value="#{userMB.entity.emailReciever}"/>
+			</p:panelGrid>
+		</ui:define>
+	</ui:composition>
+</html>

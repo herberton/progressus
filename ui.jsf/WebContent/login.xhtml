@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html>
+<html 
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+	<h:head>
+		<title>#{i18n.systemName}</title>
+		<h:outputStylesheet 
+			library="css" 
+			name="progressus.css"/>
+		<link 
+			rel="shortcut icon" 
+			href="resources/images/shortcut.icon.ico" />
+		<link 
+			rel="icon" 
+			type="image/gif" 
+			href="resources/images/shortcut.icon.gif" />
+		<style>
+			.login-fieldset {
+				background-color: #EBEBEB;
+				position: absolute; 
+    			top: 0px; 
+    			bottom: 0px; 
+    			left: 0px; 
+    			right: 0px;
+				margin: auto; 				
+				width: 420px;
+				height: 250px;
+			}
+			div.form-div {
+				float: left;
+				padding-top: 10%;
+			}
+			div.logo-div {
+				float: right;
+				padding-top: 13%;
+			}
+		</style>
+	</h:head>
+	<h:body>
+		<p:fieldset 
+			legend="#{i18n.doTheAuthentication}"
+			styleClass="login-fieldset">
+			<div 
+				class="form-div">
+				<h:form>
+					<p:focus 
+						for="login"/>
+					<p:watermark 
+						for="login" 
+						value="#{i18n.typeTheUserName}" />
+					<p:watermark 
+						for="password" 
+						value="#{i18n.typeThePassword}" />
+					<p:growl />
+					<h:panelGrid 
+						columns="2">
+						<p:outputLabel 
+							for="language" 
+							value="#{i18n.language}" />
+						<p:selectOneMenu
+							id="language"
+							value="#{loginMB.user.preference.supportedLocale}"
+							converter="supportedLocaleConverter"
+							var="selection">
+							<f:selectItems
+								value="#{loginMB.supportedLocaleList}"
+							 	var="supportedLocale"
+							 	itemLabel="#{supportedLocale.text}"
+							 	itemValue="#{supportedLocale}"/>
+						 	<p:column>
+								#{selection.text}
+							</p:column>
+							<p:column>
+								<p:graphicImage
+									value="./resources/images/#{selection.iconName}" />
+							</p:column>
+						</p:selectOneMenu>
+						<p:outputLabel 
+							for="login" 
+							value="#{i18n.user}" />
+						<p:inputText
+							value="#{loginMB.user.login}"
+							size="24" 
+							id="login" 
+							required="true"
+							requiredMessage="#{i18n.typeTheUserName}" />
+						<p:outputLabel 
+							for="password" 
+							value="#{i18n.password}" />
+						<p:password
+							id="password"
+							size="24"
+							value="#{loginMB.user.password}"
+							required="true"
+							requiredMessage="#{i18n.typeThePassword}" />
+					</h:panelGrid>
+					<p:commandButton 
+						value="#{i18n.authenticate}" 
+						action="#{loginMB.authenticate}" 
+						update="@form" />
+					<p:spacer 
+						width="5" />
+					<p:commandButton 
+						value="#{i18n.forgotMyPassword}" 
+						action="#{loginMB.forgotMyPassword}" 
+						update="@form" />
+				</h:form>
+			</div>
+			<div 
+				class="logo-div">
+				<p:graphicImage
+					url="#{resource['images:progressus.png']}"
+					height="100" />
+			</div>
+		</p:fieldset>
+	</h:body>
+</html>

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" 
+	xmlns:pe="http://primefaces.org/ui/extensions">
+	<f:view 
+		contentType="text/html" 
+		locale="#{layoutMB.locale}" >
+		<h:head>
+			<title>#{i18n.systemName}</title>
+			<h:outputStylesheet 
+				library="css" 
+				name="progressus.css"/>
+			<link 
+		    	rel="shortcut icon" 
+		    	href="resources/images/shortcut.icon.ico"/>
+		    <link 
+		    	rel="icon" 
+		    	type="image/gif" 
+		    	href="resources/images/shortcut.icon.gif"/>
+		    <script 
+		    	type="text/JavaScript">
+				function reloadPage(timeoutPeriod) {
+					setTimeout("location.reload(true);", timeoutPeriod);
+				}
+			</script>
+			<style>
+				.ui-layout-north {
+                    z-index: 20 !important;
+                    overflow: visible !important;
+                }
+                .ui-layout-north .ui-layout-unit-content {
+                    overflow: visible !important;
+                }
+				.ui-datagrid-content {
+					border: none;
+				}
+				.ui-layout-unit .ui-layout-unit-content {
+					padding: 0em 0em; 
+					border: none;
+					overflow: hidden;
+				}
+				.ui-layout-unit {
+					border: none;
+				}
+				.header-toolbar {
+					height:60px;
+				}
+				.header-toolbar-group {
+					width: 70%;
+					height: 100%;
+					text-align:right;
+				}
+				.footer-toolbar-group {
+					width: 100%;
+				}
+				div.header-right-top-div {
+					float: right;
+					width: 100%;
+    				height:50%;
+					text-align:right;
+				}
+				div.header-right-bottom-div {
+					float: right;
+					width: 100%;
+    				height:50%;
+					text-align:right;
+				}
+				div.header-right-bottom-left-div {
+					float: left;
+					width: calc(100% - 35px);
+					height:100%;
+					text-align:right;
+					font-size: 20px !important;
+				}
+				div.header-right-bottom-right-div {
+					float: right;
+					width: 35px;
+					height:100%;
+				}
+				div.footer-div {
+					padding: 0px;
+				    margin: 0px;
+					text-align: center;
+				}
+			</style>
+		</h:head>
+		<h:body 
+			onload="reloadPage(630000);">
+			<p:layout 
+				fullPage="true">
+				<p:layoutUnit
+					id="header" 
+					position="north">
+					<h:form
+						id="headerForm"
+						prependId="false">
+						<p:toolbar
+							styleClass="header-toolbar">
+							<p:toolbarGroup 
+								align="left">
+								<p:commandLink 
+									action="#{layoutMB.getIndexPageLink()}">
+									<p:graphicImage
+										url="#{resource['images:progressus.png']}"
+										height="55" />
+								</p:commandLink>
+							</p:toolbarGroup>
+							<p:toolbarGroup 
+								align="right"
+								styleClass="header-toolbar-group">
+								<div
+									class="header-right-top-div">
+									<p:commandLink 
+										value="#{layoutMB.loggedInUser.login}"/>
+									<p:separator/>
+									<p:commandLink 
+										value="#{i18n.logout}" 
+										action="#{layoutMB.logout}"/>
+									<p:separator/>
+									<h:outputText 
+										id="todayOutputText" 
+										value="#{layoutMB.today}"/>
+								</div>
+								<div
+									class="header-right-bottom-div">
+									<div
+										class="header-right-bottom-left-div">
+										<ui:insert 
+											name="title">
+											#{i18n.indexPage}
+										</ui:insert>
+									</div>
+									<div
+										class="header-right-bottom-right-div">
+										<p:ajaxStatus>  
+										    <f:facet 
+										    	name="start">
+										        <h:graphicImage 
+										        	library="images" 
+										        	name="loading.gif" />
+										    </f:facet>
+										    <f:facet 
+										    	name="complete">  
+										        <h:outputText 
+										        	id="completeOutputText" 
+										        	value="" />  
+										    </f:facet>  
+										</p:ajaxStatus>
+									</div>
+								</div>
+							</p:toolbarGroup>
+						</p:toolbar>
+						<p:menubar
+							id="menubar" 
+							model="#{layoutMB.defaultMenuModel}" 
+							autoDisplay="false"/>
+						<p:growl 
+							life="5000" 
+							showDetail="true"/>
+					</h:form>
+			    </p:layoutUnit>
+		    	<p:layoutUnit
+		    		id="body"
+					position="center">
+		          	<ui:insert
+		          		name="body"/>
+			    </p:layoutUnit>
+		        <p:layoutUnit 
+		        	id="footer"
+			    	position="south"
+			    	size="30"> 
+			    	<p:toolbar>
+						<p:toolbarGroup
+							align="left"
+							styleClass="footer-toolbar-group">
+							<div
+								class="footer-div">
+								<h:outputLabel
+									value="#{i18n.allRightsReserved}" />
+								<a 
+									href="http://www.hcs.progressus.com.br/">
+									<h:outputText 
+										id="b4lOutputText" 
+										value="#{i18n.progressus} - #{layoutMB.version}"/>
+								</a>
+							</div>
+						</p:toolbarGroup>
+					</p:toolbar> 
+			    </p:layoutUnit>
+			</p:layout>
+		</h:body>
+	</f:view>
+</html>
