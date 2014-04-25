@@ -25,8 +25,12 @@ html, body {
 /* icon_menu_item */
 
 /* icon */
-.icon_b4l {background-image: url("#{resource['images:b4l.png']}") !important; width: 20px !important;}
+.icon_b4l {background-image: url("#{resource['images:progressus.png']}") !important; width: 20px !important;}
 .icon_pt_br {background-image: url("#{resource['images:pt.BR.png']}") !important; width: 20px !important;}
 .icon_en_us {background-image: url("#{resource['images:en.US.png']}") !important; width: 20px !important;}
 .icon_es_es {background-image: url("#{resource['images:es.ES.png']}") !important; width: 20px !important;}
+.icon_login {background-image: url("#{resource['images:login.png']}") !important; width: 20px !important;}
+.icon_logout {background-image: url("#{resource['images:logout.png']}") !important; width: 20px !important;}
+.icon_question {background-image: url("#{resource['images:question.png']}") !important; width: 20px !important;}
+.icon_help {background-image: url("#{resource['images:help.png']}") !important; width: 20px !important;}
 /***********************************************************************************************************************************************************************************************************/
