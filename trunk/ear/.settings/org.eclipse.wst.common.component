@@ -59,36 +59,6 @@
         <dependent-module archiveName="hibernate-validator-cdi-5.0.2.Final.jar" deploy-path="/" handle="module:/classpath/var/M2_REPO/org/hibernate/hibernate-validator-cdi/5.0.2.Final/hibernate-validator-cdi-5.0.2.Final.jar">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="javaee-api-7.0.jar" deploy-path="/" handle="module:/classpath/var/M2_REPO/javax/javaee-api/7.0/javaee-api-7.0.jar">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="javax.mail-1.5.0.jar" deploy-path="/" handle="module:/classpath/var/M2_REPO/com/sun/mail/javax.mail/1.5.0/javax.mail-1.5.0.jar">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="activation-1.1.jar" deploy-path="/" handle="module:/classpath/var/M2_REPO/javax/activation/activation/1.1/activation-1.1.jar">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="javax.el-api-2.2.4.jar" deploy-path="/" handle="module:/classpath/var/M2_REPO/javax/el/javax.el-api/2.2.4/javax.el-api-2.2.4.jar">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="javax.el-2.2.4.jar" deploy-path="/" handle="module:/classpath/var/M2_REPO/org/glassfish/web/javax.el/2.2.4/javax.el-2.2.4.jar">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="cdi-api-1.1-PRD.jar" deploy-path="/" handle="module:/classpath/var/M2_REPO/javax/enterprise/cdi-api/1.1-PRD/cdi-api-1.1-PRD.jar">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="el-api-2.2.jar" deploy-path="/" handle="module:/classpath/var/M2_REPO/javax/el/el-api/2.2/el-api-2.2.jar">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="jboss-interceptors-api_1.1_spec-1.0.0.Beta1.jar" deploy-path="/" handle="module:/classpath/var/M2_REPO/org/jboss/spec/javax/interceptor/jboss-interceptors-api_1.1_spec/1.0.0.Beta1/jboss-interceptors-api_1.1_spec-1.0.0.Beta1.jar">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="jsr250-api-1.0.jar" deploy-path="/" handle="module:/classpath/var/M2_REPO/javax/annotation/jsr250-api/1.0/jsr250-api-1.0.jar">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="javax.inject-1.jar" deploy-path="/" handle="module:/classpath/var/M2_REPO/javax/inject/javax.inject/1/javax.inject-1.jar">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
         <dependent-module archiveName="slf4j-simple-1.7.5.jar" deploy-path="/" handle="module:/classpath/var/M2_REPO/org/slf4j/slf4j-simple/1.7.5/slf4j-simple-1.7.5.jar">
             <dependency-type>uses</dependency-type>
         </dependent-module>
@@ -101,10 +71,13 @@
         <dependent-module archiveName="gson-2.2.4.jar" deploy-path="/" handle="module:/classpath/var/M2_REPO/com/google/code/gson/gson/2.2.4/gson-2.2.4.jar">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="trugger-4.1.1.jar" deploy-path="/" handle="module:/classpath/var/M2_REPO/org/atatec/trugger/trugger/4.1.1/trugger-4.1.1.jar">
+        <dependent-module archiveName="trugger-4.3.jar" deploy-path="/" handle="module:/classpath/var/M2_REPO/org/atatec/trugger/trugger/4.3/trugger-4.3.jar">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="jboss-vfs-3.1.0.Final.jar" deploy-path="/" handle="module:/classpath/var/M2_REPO/org/jboss/jboss-vfs/3.1.0.Final/jboss-vfs-3.1.0.Final.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="commons-lang3-3.3.2.jar" deploy-path="/" handle="module:/classpath/var/M2_REPO/org/apache/commons/commons-lang3/3.3.2/commons-lang3-3.3.2.jar">
             <dependency-type>uses</dependency-type>
         </dependent-module>
     </wb-module>
