@@ -38,6 +38,7 @@
 			<groupId>javax</groupId>
 			<artifactId>javaee-api</artifactId>
 			<version>7.0</version>
+			<scope>provided</scope>
 		</dependency>
 		
 		<!-- JAVAX EL -->
@@ -45,11 +46,13 @@
 			<groupId>javax.el</groupId>
 			<artifactId>javax.el-api</artifactId>
 			<version>2.2.4</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.glassfish.web</groupId>
 			<artifactId>javax.el</artifactId>
 			<version>2.2.4</version>
+			<scope>provided</scope>
 		</dependency>
 		
 		<!-- JAVAX CDI -->
@@ -57,6 +60,7 @@
 			<groupId>javax.enterprise</groupId>
 			<artifactId>cdi-api</artifactId>
 			<version>1.1-PRD</version>
+			<scope>provided</scope>
 		</dependency>
 		
 		<!-- JUNIT -->
@@ -81,6 +85,7 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-simple</artifactId>
 			<version>1.7.5</version>
+			<scope>compile</scope>
 		</dependency>
 		
 		<!-- LOMBOK -->
@@ -101,7 +106,14 @@
 		<dependency>
 			<groupId>org.atatec.trugger</groupId>
 			<artifactId>trugger</artifactId>
-			<version>4.1.1</version>
+			<version>4.3</version>
+		</dependency>
+		
+		<!-- COMMONS LANG -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+		 	<artifactId>commons-lang3</artifactId>
+		 	<version>3.3.2</version>
 		</dependency>
 		
 	</dependencies>
