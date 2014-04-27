@@ -8,12 +8,18 @@
 	xmlns:pe="http://primefaces.org/ui/extensions">
 	<f:view 
 		contentType="text/html" 
-		locale="#{layoutMB.locale}" >
+		locale="#{templateMB.locale}" >
 		<h:head>
-			<title>#{i18n.systemName}</title>
+			<title>#{i18n.progressus}</title>
 			<h:outputStylesheet 
 				library="css" 
-				name="progressus.css"/>
+				name="template.standard.css"/>
+			<h:outputStylesheet
+				library="css"
+				name="template.standard.loading.css"/>
+			<h:outputStylesheet
+				library="css"
+				name="loading.css"/>
 			<link 
 		    	rel="shortcut icon" 
 		    	href="resources/images/shortcut.icon.ico"/>
@@ -42,9 +48,11 @@
 					padding: 0em 0em; 
 					border: none;
 					overflow: hidden;
+					background: #E0E0E0;
 				}
 				.ui-layout-unit {
 					border: none;
+					background: #E0E0E0;
 				}
 				.header-toolbar {
 					height:60px;
@@ -103,7 +111,7 @@
 							<p:toolbarGroup 
 								align="left">
 								<p:commandLink 
-									action="#{layoutMB.getIndexPageLink()}">
+									action="#{templateMB.getIndexPageLink()}">
 									<p:graphicImage
 										url="#{resource['images:progressus.png']}"
 										height="55" />
@@ -115,15 +123,15 @@
 								<div
 									class="header-right-top-div">
 									<p:commandLink 
-										value="#{layoutMB.loggedInUser.login}"/>
+										value="#{templateMB.loggedInUser.login}"/>
 									<p:separator/>
 									<p:commandLink 
-										value="#{i18n.logout}" 
-										action="#{layoutMB.logout}"/>
+										value="#{i18n.exit}" 
+										action="#{templateMB.logout}"/>
 									<p:separator/>
 									<h:outputText 
 										id="todayOutputText" 
-										value="#{layoutMB.today}"/>
+										value="#{templateMB.today}"/>
 								</div>
 								<div
 									class="header-right-bottom-div">
@@ -131,18 +139,19 @@
 										class="header-right-bottom-left-div">
 										<ui:insert 
 											name="title">
-											#{i18n.indexPage}
+											#{i18n.index}
 										</ui:insert>
 									</div>
 									<div
 										class="header-right-bottom-right-div">
-										<p:ajaxStatus>  
-										    <f:facet 
-										    	name="start">
-										        <h:graphicImage 
-										        	library="images" 
-										        	name="loading.gif" />
-										    </f:facet>
+										<p:ajaxStatus>
+											<f:facet name="start">
+											<div class="bubblingG">
+												<span id="bubblingG_1"/>
+												<span id="bubblingG_2"/>
+												<span id="bubblingG_3"/>
+											</div>
+											</f:facet>  
 										    <f:facet 
 										    	name="complete">  
 										        <h:outputText 
@@ -156,7 +165,7 @@
 						</p:toolbar>
 						<p:menubar
 							id="menubar" 
-							model="#{layoutMB.defaultMenuModel}" 
+							model="#{templateMB.defaultMenuModel}" 
 							autoDisplay="false"/>
 						<p:growl 
 							life="5000" 
@@ -166,30 +175,18 @@
 		    	<p:layoutUnit
 		    		id="body"
 					position="center">
-		          	<ui:insert
+					<ui:insert
 		          		name="body"/>
 			    </p:layoutUnit>
 		        <p:layoutUnit 
 		        	id="footer"
 			    	position="south"
 			    	size="30"> 
-			    	<p:toolbar>
-						<p:toolbarGroup
-							align="left"
-							styleClass="footer-toolbar-group">
-							<div
-								class="footer-div">
-								<h:outputLabel
-									value="#{i18n.allRightsReserved}" />
-								<a 
-									href="http://www.hcs.progressus.com.br/">
-									<h:outputText 
-										id="b4lOutputText" 
-										value="#{i18n.progressus} - #{layoutMB.version}"/>
-								</a>
-							</div>
-						</p:toolbarGroup>
-					</p:toolbar> 
+			    	<p:breadCrumb>
+						<p:menuitem value="#{i18n.index}" url="/index" />
+						<p:menuitem value="#{i18n.crud}" url="/index" />
+						<p:menuitem value="#{i18n.user}" url="/index" />
+					</p:breadCrumb>
 			    </p:layoutUnit>
 			</p:layout>
 		</h:body>

@@ -14,10 +14,11 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.primefaces.model.menu.DefaultMenuModel;
 
+import br.com.hcs.progressus.annotation.View;
 import br.com.hcs.progressus.enumerator.MenuLevel;
 import br.com.hcs.progressus.enumerator.Setting;
 import br.com.hcs.progressus.enumerator.SupportedLocale;
-import br.com.hcs.progressus.enumerator.Theme;
+import br.com.hcs.progressus.enumerator.Template;
 import br.com.hcs.progressus.exception.ProgressusException;
 import br.com.hcs.progressus.exception.UnableToCompleteOperationException;
 import br.com.hcs.progressus.helper.ReflectionHelper;
@@ -98,7 +99,16 @@ public abstract class ProgressusMB<T extends ProgressusMB<T>>
 		} catch (Exception e) {
 			ProgressusMB.log.error(e.getMessage(), e);
 		}
-		return Theme.getDefault().toString();
+		return Template.getDefault().getDefaultTheme().toString();
+	}
+	
+	public String getTemplatePage() {
+		try {
+			return ProgressusMB.getInstance(SessionMB.class).getTemplatePage();
+		} catch (Exception e) {
+			ProgressusMB.log.error(e.getMessage(), e);
+		}
+		return Template.getDefault().toString();
 	}
 	
 	
@@ -243,7 +253,7 @@ public abstract class ProgressusMB<T extends ProgressusMB<T>>
 			ProgressusMB.log.error(e.getMessage(), e);
 		}
 	}
-
+	
 	
 	public final String getURL(String page) {
 		try {
@@ -252,6 +262,18 @@ public abstract class ProgressusMB<T extends ProgressusMB<T>>
 			ProgressusMB.log.error(e.getMessage(), e);
 		}
 		return "#";
+	}
+	
+	
+	public final View getView() {
+		try {
+			if (this.getClass().isAnnotationPresent(View.class)) {
+				return this.getClass().getAnnotation(View.class);
+			}
+		} catch (Exception e) {
+			ProgressusMB.log.error(e.getMessage(), e);
+		}
+		return null;
 	}
 	
 	

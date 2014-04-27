@@ -12,7 +12,7 @@
 		}
 	</style>
 	<ui:composition 
-		template="/layout.crud.xhtml">
+		template="/#{userMB.templatePage}">
 		<ui:param 
 			name="useLDM" 
 			value="true"/>
@@ -75,17 +75,16 @@
 						validator="emailValidator" 
 						required="true" 
 						validatorMessage="#{i18n.invalidEmail}"/>
+					<p:spacer 
+						width="5"/>
+					<p:commandButton
+						action="#{userMB.sendTestEmail}"
+						process=":crudForm, @this"
+						update=":headerForm, :crudForm"
+						icon="icon_email"
+						value="#{i18n.sendTestEmail}" 
+						title="#{i18n.sendTestEmail}"/>
 				</p:column>
-				<h:outputLabel 
-					value="#{i18n.relatedTagId}" 
-					required="true" />
-				<h:outputLabel 
-					id="linkTag" 
-					value="#{userMB.entity.tag.epc == null ? i18n.selectTag : userMB.entity.tag.epc}" />
-				<h:outputText 
-					value="#{i18n.emailReciever}"/>
-				<p:selectBooleanCheckbox 
-					value="#{userMB.entity.emailReciever}"/>
 			</p:panelGrid>
 		</ui:define>
 	</ui:composition>

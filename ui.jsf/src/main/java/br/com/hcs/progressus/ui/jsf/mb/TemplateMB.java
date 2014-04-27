@@ -14,7 +14,7 @@ import br.com.hcs.progressus.ui.jsf.helper.JSFHelper;
 @NoArgsConstructor
 @ViewScoped
 @ManagedBean
-public class LayoutMB extends ProgressusMB<LayoutMB> {
+public class TemplateMB extends ProgressusMB<TemplateMB> {
 
 	private static final long serialVersionUID = 603458329345725492L;
 	
@@ -33,7 +33,7 @@ public class LayoutMB extends ProgressusMB<LayoutMB> {
 		try {
 			return new SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().getTime());
 		} catch (Exception e) {
-			LayoutMB.log.error(e.getMessage(), e);
+			TemplateMB.log.error(e.getMessage(), e);
 		}
 		return "";
 	}

@@ -11,6 +11,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import br.com.hcs.progressus.client.ejb.sb.bo.entity.ProgressusBOEntityRemote;
 import br.com.hcs.progressus.client.helper.EJBHelper;
+import br.com.hcs.progressus.enumerator.Template;
 import br.com.hcs.progressus.exception.ProgressusException;
 import br.com.hcs.progressus.exception.UnableToCompleteOperationException;
 import br.com.hcs.progressus.helper.CollectionHelper;
@@ -56,16 +57,6 @@ public abstract class ProgressusCRUDMB<K extends ProgressusCRUDMB<K, V>, V exten
 	}
 	
 	
-	public void save() throws ProgressusException {
-		this.getBo().save(this.getEntity());
-	}
-	
-	
-	public void delete() throws ProgressusException {
-		this.getBo().delete(this.getEntity());
-	}
-	
-	
 	public SelectListMethodTO<V> getSelectListMethod() throws ProgressusException {
 		return new SelectListMethodTO<>();
 	}
@@ -75,6 +66,55 @@ public abstract class ProgressusCRUDMB<K extends ProgressusCRUDMB<K, V>, V exten
 	}
 	
 	
+	public void setSelectedArray(V[] selectedArray) {
+		
+		try {
+			
+			this.selectedArray = selectedArray;
+			
+			if(this.getSelectedArray() == null) {
+				return;
+			}
+			
+			if(this.getSelectedArray().length == 1) {
+				this.setEntity(this.getSelectedArray()[0]);
+				return;
+			}
+			
+			this.setEntity(ReflectionHelper.newInstance(this.getEntityClass()));
+			
+		} catch (ProgressusException e) {
+			ProgressusCRUDMB.log.error(e.getMessage(), e);
+		}
+	}
+		
+	@SuppressWarnings("unchecked")
+	public final Class<V> getEntityClass() throws ProgressusException {
+		try {
+			
+			List<Class<?>> genericClassList = ReflectionHelper.getGenericClassList(this.getClass());
+			
+			if (CollectionHelper.isNullOrEmpty(genericClassList)) {
+				throw new UnableToCompleteOperationException("getEntityClass");
+			}
+			
+			for (Class<?> clazz : genericClassList) {
+				if (clazz.isAnnotationPresent(Entity.class) || 
+					clazz.isAnnotationPresent(MappedSuperclass.class)) {
+					return (Class<V>)clazz;
+				}
+			}
+			
+			return null;
+		} catch (ProgressusException pe) {
+			throw pe;
+		} catch (Exception e) {
+			ProgressusCRUDMB.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("getEntityClass");
+		}
+	}
+	
+		
 	@Override
 	public void init() {
 		
@@ -112,6 +152,17 @@ public abstract class ProgressusCRUDMB<K extends ProgressusCRUDMB<K, V>, V exten
 	}
 	
 	
+	@Override
+	public String getTemplatePage() {
+		try {
+			return ProgressusMB.getInstance(SessionMB.class).getTemplateCrudPage();
+		} catch (Exception e) {
+			ProgressusCRUDMB.log.error(e.getMessage(), e);
+		}
+		return Template.getDefault().getCrudPage();
+	}
+	
+	
 	public final void preSave() {
 		try {
 			this.save();
@@ -121,6 +172,10 @@ public abstract class ProgressusCRUDMB<K extends ProgressusCRUDMB<K, V>, V exten
 			ProgressusCRUDMB.log.error(e.getMessage(), e);
 			JSFMessageHelper.showMessage(new UnableToCompleteOperationException("save"));
 		}
+	}
+	
+	public void save() throws ProgressusException {
+		this.getBo().save(this.getEntity());
 	}
 	
 	
@@ -135,55 +190,10 @@ public abstract class ProgressusCRUDMB<K extends ProgressusCRUDMB<K, V>, V exten
 		}
 	}
 	
-	
-	public void setSelectedArray(V[] selectedArray) {
-		
-		try {
-			
-			this.selectedArray = selectedArray;
-			
-			if(this.getSelectedArray() == null) {
-				return;
-			}
-			
-			if(this.getSelectedArray().length == 1) {
-				this.setEntity(this.getSelectedArray()[0]);
-				return;
-			}
-			
-			this.setEntity(ReflectionHelper.newInstance(this.getEntityClass()));
-			
-		} catch (ProgressusException e) {
-			ProgressusCRUDMB.log.error(e.getMessage(), e);
-		}
+	public void delete() throws ProgressusException {
+		this.getBo().delete(this.getEntity());
 	}
-	
-	
-	@SuppressWarnings("unchecked")
-	public final Class<V> getEntityClass() throws ProgressusException {
 		
-		try {
-			
-			List<Class<?>> genericClassList = ReflectionHelper.getGenericClassList(this.getClass());
-			
-			if (CollectionHelper.isNullOrEmpty(genericClassList)) {
-				throw new UnableToCompleteOperationException("getEntityClass");
-			}
-			
-			for (Class<?> clazz : genericClassList) {
-				if (clazz.isAnnotationPresent(Entity.class) || 
-					clazz.isAnnotationPresent(MappedSuperclass.class)) {
-					return (Class<V>)clazz;
-				}
-			}
-			
-			return null;
-			
-		} catch (ProgressusException pe) {
-			throw pe;
-		} catch (Exception e) {
-			ProgressusCRUDMB.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("getEntityClass");
-		}
-	}
+	
+	
 }
