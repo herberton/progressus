@@ -231,7 +231,7 @@ public final class DefaultMenuModelHelper implements Serializable {
 						DefaultMenuModelHelper.getIcon(view), 
 						viewName, 
 						viewDescription, 
-						DefaultMenuModelHelper.getOutcome(DefaultMenuModelHelper.getModuleName(view), view)
+						DefaultMenuModelHelper.getOutcome(DefaultMenuModelHelper.getModuleName(view), view.getName())
 					);
 			
 		} catch (Exception e) {
@@ -334,10 +334,10 @@ public final class DefaultMenuModelHelper implements Serializable {
 	}
 
 	
-	public static final String getOutcome(String moduleName, ViewEntity view) {
+	public static final String getOutcome(String moduleName, String viewName) {
 		try {
 			return 
-				String.format("/%s/%s", moduleName, view.getName().replace(".", Setting.SEPARATOR.toString()));
+				String.format("/%s/%s", moduleName, viewName.replace(".", Setting.SEPARATOR.toString()));
 		} catch (Exception e) {
 			DefaultMenuModelHelper.log.error(e.getMessage(), e);
 		}
@@ -440,5 +440,6 @@ public final class DefaultMenuModelHelper implements Serializable {
 		}
 		return "";
 	}
+
 	
 }	

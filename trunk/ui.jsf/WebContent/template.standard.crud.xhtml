@@ -7,7 +7,7 @@
 	xmlns:p="http://primefaces.org/ui" 
 	xmlns:pe="http://primefaces.org/ui/extensions">
 	<ui:composition 
-		template="/layout.xhtml">
+		template="/template.standard.xhtml">
 		<ui:param 
 			name="toolbarRendered" 
 			value="true"/>
@@ -25,6 +25,7 @@
 					<p:toolbarGroup 
 						align="left">
 						<p:commandButton 
+							id="saveCommandButton"
 							action="#{mb.preSave}"
 							process=":crudForm, @this"
 							update=":headerForm, :crudForm, :dataTableForm"
@@ -32,11 +33,13 @@
 							value="#{i18n.save}" 
 							title="#{i18n.save}" />
 						<p:commandButton 
+							id="deleteCommandButton"
 							onclick="deleteConfirmDialog.show()" 
 							icon="delete.icon" 
 							value="#{i18n.delete}" 
 							title="#{i18n.delete}" />
 						<p:commandButton 
+							id="cleanCommandButton"
 							immediate="true"
 							action="#{mb.clean}"
 							update=":headerForm, :crudForm, :dataTableForm" 
@@ -48,10 +51,19 @@
 				<p:spacer 
 					height="5"/>
 				<p:fieldset 
+					id="formFieldset"
 					legend="#{crudFieldset}">
 					<ui:insert 
 						name="form"/>
 				</p:fieldset>
+				<p:blockUI
+					block="formFieldset" 
+					trigger="saveCommandButton, deleteCommandButton, cleanCommandButton">  
+	        		#{i18n.loading}<br/>
+	        		 <h:graphicImage 
+						library="images" 
+						name="loading.gif" />  
+				</p:blockUI>
 			</h:form>
 			<p:spacer 
 				height="5"/>
@@ -60,7 +72,8 @@
 				prependId="false">
 				<ui:insert 
 					name="table"/>
-				<p:dataTable 
+				<p:dataTable
+					id="dataTable"
 					var="entity" 
 					value="#{mb.ldm}" 
 					paginator="true" 
@@ -89,12 +102,28 @@
 			           	#{entity[column.property]}
 			        </p:columns>
 				</p:dataTable>
+				<p:blockUI
+					block="dataTable" 
+					trigger="dataTable">  
+	        		#{i18n.loading}<br/>
+	        		 <div id="circular3dG">
+						<div id="circular3d_1G" class="circular3dG"/>
+						<div id="circular3d_2G" class="circular3dG"/>
+						<div id="circular3d_3G" class="circular3dG"/>
+						<div id="circular3d_4G" class="circular3dG"/>
+						<div id="circular3d_5G" class="circular3dG"/>
+						<div id="circular3d_6G" class="circular3dG"/>
+						<div id="circular3d_7G" class="circular3dG"/>
+						<div id="circular3d_8G" class="circular3dG"/>
+					</div>  
+				</p:blockUI>
 			</h:form>
 			<p:confirmDialog
 				widgetVar="deleteConfirmDialog" 
 				message="#{i18n.areYouSureToRemove}" 
 				header="#{i18n.delete}" 
-				severity="alert" >
+				severity="alert"
+				appendToBody="true">
 				<p:commandButton
 					id="confirm" 
 					onclick="deleteConfirmDialog.hide()" 

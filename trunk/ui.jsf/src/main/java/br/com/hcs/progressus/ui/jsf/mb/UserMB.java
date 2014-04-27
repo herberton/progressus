@@ -38,4 +38,8 @@ public class UserMB extends ProgressusCRUDMB<UserMB, UserEntity> {
 	public void load() throws ProgressusException {
 		System.out.println("load()");
 	}
+	
+	public void sendTestEmail() {
+		
+	}
 }

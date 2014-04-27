@@ -7,7 +7,7 @@ html, body {
 	height: 100% !important;
 	margin: 0 !important;
 	padding: 0 !important;
-	background-color: #F8F8F8;
+	background-color: #E0E0E0;
 }
 
 .labelFields {
@@ -25,7 +25,7 @@ html, body {
 /* icon_menu_item */
 
 /* icon */
-.icon_b4l {background-image: url("#{resource['images:progressus.png']}") !important; width: 20px !important;}
+.icon_progressus {background-image: url("#{resource['images:progressus.png']}") !important; width: 20px !important;}
 .icon_pt_br {background-image: url("#{resource['images:pt.BR.png']}") !important; width: 20px !important;}
 .icon_en_us {background-image: url("#{resource['images:en.US.png']}") !important; width: 20px !important;}
 .icon_es_es {background-image: url("#{resource['images:es.ES.png']}") !important; width: 20px !important;}
@@ -33,4 +33,5 @@ html, body {
 .icon_logout {background-image: url("#{resource['images:logout.png']}") !important; width: 20px !important;}
 .icon_question {background-image: url("#{resource['images:question.png']}") !important; width: 20px !important;}
 .icon_help {background-image: url("#{resource['images:help.png']}") !important; width: 20px !important;}
+.icon_email {background-image: url("#{resource['images:email.png']}") !important; width: 20px !important;}
 /***********************************************************************************************************************************************************************************************************/

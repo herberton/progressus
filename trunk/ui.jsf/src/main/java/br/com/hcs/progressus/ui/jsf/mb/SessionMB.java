@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import br.com.hcs.progressus.enumerator.SupportedLocale;
-import br.com.hcs.progressus.enumerator.Theme;
+import br.com.hcs.progressus.enumerator.Template;
 import br.com.hcs.progressus.server.jpa.entity.UserEntity;
 
 @Slf4j
@@ -63,15 +63,46 @@ public class SessionMB extends ProgressusMB<SessionMB> {
 	public String getThemeName() {
 		try {
 			if (this.getLoggedInUser() == null) {
-				return Theme.getDefault().toString();
+				return Template.getDefault().getDefaultTheme().toString();
 			}
 			if (this.getLoggedInUser().getPreference() == null) {
-				return Theme.getDefault().toString();
+				return Template.getDefault().getDefaultTheme().toString();
 			}
 			return this.getLoggedInUser().getPreference().getTheme().toString();
 		} catch (Exception e) {
 			SessionMB.log.error(e.getMessage(), e);
 		}
-		return Theme.getDefault().toString();
+		return Template.getDefault().getDefaultTheme().toString();
+	}
+	
+	@Override
+	public String getTemplatePage() {
+		try {
+			if (this.getLoggedInUser() == null) {
+				return Template.getDefault().toString();
+			}
+			if (this.getLoggedInUser().getPreference() == null) {
+				return Template.getDefault().toString();
+			}
+			return this.getLoggedInUser().getPreference().getTemplate().toString();
+		} catch (Exception e) {
+			SessionMB.log.error(e.getMessage(), e);
+		}
+		return Template.getDefault().toString();
+	}
+	
+	public String getTemplateCrudPage() {
+		try {
+			if (this.getLoggedInUser() == null) {
+				return Template.getDefault().getCrudPage();
+			}
+			if (this.getLoggedInUser().getPreference() == null) {
+				return Template.getDefault().getCrudPage();
+			}
+			return this.getLoggedInUser().getPreference().getTemplate().getCrudPage();
+		} catch (Exception e) {
+			SessionMB.log.error(e.getMessage(), e);
+		}
+		return Template.getDefault().getCrudPage();
 	}
 }

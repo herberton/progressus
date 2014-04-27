@@ -49,11 +49,6 @@ public class UserEntity extends ProgressusEntity<UserEntity> implements Serializ
 	@Getter
 	@Setter
 	private String name;
-	@Display
-	@Getter
-	@Setter
-	@Column
-	private boolean emailReciever;
 	@Setter
 	@OneToOne(optional=false, cascade=CascadeType.ALL, orphanRemoval=true)
 	private UserPreferenceEntity preference;
@@ -61,10 +56,6 @@ public class UserEntity extends ProgressusEntity<UserEntity> implements Serializ
 	@Setter
 	@OneToOne(optional=true, cascade=CascadeType.ALL, orphanRemoval=true)
 	private EmailEntity email;
-	@Getter
-	@Setter
-	@OneToOne(optional=true, cascade=CascadeType.ALL, orphanRemoval=true)
-	private TagEntity tag;
 	@Setter
 	@ManyToMany(mappedBy = "userList")
 	private List<RoleEntity> roleList;
