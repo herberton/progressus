@@ -5,7 +5,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui" 
-	xmlns:pe="http://primefaces.org/ui/extensions">
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:hcs="http://hcs.com/facelets">
 	<ui:composition 
 		template="/template.standard.xhtml">
 		<ui:param 
@@ -56,14 +57,9 @@
 					<ui:insert 
 						name="form"/>
 				</p:fieldset>
-				<p:blockUI
-					block="formFieldset" 
-					trigger="saveCommandButton, deleteCommandButton, cleanCommandButton">  
-	        		#{i18n.loading}<br/>
-	        		 <h:graphicImage 
-						library="images" 
-						name="loading.gif" />  
-				</p:blockUI>
+				<hcs:loading
+        			block="formFieldset"
+        			trigger="saveCommandButton, deleteCommandButton, cleanCommandButton"/>
 			</h:form>
 			<p:spacer 
 				height="5"/>
@@ -102,21 +98,9 @@
 			           	#{entity[column.property]}
 			        </p:columns>
 				</p:dataTable>
-				<p:blockUI
-					block="dataTable" 
-					trigger="dataTable">  
-	        		#{i18n.loading}<br/>
-	        		 <div id="circular3dG">
-						<div id="circular3d_1G" class="circular3dG"/>
-						<div id="circular3d_2G" class="circular3dG"/>
-						<div id="circular3d_3G" class="circular3dG"/>
-						<div id="circular3d_4G" class="circular3dG"/>
-						<div id="circular3d_5G" class="circular3dG"/>
-						<div id="circular3d_6G" class="circular3dG"/>
-						<div id="circular3d_7G" class="circular3dG"/>
-						<div id="circular3d_8G" class="circular3dG"/>
-					</div>  
-				</p:blockUI>
+				<hcs:loading
+        			block="dataTable"
+        			trigger="dataTable"/>
 			</h:form>
 			<p:confirmDialog
 				widgetVar="deleteConfirmDialog" 
