@@ -8,149 +8,153 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions"
 	xmlns:hcs="http://hcs.com/facelets">
-	<h:head>
-		<title>#{i18n.progressus}</title>
-		<h:outputStylesheet 
-			library="css" 
-			name="template.standard.css"/>
-		<h:outputStylesheet
-				library="css"
-				name="loading.css"/>
-		<link 
-			rel="shortcut icon" 
-			href="resources/images/shortcut.icon.ico" />
-		<link 
-			rel="icon" 
-			href="resources/images/shortcut.icon.ico" />
-		<style>
-			.language-select-one-menu {
-				width: 152px !important;
-			}
-			.enter-split-button {
-				padding-left: 59px !important;
-			}
-			.login-panel {
-				width: 350px;
-				height: 205px;
-			}
-			div.login-div {
-				position: absolute; 
-    			top: 0px; 
-    			bottom: 0px; 
-    			left: 0px; 
-    			right: 0px;
-				margin: auto; 				
-				width: 350px;
-				height: 205px;
-			}
-			div.form-div {
-				float: left;
-				padding-top: 10%;
-			}
-			div.logo-div {
-				float: right;
-				padding-top: 10%;
-			}
-		</style>
-	</h:head>
-	<h:body>
-		<div
-			class="login-div">
-			<h:form
-				id="loginForm"
-				prependId="false">
-				<p:growl />
-				<p:panel
-					id="loginPanel"
-					styleClass="login-panel"
-					header="#{i18n.userIdentification}"
-					closable="false"
-					toggleable="false">
-					<div 
-						class="logo-div">
-						<p:graphicImage
-							url="#{resource['images:progressus.png']}"
-							height="100" />
-					</div>
-					<div 
-						class="form-div">
-						<p:focus 
-							for="loginInputText"/>
-						<p:watermark 
-							for="loginInputText" 
-							value="#{i18n.typeTheLogin}" />
-						<p:watermark 
-							for="passwordPassword" 
-							value="#{i18n.typeThePassword}" />
-						<h:panelGrid 
-							columns="2">
-							<p:outputLabel 
-								for="languageSelectOneMenu" 
-								value="#{i18n.language}" />
-							<p:selectOneMenu
-								id="languageSelectOneMenu"
-								value="#{loginMB.user.preference.supportedLocale}"
-								converter="supportedLocaleConverter"
-								var="selection"
-								styleClass="language-select-one-menu">
-								<f:selectItems
-									value="#{loginMB.supportedLocaleList}"
-								 	var="supportedLocale"
-								 	itemLabel="#{supportedLocale.text}"
-								 	itemValue="#{supportedLocale}"/>
-							 	<p:column>
-									#{selection.text}
-								</p:column>
-								<p:column>
-									<p:graphicImage
-										value="./resources/images/#{selection.iconName}" />
-								</p:column>
-								<p:ajax 
-									event="change" 
-	 	 							actionListener="#{loginMB.changeLanguage}" 
-	 	 							update="@form" 
-	 	 							process="@form"/>
-							</p:selectOneMenu>
-							<p:outputLabel 
+	<f:view
+		contentType="text/html" 
+		locale="#{loginMB.locale}">
+		<h:head>
+			<title>#{i18n.progressus}</title>
+			<h:outputStylesheet 
+				library="css" 
+				name="template.standard.css"/>
+			<h:outputStylesheet
+					library="css"
+					name="loading.css"/>
+			<link 
+				rel="shortcut icon" 
+				href="resources/images/shortcut.icon.ico" />
+			<link 
+				rel="icon" 
+				href="resources/images/shortcut.icon.ico" />
+			<style>
+				.language-select-one-menu {
+					width: 152px !important;
+				}
+				.enter-split-button {
+					padding-left: 59px !important;
+				}
+				.login-panel {
+					width: 350px;
+					height: 205px;
+				}
+				div.login-div {
+					position: absolute; 
+	    			top: 0px; 
+	    			bottom: 0px; 
+	    			left: 0px; 
+	    			right: 0px;
+					margin: auto; 				
+					width: 350px;
+					height: 205px;
+				}
+				div.form-div {
+					float: left;
+					padding-top: 10%;
+				}
+				div.logo-div {
+					float: right;
+					padding-top: 10%;
+				}
+			</style>
+		</h:head>
+		<h:body>
+			<div
+				class="login-div">
+				<h:form
+					id="loginForm"
+					prependId="false">
+					<p:growl />
+					<p:panel
+						id="loginPanel"
+						styleClass="login-panel"
+						header="#{i18n.userIdentification}"
+						closable="false"
+						toggleable="false">
+						<div 
+							class="logo-div">
+							<p:graphicImage
+								url="#{resource['images:progressus.png']}"
+								height="100" />
+						</div>
+						<div 
+							class="form-div">
+							<p:focus 
+								for="loginInputText"/>
+							<p:watermark 
 								for="loginInputText" 
-								value="#{i18n.user}" />
-							<p:inputText
-								id="loginInputText" 
-								value="#{loginMB.user.login}"
-								size="24" 
-								required="true"
-								requiredMessage="#{i18n.typeTheLogin}" />
-							<p:outputLabel 
+								value="#{i18n.typeTheLogin}" />
+							<p:watermark 
 								for="passwordPassword" 
-								value="#{i18n.password}" />
-							<p:password
-								id="passwordPassword"
-								size="24"
-								value="#{loginMB.user.password}"
-								required="true"
-								requiredMessage="#{i18n.typeThePassword}" />
-							<p:spacer/>
-							<p:splitButton
-								id="enterSplitButton"
-								value="#{i18n.enter}"
-								action="#{loginMB.authenticate}"
-								update="@form"
-								icon="icon_login"
-								styleClass="enter-split-button">
-								<p:menuitem
-									id="enterMenuitem"
-									value="#{i18n.forgotMyPassword}"
-									action="#{loginMB.forgotMyPassword}" 
+								value="#{i18n.typeThePassword}" />
+							<h:panelGrid 
+								columns="2">
+								<p:outputLabel 
+									for="languageSelectOneMenu" 
+									value="#{i18n.language}" />
+								<p:selectOneMenu
+									id="languageSelectOneMenu"
+									value="#{loginMB.user.preference.supportedLocale}"
+									converter="supportedLocaleConverter"
+									var="selection"
+									styleClass="language-select-one-menu">
+									<f:selectItems
+										value="#{loginMB.supportedLocaleList}"
+									 	var="supportedLocale"
+									 	itemLabel="#{supportedLocale.text}"
+									 	itemValue="#{supportedLocale}"/>
+								 	<p:column>
+										#{selection.text}
+									</p:column>
+									<p:column>
+										<p:graphicImage
+											value="./resources/images/#{selection.iconName}" />
+									</p:column>
+									<p:ajax 
+										listener="#{loginMB.changeLanguage}"
+										event="change" 
+		 	 							update="@form" 
+		 	 							process="@form"/>
+								</p:selectOneMenu>
+								<p:outputLabel 
+									for="loginInputText" 
+									value="#{i18n.user}" />
+								<p:inputText
+									id="loginInputText" 
+									value="#{loginMB.user.login}"
+									size="24" 
+									required="true"
+									requiredMessage="#{i18n.typeTheLogin}" />
+								<p:outputLabel 
+									for="passwordPassword" 
+									value="#{i18n.password}" />
+								<p:password
+									id="passwordPassword"
+									size="24"
+									value="#{loginMB.user.password}"
+									required="true"
+									requiredMessage="#{i18n.typeThePassword}" />
+								<p:spacer/>
+								<p:splitButton
+									id="enterSplitButton"
+									value="#{i18n.enter}"
+									action="#{loginMB.authenticate}"
 									update="@form"
-									icon="icon_help" />
-							</p:splitButton>
-						</h:panelGrid>
-					</div>
-				</p:panel>
-				<hcs:loading
-		        	block="loginPanel"
-		        	trigger="languageSelectOneMenu, enterSplitButton, enterMenuitem"/>
-			</h:form>
-		</div>
-	</h:body>
+									icon="icon_login"
+									styleClass="enter-split-button">
+									<p:menuitem
+										id="enterMenuitem"
+										value="#{i18n.forgotMyPassword}"
+										action="#{loginMB.forgotMyPassword}" 
+										update="@form"
+										icon="icon_help" />
+								</p:splitButton>
+							</h:panelGrid>
+						</div>
+					</p:panel>
+					<hcs:loading
+			        	block="loginPanel"
+			        	trigger="languageSelectOneMenu, enterSplitButton, enterMenuitem"/>
+				</h:form>
+			</div>
+		</h:body>
+	</f:view>
 </html>

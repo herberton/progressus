@@ -51,11 +51,11 @@ public enum Theme {
 	
 	@Getter(AccessLevel.PRIVATE)
 	@Setter(AccessLevel.PRIVATE)
-	private String text;
+	private String name;
 	
 	
-	private Theme(String text) {
-		this.setText(text);
+	private Theme(String name) {
+		this.setName(name);
 	}
 	
 	
@@ -67,7 +67,7 @@ public enum Theme {
 	@Override
 	public String toString() {
 		try {
-			return StringHelper.isNullOrEmpty(this.getText()) ? "" : this.getText();
+			return StringHelper.isNullOrEmpty(this.getName()) ? "" : this.getName();
 		} catch (Exception e) {
 			Theme.log.error(e.getMessage(), e);
 		}

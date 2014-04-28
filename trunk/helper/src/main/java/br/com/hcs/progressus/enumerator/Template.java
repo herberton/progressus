@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import br.com.hcs.progressus.exception.ProgressusException;
@@ -13,8 +14,8 @@ public enum Template {
 	
 	STANDARD("template.standard.xhtml", Theme.getDefault());
 	
-	@Getter
-	@Setter
+	@Getter(AccessLevel.PRIVATE)
+	@Setter(AccessLevel.PRIVATE)
 	private String page;
 	@Setter
 	private List<Theme> themeList;

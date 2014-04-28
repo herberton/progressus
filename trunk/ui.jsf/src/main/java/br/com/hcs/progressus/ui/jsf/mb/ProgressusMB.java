@@ -19,6 +19,7 @@ import br.com.hcs.progressus.enumerator.MenuLevel;
 import br.com.hcs.progressus.enumerator.Setting;
 import br.com.hcs.progressus.enumerator.SupportedLocale;
 import br.com.hcs.progressus.enumerator.Template;
+import br.com.hcs.progressus.enumerator.Theme;
 import br.com.hcs.progressus.exception.ProgressusException;
 import br.com.hcs.progressus.exception.UnableToCompleteOperationException;
 import br.com.hcs.progressus.helper.ReflectionHelper;
@@ -84,6 +85,58 @@ public abstract class ProgressusMB<T extends ProgressusMB<T>>
 	}
 	
 	
+	public SupportedLocale getSupportedLocale() {
+		try {
+			return ProgressusMB.getInstance(SessionMB.class).getSupportedLocale();
+		} catch (Exception e) {
+			ProgressusMB.log.error(e.getMessage(), e);
+		}
+		return SupportedLocale.getDefault();
+	}
+	
+	public void setSupportedLocale(SupportedLocale supportedLocale) {
+		try {
+			ProgressusMB.getInstance(SessionMB.class).setSupportedLocale(supportedLocale);
+		} catch (Exception e) {
+			ProgressusMB.log.error(e.getMessage(), e);
+		}
+	}
+	
+	public Template getTemplate() {
+		try {
+			return ProgressusMB.getInstance(SessionMB.class).getTemplate();
+		} catch (Exception e) {
+			ProgressusMB.log.error(e.getMessage(), e);
+		}
+		return Template.getDefault();
+	}
+	
+	public void setTemplate(Template template) {
+		try {
+			ProgressusMB.getInstance(SessionMB.class).setTemplate(template);
+		} catch (Exception e) {
+			ProgressusMB.log.error(e.getMessage(), e);
+		}
+	}
+	
+	public Theme getTheme() {
+		try {
+			return ProgressusMB.getInstance(SessionMB.class).getTheme();
+		} catch (Exception e) {
+			ProgressusMB.log.error(e.getMessage(), e);
+		}
+		return this.getTemplate().getDefaultTheme();
+	}
+	
+	public void setTheme(Theme theme) {
+		try {
+			ProgressusMB.getInstance(SessionMB.class).setTheme(theme);
+		} catch (Exception e) {
+			ProgressusMB.log.error(e.getMessage(), e);
+		}
+	}
+	
+	
 	public Locale getLocale() {
 		try {
 			return ProgressusMB.getInstance(SessionMB.class).getLocale();
@@ -102,6 +155,7 @@ public abstract class ProgressusMB<T extends ProgressusMB<T>>
 		return Template.getDefault().getDefaultTheme().toString();
 	}
 	
+	
 	public String getTemplatePage() {
 		try {
 			return ProgressusMB.getInstance(SessionMB.class).getTemplatePage();
@@ -112,9 +166,12 @@ public abstract class ProgressusMB<T extends ProgressusMB<T>>
 	}
 	
 	
+	
+	
 	public final void clean() {
 		this.clean(true);
 	}
+	
 	
 	public final void clean(boolean isInvokeInitMethod) {
 		try {
@@ -127,6 +184,7 @@ public abstract class ProgressusMB<T extends ProgressusMB<T>>
 			ProgressusMB.log.error(e.getMessage(), e);
 		}
 	}
+	
 	
 	public final void clean(UIComponent uiComponent) {
 		try {
@@ -156,9 +214,12 @@ public abstract class ProgressusMB<T extends ProgressusMB<T>>
 	}	
 	
 	
+	
+	
 	public final void setValid() {
 		this.setValid(JSFHelper.getUIViewRoot());
 	}
+	
 	
 	public final void setValid(UIComponent uiComponent) {
 		
@@ -183,6 +244,8 @@ public abstract class ProgressusMB<T extends ProgressusMB<T>>
 	}
 	
 	
+	
+	
 	public final boolean checkPermission(String name) {
 		try {
 			return true;
@@ -191,11 +254,15 @@ public abstract class ProgressusMB<T extends ProgressusMB<T>>
 		}
 		return false;
 	}
+	
+	
 
 	
 	public final String getVersion() {
 		return "3.0.0.0";
 	}
+	
+	
 	
 	
 	public final String logout() {
@@ -208,6 +275,8 @@ public abstract class ProgressusMB<T extends ProgressusMB<T>>
 		}
 		return "";
 	}
+	
+	
 
 	
 	public final DefaultMenuModel getDefaultMenuModel() {
@@ -246,6 +315,7 @@ public abstract class ProgressusMB<T extends ProgressusMB<T>>
 		return null;
 	}
 	
+	
 	public final void setDefaultMenuModel(DefaultMenuModel defaultMenuModel) {
 		try {
 			JSFHelper.putSessionAttribute(Setting.WEB_SESSION_DEFAULT_MENU_MODEL.toString(), defaultMenuModel);
@@ -253,6 +323,8 @@ public abstract class ProgressusMB<T extends ProgressusMB<T>>
 			ProgressusMB.log.error(e.getMessage(), e);
 		}
 	}
+	
+	
 	
 	
 	public final String getURL(String page) {
@@ -263,6 +335,8 @@ public abstract class ProgressusMB<T extends ProgressusMB<T>>
 		}
 		return "#";
 	}
+	
+	
 	
 	
 	public final View getView() {
@@ -277,12 +351,16 @@ public abstract class ProgressusMB<T extends ProgressusMB<T>>
 	}
 	
 	
+	
+	
 	public final List<ColumnTO> getColumnList() {
 		if (this.columnList == null) {
 			this.setColumnList(new ArrayList<ColumnTO>());
 		}
 		return this.columnList;
 	}
+	
+	
 	
 		
 	public final <TO extends ProgressusTO<TO>> void loadColumnList(Class<TO> clazz, boolean isClearColumnList) throws ProgressusException {
@@ -308,6 +386,7 @@ public abstract class ProgressusMB<T extends ProgressusMB<T>>
 		}
 	}
 	
+	
 	public final <TO extends ProgressusTO<TO>> void loadColumnList(Class<TO> clazz) throws ProgressusException {
 		try {
 			this.loadColumnList(clazz, true);
@@ -318,6 +397,7 @@ public abstract class ProgressusMB<T extends ProgressusMB<T>>
 			throw new UnableToCompleteOperationException("loadColumnList");
 		}
 	}
+	
 	
 	@SuppressWarnings("unchecked")
 	public final <TO extends ProgressusTO<TO>> void loadColumnList(Class<TO>...clazzArray) throws ProgressusException {
@@ -334,6 +414,7 @@ public abstract class ProgressusMB<T extends ProgressusMB<T>>
 		}
 	}
 	
+	
 	public final <TO extends ProgressusTO<TO>> void loadColumnList(List<Class<TO>> clazzList) throws ProgressusException {
 		try {
 			this.getColumnList().clear();
@@ -348,6 +429,8 @@ public abstract class ProgressusMB<T extends ProgressusMB<T>>
 		}
 	}
 	
+	
+	
 		
 	public static final <X extends ProgressusMB<X>> String getManagedBeanExpression(Class<X> clazz) {
 		try {
@@ -357,6 +440,7 @@ public abstract class ProgressusMB<T extends ProgressusMB<T>>
 		}
 		return "";
 	}
+	
 	
 	public static final <X extends ProgressusMB<X>> X getInstance(Class<X> clazz) {
 		try {
