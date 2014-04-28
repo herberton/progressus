@@ -10,7 +10,6 @@ import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
 
 import lombok.extern.slf4j.Slf4j;
-import br.com.hcs.progressus.exception.ProgressusException;
 import br.com.hcs.progressus.ui.jsf.helper.I18NHelper;
 
 @Slf4j
@@ -34,7 +33,7 @@ public class DefaultValidator implements Serializable, Validator {
 				facesMessage = input.getRequiredMessage() != null ? 
 					new FacesMessage(input.getRequiredMessage()) : 
 					new FacesMessage(I18NHelper.getText("javax.faces.component.UIInput.REQUIRED"));
-			} catch (ProgressusException e) {
+			} catch (Exception e) {
 				DefaultValidator.log.error(e.getMessage(), e);
 			}
 			throw new ValidatorException(facesMessage);

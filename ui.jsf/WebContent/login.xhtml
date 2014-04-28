@@ -56,7 +56,9 @@
 	<h:body>
 		<div
 			class="login-div">
-			<h:form>
+			<h:form
+				id="loginForm"
+				prependId="false">
 				<p:growl />
 				<p:panel
 					id="loginPanel"
@@ -103,6 +105,11 @@
 									<p:graphicImage
 										value="./resources/images/#{selection.iconName}" />
 								</p:column>
+								<p:ajax 
+									event="change" 
+	 	 							actionListener="#{loginMB.changeLanguage}" 
+	 	 							update="@form" 
+	 	 							process="@form"/>
 							</p:selectOneMenu>
 							<p:outputLabel 
 								for="loginInputText" 

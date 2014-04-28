@@ -91,4 +91,8 @@ public class LoginMB extends ProgressusMB<LoginMB> {
 	public void forgotMyPassword(){
 		// TODO: COLOCAR LÓGICA PARA ESQUECI MINHA SENHA
 	}
+	
+	public void changeLanguage() {
+		// TODO: COLOCAR LÓGICA PARA ALTERAR O IDIOMA
+	}
 }
