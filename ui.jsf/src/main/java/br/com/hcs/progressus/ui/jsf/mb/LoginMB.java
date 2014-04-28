@@ -8,6 +8,7 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.event.AjaxBehaviorEvent;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -64,7 +65,6 @@ public class LoginMB extends ProgressusMB<LoginMB> {
 	
 	public String authenticate(){
 		
-		
 		try {
 			
 			this.setUser(this.getAuthenticationBO().authenticate(this.getUser()));
@@ -92,7 +92,7 @@ public class LoginMB extends ProgressusMB<LoginMB> {
 		// TODO: COLOCAR LÓGICA PARA ESQUECI MINHA SENHA
 	}
 	
-	public void changeLanguage() {
-		// TODO: COLOCAR LÓGICA PARA ALTERAR O IDIOMA
+	public void changeLanguage(AjaxBehaviorEvent ajaxBehaviorEvent) {
+		this.setSupportedLocale(this.getUser().getPreference().getSupportedLocale());
 	}
 }
