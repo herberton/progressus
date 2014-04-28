@@ -5,7 +5,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui" 
-	xmlns:pe="http://primefaces.org/ui/extensions">
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:hcs="http://hcs.com/facelets">
 	<f:view 
 		contentType="text/html" 
 		locale="#{templateMB.locale}" >
@@ -145,19 +146,14 @@
 									<div
 										class="header-right-bottom-right-div">
 										<p:ajaxStatus>
-											<f:facet name="start">
-											<div class="bubblingG">
-												<span id="bubblingG_1"/>
-												<span id="bubblingG_2"/>
-												<span id="bubblingG_3"/>
-											</div>
+											<f:facet
+												name="start">
+												<div class="bubblingG">
+													<span id="bubblingG_1"/>
+													<span id="bubblingG_2"/>
+													<span id="bubblingG_3"/>
+												</div>
 											</f:facet>  
-										    <f:facet 
-										    	name="complete">  
-										        <h:outputText 
-										        	id="completeOutputText" 
-										        	value="" />  
-										    </f:facet>  
 										</p:ajaxStatus>
 									</div>
 								</div>

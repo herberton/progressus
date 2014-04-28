@@ -6,12 +6,16 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:pe="http://primefaces.org/ui/extensions">
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:hcs="http://hcs.com/facelets">
 	<h:head>
 		<title>#{i18n.progressus}</title>
 		<h:outputStylesheet 
 			library="css" 
 			name="template.standard.css"/>
+		<h:outputStylesheet
+				library="css"
+				name="loading.css"/>
 		<link 
 			rel="shortcut icon" 
 			href="resources/images/shortcut.icon.ico" />
@@ -19,7 +23,17 @@
 			rel="icon" 
 			href="resources/images/shortcut.icon.ico" />
 		<style>
+			.language-select-one-menu {
+				width: 152px !important;
+			}
+			.enter-split-button {
+				padding-left: 59px !important;
+			}
 			.login-panel {
+				width: 350px;
+				height: 205px;
+			}
+			div.login-div {
 				position: absolute; 
     			top: 0px; 
     			bottom: 0px; 
@@ -28,12 +42,6 @@
 				margin: auto; 				
 				width: 350px;
 				height: 205px;
-			}
-			.language-select-one-menu {
-				width: 152px !important;
-			}
-			.enter-split-button {
-				padding-left: 59px !important;
 			}
 			div.form-div {
 				float: left;
@@ -46,87 +54,96 @@
 		</style>
 	</h:head>
 	<h:body>
-		<p:panel 
-			header="#{i18n.userIdentification}"
-			styleClass="login-panel"
-			closable="false"
-			toggleable="false">
-			<div 
-				class="logo-div">
-				<p:graphicImage
-					url="#{resource['images:progressus.png']}"
-					height="100" />
-			</div>
-			<div 
-				class="form-div">
-				<h:form>
-					<p:focus 
-						for="login"/>
-					<p:watermark 
-						for="login" 
-						value="#{i18n.typeTheLogin}" />
-					<p:watermark 
-						for="password" 
-						value="#{i18n.typeThePassword}" />
-					<p:growl />
-					<h:panelGrid 
-						columns="2">
-						<p:outputLabel 
-							for="language" 
-							value="#{i18n.language}" />
-						<p:selectOneMenu
-							id="language"
-							value="#{loginMB.user.preference.supportedLocale}"
-							converter="supportedLocaleConverter"
-							var="selection"
-							styleClass="language-select-one-menu">
-							<f:selectItems
-								value="#{loginMB.supportedLocaleList}"
-							 	var="supportedLocale"
-							 	itemLabel="#{supportedLocale.text}"
-							 	itemValue="#{supportedLocale}"/>
-						 	<p:column>
-								#{selection.text}
-							</p:column>
-							<p:column>
-								<p:graphicImage
-									value="./resources/images/#{selection.iconName}" />
-							</p:column>
-						</p:selectOneMenu>
-						<p:outputLabel 
-							for="login" 
-							value="#{i18n.user}" />
-						<p:inputText
-							value="#{loginMB.user.login}"
-							size="24" 
-							id="login" 
-							required="true"
-							requiredMessage="#{i18n.typeTheLogin}" />
-						<p:outputLabel 
-							for="password" 
-							value="#{i18n.password}" />
-						<p:password
-							id="password"
-							size="24"
-							value="#{loginMB.user.password}"
-							required="true"
-							requiredMessage="#{i18n.typeThePassword}" />
-						<p:spacer/>
-						<p:splitButton
-							value="#{i18n.enter}"
-							action="#{loginMB.authenticate}"
-							update="@form"
-							icon="icon_login"
-							styleClass="enter-split-button">
-							<p:menuitem
-								value="#{i18n.forgotMyPassword}"
-								action="#{loginMB.forgotMyPassword}" 
+		<div
+			class="login-div">
+			<h:form>
+				<p:growl />
+				<p:panel
+					id="loginPanel"
+					styleClass="login-panel"
+					header="#{i18n.userIdentification}"
+					closable="false"
+					toggleable="false">
+					<div 
+						class="logo-div">
+						<p:graphicImage
+							url="#{resource['images:progressus.png']}"
+							height="100" />
+					</div>
+					<div 
+						class="form-div">
+						<p:focus 
+							for="loginInputText"/>
+						<p:watermark 
+							for="loginInputText" 
+							value="#{i18n.typeTheLogin}" />
+						<p:watermark 
+							for="passwordPassword" 
+							value="#{i18n.typeThePassword}" />
+						<h:panelGrid 
+							columns="2">
+							<p:outputLabel 
+								for="languageSelectOneMenu" 
+								value="#{i18n.language}" />
+							<p:selectOneMenu
+								id="languageSelectOneMenu"
+								value="#{loginMB.user.preference.supportedLocale}"
+								converter="supportedLocaleConverter"
+								var="selection"
+								styleClass="language-select-one-menu">
+								<f:selectItems
+									value="#{loginMB.supportedLocaleList}"
+								 	var="supportedLocale"
+								 	itemLabel="#{supportedLocale.text}"
+								 	itemValue="#{supportedLocale}"/>
+							 	<p:column>
+									#{selection.text}
+								</p:column>
+								<p:column>
+									<p:graphicImage
+										value="./resources/images/#{selection.iconName}" />
+								</p:column>
+							</p:selectOneMenu>
+							<p:outputLabel 
+								for="loginInputText" 
+								value="#{i18n.user}" />
+							<p:inputText
+								id="loginInputText" 
+								value="#{loginMB.user.login}"
+								size="24" 
+								required="true"
+								requiredMessage="#{i18n.typeTheLogin}" />
+							<p:outputLabel 
+								for="passwordPassword" 
+								value="#{i18n.password}" />
+							<p:password
+								id="passwordPassword"
+								size="24"
+								value="#{loginMB.user.password}"
+								required="true"
+								requiredMessage="#{i18n.typeThePassword}" />
+							<p:spacer/>
+							<p:splitButton
+								id="enterSplitButton"
+								value="#{i18n.enter}"
+								action="#{loginMB.authenticate}"
 								update="@form"
-								icon="icon_help" />
-						</p:splitButton>
-					</h:panelGrid>
-				</h:form>
-			</div>
-		</p:panel>
+								icon="icon_login"
+								styleClass="enter-split-button">
+								<p:menuitem
+									id="enterMenuitem"
+									value="#{i18n.forgotMyPassword}"
+									action="#{loginMB.forgotMyPassword}" 
+									update="@form"
+									icon="icon_help" />
+							</p:splitButton>
+						</h:panelGrid>
+					</div>
+				</p:panel>
+				<hcs:loading
+		        	block="loginPanel"
+		        	trigger="languageSelectOneMenu, enterSplitButton, enterMenuitem"/>
+			</h:form>
+		</div>
 	</h:body>
 </html>
