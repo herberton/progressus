@@ -8,10 +8,6 @@ import java.util.ResourceBundle;
 import lombok.extern.slf4j.Slf4j;
 import br.com.hcs.progressus.enumerator.Setting;
 import br.com.hcs.progressus.enumerator.SupportedLocale;
-import br.com.hcs.progressus.exception.EmptyParameterException;
-import br.com.hcs.progressus.exception.I18NNotFoundException;
-import br.com.hcs.progressus.exception.InvalidI18NMessageException;
-import br.com.hcs.progressus.exception.ProgressusException;
 import br.com.hcs.progressus.helper.StringHelper;
 import br.com.hcs.progressus.ui.jsf.mb.ProgressusMB;
 import br.com.hcs.progressus.ui.jsf.mb.SessionMB;
@@ -40,7 +36,8 @@ public final class I18NHelper implements Serializable {
 		return null;
 	}
 	
-	public static final String getText(Locale locale, String key, Object...argumentArray) throws ProgressusException {
+	
+	public static final String getText(Locale locale, String key, Object...argumentArray) {
 		
 		try {
 			
@@ -48,28 +45,32 @@ public final class I18NHelper implements Serializable {
 				return I18NHelper.getText(locale, key);
 			}
 			
+		} catch (Exception e) {
+			I18NHelper.log.error(e.getMessage(), e);
+			return I18NHelper.getI18NNotFoundMessage(key);
+		}
+		
+		try {
+			
 			for (int i = 0; i < argumentArray.length; i++) {
 				
 				if (argumentArray[i] == null) {
-					throw new EmptyParameterException("argument");
+					argumentArray[i] = "";
 				}
 				
 				if (argumentArray[i] instanceof String) {
 					
-					if (StringHelper.isNullOrEmpty(argumentArray[i].toString())) {
-						throw new EmptyParameterException("argument");
-					}
-					
 					String argumentMessageBundle = "";
+					
+					if (StringHelper.isNullOrEmpty(argumentArray[i].toString())) {
+						argumentArray[i] = argumentMessageBundle;
+						continue;
+					}
 					
 					try {
 						argumentMessageBundle = I18NHelper.getText(locale, argumentArray[i].toString());
 					} catch (Exception e) {
 						argumentMessageBundle = argumentArray[i].toString();
-						continue;
-					}
-					
-					if (StringHelper.isNullOrEmpty(argumentMessageBundle)) {
 						continue;
 					}
 					
@@ -84,10 +85,7 @@ public final class I18NHelper implements Serializable {
 					try {
 						argumentMessageBundle = I18NHelper.getText(locale, StringHelper.getI18N((Class<?>)argumentArray[i]));
 					} catch (Exception e) {
-						continue;
-					}
-					
-					if (StringHelper.isNullOrEmpty(argumentMessageBundle)) {
+						argumentMessageBundle = ((Class<?>)argumentArray[i]).getSimpleName();
 						continue;
 					}
 					
@@ -95,27 +93,34 @@ public final class I18NHelper implements Serializable {
 					continue;
 				}
 			}
+		} catch (Exception e) {
+			I18NHelper.log.error(e.getMessage(), e);
+			return I18NHelper.getI18NNotFoundMessage(key);
+		}
+		
+		try {
 			
 			return MessageFormat.format(I18NHelper.getResourceBundle(locale).getString(key), argumentArray);
 			
-		} catch(ProgressusException pe){
-			throw pe;
 		} catch(Exception e) {
-			throw new I18NNotFoundException(key, locale);
+			I18NHelper.log.error(e.getMessage(), e);
 		}
+		
+		return I18NHelper.getI18NNotFoundMessage(key);
 	}
 	
-	public static final String getText(Locale locale, String propertyName) throws ProgressusException {
+	public static final String getText(Locale locale, String key) {
 		try {
 			
-			return I18NHelper.getResourceBundle(locale).getString(propertyName);
+			return I18NHelper.getResourceBundle(locale).getString(key);
 			
 		} catch(Exception e){
-			throw new InvalidI18NMessageException(propertyName, locale);
+			I18NHelper.log.error(e.getMessage(), e);
 		}
+		return I18NHelper.getI18NNotFoundMessage(key);
 	}
 	
-	public static final String getText(String key, Object...argumentArray) throws ProgressusException {
+	public static final String getText(String key, Object...argumentArray) {
 		Locale locale = null;
 		
 		try {
@@ -129,11 +134,14 @@ public final class I18NHelper implements Serializable {
 					
 			return I18NHelper.getText(locale, key, argumentArray);
 			
-		} catch(ProgressusException pe) {
-			throw pe;
 		} catch (Exception e) {
 			I18NHelper.log.error(e.getMessage(), e);
-			throw new I18NNotFoundException(key, locale);
+			return I18NHelper.getI18NNotFoundMessage(key);
 		}
+	}
+
+	
+	private static String getI18NNotFoundMessage(String key) {
+		return Setting.I18N_NOT_FOUND_MESSAGE.toString().replace("[i18n]", key);
 	}
 }

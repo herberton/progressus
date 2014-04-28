@@ -15,7 +15,6 @@ import org.primefaces.model.menu.Submenu;
 import br.com.hcs.progressus.enumerator.MenuLevel;
 import br.com.hcs.progressus.enumerator.Separator;
 import br.com.hcs.progressus.enumerator.Setting;
-import br.com.hcs.progressus.exception.ProgressusException;
 import br.com.hcs.progressus.server.jpa.entity.ItemMenuEntity;
 import br.com.hcs.progressus.server.jpa.entity.MenuEntity;
 import br.com.hcs.progressus.server.jpa.entity.PermissionEntity;
@@ -120,20 +119,12 @@ public final class DefaultMenuModelHelper implements Serializable {
 	public static final DefaultSubMenu getSubMenu(MenuEntity menu) {
 		
 		try {
-			String menuName = "";
-			
-			try {
-				menuName = I18NHelper.getText(menu.getName());	
-			} catch (ProgressusException e) {
-				menuName = menu.getName();
-			}
-			
 			return 
 				DefaultMenuModelHelper
 					.getSubMenu(
 						DefaultMenuModelHelper.getSubMenuID(menu),
 						menu.getIcon(),
-						menuName
+						I18NHelper.getText(menu.getName())
 					);
 			
 		} catch (Exception e) {
@@ -166,20 +157,12 @@ public final class DefaultMenuModelHelper implements Serializable {
 		
 		try {
 			
-			String viewName = "";
-			
-			try {
-				viewName = I18NHelper.getText(view.getName());
-			} catch (ProgressusException e) {
-				viewName = view.getName();
-			}
-			
 			DefaultSubMenu submenu =
 				DefaultMenuModelHelper
 					.getSubMenu(
 						DefaultMenuModelHelper.getMenuItemID(view),
 						DefaultMenuModelHelper.getIcon(view),
-						viewName
+						I18NHelper.getText(view.getName())
 					);
 			
 			for (ViewEntity childView : view.getChildViewList()) {
@@ -208,29 +191,13 @@ public final class DefaultMenuModelHelper implements Serializable {
 		
 		try {
 			
-			String viewName = "";
-			
-			try {
-				viewName = I18NHelper.getText(view.getName());
-			} catch (ProgressusException e) {
-				viewName = view.getName();
-			}
-			
-			String viewDescription = "";
-			
-			try {
-				viewDescription = I18NHelper.getText(view.getDescription());
-			} catch (ProgressusException e) {
-				viewDescription = view.getName();
-			}
-			
 			return 
 				DefaultMenuModelHelper
 					.getMenuItem(
 						DefaultMenuModelHelper.getMenuItemID(view), 
 						DefaultMenuModelHelper.getIcon(view), 
-						viewName, 
-						viewDescription, 
+						I18NHelper.getText(view.getName()), 
+						I18NHelper.getText(view.getDescription()), 
 						DefaultMenuModelHelper.getOutcome(DefaultMenuModelHelper.getModuleName(view), view.getName())
 					);
 			
@@ -264,21 +231,13 @@ public final class DefaultMenuModelHelper implements Serializable {
 	public static final DefaultMenuItem getMenuItem(PermissionEntity permission) {
 		
 		try {
-			String permissionName = "";
-			
-			try {
-				permissionName = I18NHelper.getText(permission.getName());
-			} catch (ProgressusException e) {
-				permissionName = permission.getName();
-			}
-			
 			return 
 				DefaultMenuModelHelper
 					.getMenuItem(
 						DefaultMenuModelHelper.getMenuItemID(permission), 
 						DefaultMenuModelHelper.getIcon(permission), 
-						permissionName, 
-						permissionName, 
+						I18NHelper.getText(permission.getName()), 
+						I18NHelper.getText(permission.getName()), 
 						null
 					);
 		} catch (Exception e) {
@@ -317,7 +276,7 @@ public final class DefaultMenuModelHelper implements Serializable {
 			
 			return DefaultMenuModelHelper.getSubMenu(view, menuLevel);
 			
-		} catch (ProgressusException e) {
+		} catch (Exception e) {
 			DefaultMenuModelHelper.log.error(e.getMessage(), e);
 		}
 		

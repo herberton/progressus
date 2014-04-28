@@ -15,12 +15,8 @@ public final class ValidatorHelper implements Serializable {
 	
 	public static final <T> void validateFilling(String name, T parameter) throws ProgressusException {
 		try {
-			if (StringHelper.isNullOrEmpty(name) && parameter == null) {
-				throw new EmptyParameterException();
-			}
-			
-			if (parameter == null) {
-				throw new EmptyParameterException(name);
+			if (ObjectHelper.isNullOrEmpty(parameter)) {
+				throw new EmptyParameterException(StringHelper.isNullOrEmpty(name) ? "" : name);
 			}
 		} catch (ProgressusException pe) {
 			throw pe;

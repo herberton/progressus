@@ -5,9 +5,11 @@ import javax.ejb.Stateless;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import br.com.hcs.progressus.client.ejb.sb.bo.entity.UserBORemote;
+import br.com.hcs.progressus.client.ejb.sb.dao.UserDAOLocal;
 import br.com.hcs.progressus.exception.ProgressusException;
 import br.com.hcs.progressus.exception.SelectException;
 import br.com.hcs.progressus.helper.StringHelper;
+import br.com.hcs.progressus.helper.ValidatorHelper;
 import br.com.hcs.progressus.server.jpa.entity.UserEntity;
 
 @Slf4j
@@ -22,6 +24,21 @@ public class UserBO extends ProgressusBOEntity<UserEntity> implements UserBORemo
 	public UserEntity select(String login) throws ProgressusException {	
 		try {
 			return this.select(new UserEntity(login).toParameterMap("login", "entityStatus"));
+		} catch (ProgressusException pe) {
+			throw pe;
+		} catch (Exception e) {
+			UserBO.log.error(e.getMessage(), e);
+			throw new SelectException(StringHelper.getI18N(this.getEntityClass()), e);
+		}
+	}
+
+
+	@Override
+	public boolean isValidPassword(String login, String password) throws ProgressusException {
+		ValidatorHelper.validateFilling("login", login);
+		ValidatorHelper.validateFilling("password", password);
+		try {
+			return ((UserDAOLocal)this.getDAO()).isValidPassword(login, password);
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {

@@ -41,6 +41,7 @@ public enum Setting {
 	
 	WEB_SESSION_DEFAULT_MENU_MODEL("defaultMenuModel"),
 	
+	I18N_NOT_FOUND_MESSAGE("???[i18n]???"),
 	
 	EJB_JNDI_LOOKUP("java:global/ear/progressus.ejb/[class_simpleName]![class_name]");
 	

@@ -8,4 +8,5 @@ import br.com.hcs.progressus.server.jpa.entity.UserEntity;
 @Remote
 public interface UserBORemote extends ProgressusBOEntityRemote<UserEntity> {
 	UserEntity select(String login) throws ProgressusException;
+	boolean isValidPassword(String login, String password)  throws ProgressusException;
 }
