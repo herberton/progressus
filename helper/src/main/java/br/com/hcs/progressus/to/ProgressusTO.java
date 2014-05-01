@@ -12,6 +12,9 @@ import javax.persistence.Transient;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+
+import org.apache.commons.lang3.builder.CompareToBuilder;
+
 import br.com.hcs.progressus.annotation.Display;
 import br.com.hcs.progressus.contract.ClassInformer;
 import br.com.hcs.progressus.contract.ClassValidator;
@@ -123,11 +126,17 @@ public abstract class ProgressusTO<T extends ProgressusTO<T>>
 	@Override
 	public int compareTo(T other) {
 		try {
-			return other == null ? -1 : this.toString().compareTo(other.toString());
+			if (other == null) {
+				return 1;
+			}
+			return 
+				new CompareToBuilder()
+					.append(this.toString(), other.toString())
+					.toComparison();
 		} catch (Exception e) {
 			ProgressusTO.log.error(e.getMessage(), e);
 		}
-		return 0;
+		return 1;
 	}
 	
 	

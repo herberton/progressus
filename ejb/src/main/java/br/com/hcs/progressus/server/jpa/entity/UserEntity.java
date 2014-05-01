@@ -30,7 +30,6 @@ public class UserEntity extends ProgressusEntity<UserEntity> implements Serializ
 
 	private static final long serialVersionUID = -8047519884850858607L;
 
-	@Display
 	@Getter
 	@Setter
 	@Column
@@ -75,6 +74,28 @@ public class UserEntity extends ProgressusEntity<UserEntity> implements Serializ
 	}
 	
 	
+	public boolean havePermission(PermissionEntity permission) {
+		try {
+			
+			if (this.isAdministrator()) {
+				return true;
+			}
+			
+			for (RoleEntity role : this.getRoleList()) {
+				for (PermissionEntity permissionRole : role.getPermissionList()) {
+					if (permissionRole.equals(permission)) {
+						return true;
+					}
+				}
+			}
+			
+		} catch (Exception e) {
+			UserEntity.log.error(e.getMessage(), e);
+		}
+		
+		return false;
+	}
+	
 	public boolean havePermission(ViewEntity view) {
 		
 		try {
@@ -85,7 +106,6 @@ public class UserEntity extends ProgressusEntity<UserEntity> implements Serializ
 			
 			for (RoleEntity role : this.getRoleList()) {
 				for (PermissionEntity permission : role.getPermissionList()) {
-					
 					if (view.equals(permission.getView())) {
 						return true;
 					}
@@ -105,7 +125,10 @@ public class UserEntity extends ProgressusEntity<UserEntity> implements Serializ
 	
 	public boolean havePermission(ItemMenuEntity itemMenu) {
 		try {
-			return this.havePermission(itemMenu.getView());
+			if (this.isAdministrator()) {
+				return true;
+			}
+			return this.havePermission((ViewEntity)itemMenu);
 		} catch (Exception e) {
 			UserEntity.log.error(e.getMessage(), e);
 		}
@@ -114,6 +137,9 @@ public class UserEntity extends ProgressusEntity<UserEntity> implements Serializ
 	
 	public boolean havePermission(MenuEntity menu) {
 		try {
+			if (this.isAdministrator()) {
+				return true;
+			}
 			for (ItemMenuEntity itemMenu : menu.getItemMenuList()) {
 				if (this.havePermission(itemMenu)) {
 					return true;

@@ -1,9 +1,6 @@
 package br.com.hcs.progressus.ui.jsf.sel;
 
 import java.io.Serializable;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.faces.application.Application;
 import javax.faces.event.AbortProcessingException;
@@ -15,15 +12,10 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 import lombok.extern.slf4j.Slf4j;
-
-import org.atatec.trugger.scan.ClassScan;
-import org.atatec.trugger.scan.PackageScan;
-import org.atatec.trugger.scan.ScanLevel;
-
-import br.com.hcs.progressus.annotation.View;
 import br.com.hcs.progressus.client.ejb.sb.bo.process.ApplicationBOLocal;
 import br.com.hcs.progressus.client.helper.EJBHelper;
 import br.com.hcs.progressus.enumerator.Setting;
+import br.com.hcs.progressus.ui.jsf.helper.ClassHelper;
 import br.com.hcs.progressus.ui.jsf.helper.JSFHelper;
 
 @Slf4j
@@ -69,15 +61,7 @@ public class ApplicationSEL implements SystemEventListener, Serializable {
 	private void postConstructApplicationEvent() {
 		try {
 			
-			PackageScan packageScan = new PackageScan(Setting.WEB_MANAGED_BEAN_PACKAGE.toString(), ScanLevel.SUBPACKAGES);
-			
-			@SuppressWarnings("rawtypes")
-			Set<Class> foundClazzSet = ClassScan.findClasses().recursively().annotatedWith(View.class).in(packageScan);
-			
-			Set<Class<?>> viewClazzSet = new HashSet<>();
-			Collections.addAll(viewClazzSet, foundClazzSet.toArray(new Class<?>[]{}));
-			
-			this.getApplicationBO().createMenuTree(viewClazzSet);
+			this.getApplicationBO().createMenuTree(ClassHelper.getViewClazzSet());
 			this.getApplicationBO().createAdministratorUser();
 			
 			JSFHelper

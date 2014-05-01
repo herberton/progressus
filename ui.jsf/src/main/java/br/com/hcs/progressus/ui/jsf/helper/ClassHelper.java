@@ -6,18 +6,49 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import lombok.extern.slf4j.Slf4j;
+
 import org.atatec.trugger.scan.ClassScan;
 import org.atatec.trugger.scan.PackageScan;
 import org.atatec.trugger.scan.ScanLevel;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import br.com.hcs.progressus.annotation.View;
+import br.com.hcs.progressus.enumerator.Setting;
 import br.com.hcs.progressus.helper.CollectionHelper;
 
+@Slf4j
 public class ClassHelper implements Serializable {
 	
 	private static final long serialVersionUID = 386149031341420468L;
-	private static final Logger logger = LoggerFactory.getLogger(ClassHelper.class);
+	
+	
+	public static Set<Class<?>> getViewClazzSet() {
+		try {
+			return ClassHelper.getViewClazzSet(ScanLevel.SUBPACKAGES);
+		} catch (Exception e) {
+			ClassHelper.log.error(e.getMessage());
+		}
+		return new HashSet<>();
+	}
+	
+	public static Set<Class<?>> getViewClazzSet(ScanLevel scanLevel) {
+		try {
+			return ClassHelper.getViewClazzSet(Setting.WEB_MANAGED_BEAN_PACKAGE.toString(), scanLevel);
+		} catch (Exception e) {
+			ClassHelper.log.error(e.getMessage());
+		}
+		return new HashSet<>();
+	}
+	
+	public static Set<Class<?>> getViewClazzSet(String classPackage, ScanLevel scanLevel) {
+		try {
+			return ClassHelper.findSet(View.class, classPackage, scanLevel);
+		} catch (Exception e) {
+			ClassHelper.log.error(e.getMessage());
+		}
+		return new HashSet<>();
+	}
+	
 	
 	public static Set<Class<?>> findSet(Class<? extends Annotation> annotationClazz, String classPackage, ScanLevel scanLevel) {
 		
@@ -39,7 +70,7 @@ public class ClassHelper implements Serializable {
 			return viewClazzSet;
 			
 		} catch (Exception e) {
-			ClassHelper.logger.warn(e.getMessage());
+			ClassHelper.log.error(e.getMessage());
 		}
 		
 		return new HashSet<>();

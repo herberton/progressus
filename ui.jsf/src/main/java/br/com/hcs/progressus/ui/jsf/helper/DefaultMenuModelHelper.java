@@ -10,11 +10,11 @@ import org.primefaces.model.menu.DefaultMenuModel;
 import org.primefaces.model.menu.DefaultSeparator;
 import org.primefaces.model.menu.DefaultSubMenu;
 import org.primefaces.model.menu.MenuElement;
-import org.primefaces.model.menu.Submenu;
 
 import br.com.hcs.progressus.enumerator.MenuLevel;
 import br.com.hcs.progressus.enumerator.Separator;
 import br.com.hcs.progressus.enumerator.Setting;
+import br.com.hcs.progressus.helper.StringHelper;
 import br.com.hcs.progressus.server.jpa.entity.ItemMenuEntity;
 import br.com.hcs.progressus.server.jpa.entity.MenuEntity;
 import br.com.hcs.progressus.server.jpa.entity.PermissionEntity;
@@ -39,13 +39,11 @@ public final class DefaultMenuModelHelper implements Serializable {
 		
 		try {
 			
-			boolean isCheckPermission = user != null;
-			
 			DefaultMenuModel defaultMenuModel = new DefaultMenuModel();
 			
 			for (MenuEntity menu : menuList) {
 				
-				if (isCheckPermission && !user.havePermission(menu)) {
+				if (!DefaultMenuModelHelper.havePermission(user, menu)) {
 					continue;
 				}
 				
@@ -60,19 +58,17 @@ public final class DefaultMenuModelHelper implements Serializable {
 		
 		return null;
 	}
-	
+		
 	
 	public static final DefaultSubMenu getSubMenu(UserEntity user, MenuEntity menu, MenuLevel menuLevel) {
 		
 		try {
 			
-			boolean isCheckPermission = user != null;
-			
 			DefaultSubMenu submenu = DefaultMenuModelHelper.getSubMenu(menu);
 			
 			for (MenuEntity childMenu : menu.getChildMenuList()) {
 				
-				if (isCheckPermission && !user.havePermission(childMenu)) {
+				if (!DefaultMenuModelHelper.havePermission(user, childMenu)) {
 					continue;
 				}
 				
@@ -81,7 +77,7 @@ public final class DefaultMenuModelHelper implements Serializable {
 			
 			for (ItemMenuEntity itemMenu : menu.getItemMenuList()) {
 				
-				if (isCheckPermission && !user.havePermission(itemMenu)) {
+				if (!DefaultMenuModelHelper.havePermission(user, itemMenu)) {
 					continue;
 				}
 				
@@ -91,7 +87,7 @@ public final class DefaultMenuModelHelper implements Serializable {
 				
 				if (menuLevel.equals(MenuLevel.MENU_ITEM)) {
 				
-					submenu.addElement(DefaultMenuModelHelper.getMenuItem(itemMenu.getView()));
+					submenu.addElement(DefaultMenuModelHelper.getMenuItem(itemMenu));
 					
 					if (itemMenu.getSeparator().equals(Separator.AFTER)) {
 						DefaultMenuModelHelper.addSeparator(submenu);
@@ -100,7 +96,7 @@ public final class DefaultMenuModelHelper implements Serializable {
 					continue;
 				}
 				
-				submenu.addElement(DefaultMenuModelHelper.getElement(itemMenu.getView(), menuLevel));
+				submenu.addElement(DefaultMenuModelHelper.getElement(itemMenu, menuLevel));
 				
 				if (itemMenu.getSeparator().equals(Separator.AFTER)) {
 					DefaultMenuModelHelper.addSeparator(submenu);
@@ -153,7 +149,7 @@ public final class DefaultMenuModelHelper implements Serializable {
 		return null;
 	}
 	
-	public static final Submenu getSubMenu(ViewEntity view, MenuLevel level) {
+	public static final DefaultSubMenu getSubMenu(ViewEntity view, MenuLevel level) {
 		
 		try {
 			
@@ -197,7 +193,7 @@ public final class DefaultMenuModelHelper implements Serializable {
 						DefaultMenuModelHelper.getMenuItemID(view), 
 						DefaultMenuModelHelper.getIcon(view), 
 						I18NHelper.getText(view.getName()), 
-						I18NHelper.getText(view.getDescription()), 
+						I18NHelper.getText(StringHelper.isNullOrEmpty(view.getDescription()) ? view.getName() : view.getDescription()), 
 						DefaultMenuModelHelper.getOutcome(DefaultMenuModelHelper.getModuleName(view), view.getName())
 					);
 			
@@ -296,7 +292,7 @@ public final class DefaultMenuModelHelper implements Serializable {
 	public static final String getOutcome(String moduleName, String viewName) {
 		try {
 			return 
-				String.format("/%s/%s", moduleName, viewName.replace(".", Setting.SEPARATOR.toString()));
+				String.format("/%s/%s", moduleName, viewName);
 		} catch (Exception e) {
 			DefaultMenuModelHelper.log.error(e.getMessage(), e);
 		}
@@ -307,9 +303,9 @@ public final class DefaultMenuModelHelper implements Serializable {
 	public static final String getModuleName(ViewEntity view) {
 		try {
 			return 
-				view.getParentView() != null ?
-					DefaultMenuModelHelper.getModuleName(view.getParentView()) :
-					DefaultMenuModelHelper.getModuleName(view.getItemMenu().getParentMenu());
+				view instanceof ItemMenuEntity ?
+					DefaultMenuModelHelper.getModuleName(((ItemMenuEntity)view).getParentMenu()) :
+					DefaultMenuModelHelper.getModuleName(view.getParentView());
 		} catch (Exception e) {
 			DefaultMenuModelHelper.log.error(e.getMessage(), e);
 		}
@@ -335,7 +331,7 @@ public final class DefaultMenuModelHelper implements Serializable {
 				Setting.WEB_MENU_ID_FORMAT.toString()
 					.replace("[menu_id]", menu.getId().toString())
 					.replace("[menu_name]", menu.getName())
-					.replace("[math.random]", new Double(Math.random()).toString().replace(".", ""));
+					.replace("[math.random]", new Double(Math.random()).toString().replaceAll("\\.", ""));
 		} catch (Exception e) {
 			DefaultMenuModelHelper.log.error(e.getMessage(), e);
 		}
@@ -347,7 +343,7 @@ public final class DefaultMenuModelHelper implements Serializable {
 			Setting.WEB_VIEW_ID_FORMAT.toString()
 				.replace("[view_id]", view.getId().toString())
 				.replace("[view_name]", view.getName())
-				.replace("[math.random]", new Double(Math.random()).toString().replace(".", ""));
+				.replace("[math.random]", new Double(Math.random()).toString().replaceAll("\\.", ""));
 	}
 
 	public static final String getMenuItemID() {
@@ -355,7 +351,7 @@ public final class DefaultMenuModelHelper implements Serializable {
 			return 
 				Setting.WEB_ITEM_MENU_ID_PREFIX.toString()
 					.concat(Setting.SEPARATOR.toString())
-						.concat(new Double(Math.random()).toString().replace(".", ""));
+						.concat(new Double(Math.random()).toString().replaceAll("\\.", ""));
 		} catch (Exception e) {
 			DefaultMenuModelHelper.log.error(e.getMessage(), e);
 		}
@@ -368,7 +364,7 @@ public final class DefaultMenuModelHelper implements Serializable {
 				Setting.WEB_PERMISSION_ID_FORMAT.toString()
 					.replace("[permission_id]", permission.getId().toString())
 					.replace("[permission_name]", permission.getName())
-					.replace("[math.random]", new Double(Math.random()).toString().replace(".", ""));
+					.replace("[math.random]", new Double(Math.random()).toString().replaceAll("\\.", ""));
 		} catch (Exception e) {
 			DefaultMenuModelHelper.log.error(e.getMessage(), e);
 		}
@@ -378,11 +374,8 @@ public final class DefaultMenuModelHelper implements Serializable {
 	
 	public static final String getIcon(ViewEntity view) {
 		try {
-			if (view.getParentView() == null) {
-				return 
-					view.getItemMenu() == null ? 
-						Setting.WEB_VIEW_ICON_DEFAULT.toString() : 
-						view.getItemMenu().getIcon();
+			if (view instanceof ItemMenuEntity) {
+				return ((ItemMenuEntity)view).getIcon();
 			}
 			return DefaultMenuModelHelper.getIcon(view.getParentView());
 		} catch (Exception e) {
@@ -401,4 +394,21 @@ public final class DefaultMenuModelHelper implements Serializable {
 	}
 
 	
+	private static final boolean havePermission(UserEntity user, MenuEntity menu) {
+		try {
+			return  user == null ? true : user.havePermission(menu);
+		} catch (Exception e) {
+			DefaultMenuModelHelper.log.error(e.getMessage(), e);
+		}
+		return false;
+	}
+	
+	private static final boolean havePermission(UserEntity user, ViewEntity view) {
+		try {
+			return  user == null ? true : user.havePermission(view);
+		} catch (Exception e) {
+			DefaultMenuModelHelper.log.error(e.getMessage(), e);
+		}
+		return false;
+	}
 }	

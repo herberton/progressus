@@ -7,8 +7,6 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -16,11 +14,19 @@ import javax.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import br.com.hcs.progressus.enumerator.Separator;
 import br.com.hcs.progressus.enumerator.Setting;
+import br.com.hcs.progressus.exception.ProgressusException;
+import br.com.hcs.progressus.exception.UnableToCompleteOperationException;
+import br.com.hcs.progressus.helper.CollectionHelper;
+import br.com.hcs.progressus.helper.ObjectHelper;
 import br.com.hcs.progressus.helper.StringHelper;
+import br.com.hcs.progressus.helper.ValidatorHelper;
 
 @Slf4j
 @NoArgsConstructor
@@ -31,58 +37,172 @@ public class MenuEntity extends ProgressusEntity<MenuEntity> implements Serializ
 	private static final long serialVersionUID = 8490521196480203372L;
 
 	
-	@Getter
-	@Column(nullable=false)
-	private String name;
-	@Setter
-	@Column(nullable=false)
-	private String icon;
-	@Getter
-	@Setter
-	@Enumerated(EnumType.STRING)
-	private Separator separator;
-	@Getter
-	@Setter
-	@ManyToOne
-	private MenuEntity parentMenu;
-	@Setter
-	@OneToMany(mappedBy = "parentMenu", cascade=CascadeType.ALL)
-	private List<MenuEntity> childMenuList;
-	@Setter
-	@OneToMany(mappedBy = "parentMenu", cascade=CascadeType.ALL, fetch=FetchType.EAGER)
-	private List<ItemMenuEntity> itemMenuList;
-	
-	
-	public MenuEntity(String name) {
+	public MenuEntity(String name) throws ProgressusException {
 		this();
 		this.setName(name);
 	}
 	
 	
-	public void setName(String name) {
-		
+	@Getter
+	@Column(nullable=false)
+	private String name;
+	@Column(nullable=false)
+	private String icon;
+	@Getter
+	@ManyToOne
+	private MenuEntity parentMenu;
+	@OneToMany(mappedBy = "parentMenu", cascade=CascadeType.ALL)
+	private List<MenuEntity> childMenuList;
+	@OneToMany(mappedBy = "parentMenu", cascade=CascadeType.ALL, fetch=FetchType.EAGER)
+	private List<ItemMenuEntity> itemMenuList;
+
+	
+	public void setName(String name) throws ProgressusException {
+		this.name = name;
+		this.updateIcon();
+	}
+	
+	
+	public String getIcon() throws ProgressusException {
+		this.updateIcon();
+		return this.icon;
+	}
+
+	protected void setIcon(String icon) {
+		this.icon = icon;
+	}
+	
+	
+	public void setParentMenu(MenuEntity parentMenu) throws ProgressusException {
+		this.parentMenu = parentMenu;
 		try {
-			
-			this.name = name;
-			
-			if (!StringHelper.isNullOrEmpty(this.getName())) {
-				this.setIcon(Setting.WEB_MENU_ICON_FORMAT.toString().replace("[menu_name]", this.getName()));
+			if (this.getParentMenu() == null) {
+				return;
 			}
-			
+			if (this.getParentMenu().getChildMenuList().contains(this)) {
+				return;
+			}
+			this.getParentMenu().getChildMenuList().add(this);
 		} catch (Exception e) {
-			MenuEntity.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("setParentMenu");
 		}
 	}
 	
-	public String getIcon() {
+	
+	public List<MenuEntity> getChildMenuList() throws ProgressusException {
+		try {
+			if (this.childMenuList == null) {
+				this.setChildMenuList(new ArrayList<MenuEntity>());
+			}
+			return this.childMenuList;
+		} catch (ProgressusException pe) {
+			throw pe;
+		} catch(Exception ee) {
+			throw new UnableToCompleteOperationException("getChildMenuList");
+		}
+	}
+	
+	public void setChildMenuList(List<MenuEntity> childMenuList) throws ProgressusException {
+		try {
+			this.childMenuList = childMenuList;
+			for (MenuEntity childMenu : this.getChildMenuList()) {
+				if (childMenu.getParentMenu() == null) {
+					childMenu.setParentMenu(this);
+					continue;
+				}
+				if (childMenu.getParentMenu().equals(this)) {
+					continue;
+				}
+				childMenu.setParentMenu(this);
+			}
+		} catch (ProgressusException pe) {
+			throw pe;
+		} catch(Exception ee) {
+			throw new UnableToCompleteOperationException("setChildMenuList");
+		}
+	}
+	
+	
+	public List<ItemMenuEntity> getItemMenuList() throws ProgressusException {
+		if (this.itemMenuList == null) {
+			this.setItemMenuList(new ArrayList<ItemMenuEntity>());
+		}
+		return this.itemMenuList;
+	}
+	
+	public void setItemMenuList(List<ItemMenuEntity> itemMenuList) throws ProgressusException {
+		try {
+			this.itemMenuList = itemMenuList;
+			for (ItemMenuEntity itemMenu : this.getItemMenuList()) {
+				if (itemMenu.getParentMenu() == null) {
+					itemMenu.setParentMenu(this);
+					continue;
+				}
+				if (itemMenu.getParentMenu().equals(this)) {
+					continue;
+				}
+				itemMenu.setParentMenu(this);
+			}
+		} catch (ProgressusException pe) {
+			throw pe;
+		} catch(Exception ee) {
+			throw new UnableToCompleteOperationException("setChildMenuList");
+		}
+	}
+	
+	
+	private void updateIcon() throws ProgressusException {
+		if (StringHelper.isNullOrEmpty(this.icon)) {
+			if (StringHelper.isNullOrEmpty(this.getName())) {
+				this.setIcon(Setting.WEB_MENU_ICON_FORMAT.toString().replace("[menu_name]", "default"));
+			} else {
+				this.setIcon(Setting.WEB_MENU_ICON_FORMAT.toString().replace("[menu_name]", this.getName()));
+			}
+		}
+	}
+	
+	
+	public void addChildMenu(MenuEntity childMenu) throws ProgressusException {
+		ValidatorHelper.validateFilling(MenuEntity.class, childMenu);
+		try {
+			this.getChildMenuList().add(childMenu);
+			childMenu.setParentMenu(this);
+		} catch (Exception e) {
+			throw new UnableToCompleteOperationException("addChildMenu");
+		}
+	}
+	
+	public void addItemMenu(ItemMenuEntity itemMenu) throws ProgressusException {
+		ValidatorHelper.validateFilling(ItemMenuEntity.class, itemMenu);
+		try {
+			this.getItemMenuList().add(itemMenu);
+			itemMenu.setParentMenu(this);
+		} catch (Exception e) {
+			throw new UnableToCompleteOperationException("addItemMenu");
+		}
+	}
+	
+	
+	@Override
+	public String toString() {
 		
 		try {
-		
-			if (StringHelper.isNullOrEmpty(this.icon)) {
-				this.setIcon(Setting.WEB_MENU_ICON_FORMAT.toString().replace("[menu_name]", "default"));
+			
+			if (ObjectHelper.isNullOrEmpty(this.getParentMenu())) {
+				return StringHelper.isNullOrEmpty(this.getName()) ? "" : this.getName();
 			}
 			
-			return this.icon;
+			String string = this.getParentMenu().toString();
+			
+			if (StringHelper.isNullOrEmpty(this.getName())) {
+				return StringHelper.isNullOrEmpty(string) ? "" : string;
+			}
+			
+			if (StringHelper.isNullOrEmpty(string)) {
+				return this.getName();
+			}
+			
+			return string.concat(".").concat(this.getName());
 			
 		} catch (Exception e) {
 			MenuEntity.log.error(e.getMessage(), e);
@@ -91,188 +211,117 @@ public class MenuEntity extends ProgressusEntity<MenuEntity> implements Serializ
 		return "";
 	}
 	
-	public List<MenuEntity> getChildMenuList() {
-		if (this.childMenuList == null) {
-			this.setChildMenuList(new ArrayList<MenuEntity>());
-		}
-		return this.childMenuList;
-	}
-	
-	public List<ItemMenuEntity> getItemMenuList() {
-		if (this.itemMenuList == null) {
-			this.setItemMenuList(new ArrayList<ItemMenuEntity>());
-		}
-		return this.itemMenuList;
-	}
-	
-	
-	public void addChildMenu(MenuEntity childMenu){
-		
-		try {
-			
-			if(this.getChildMenu(childMenu) != null) {
-				return;
-			}
-			
-			childMenu.setParentMenu(this);
-			
-			this.getChildMenuList().add(childMenu);
-			
-		} catch (Exception e) {
-			MenuEntity.log.error(e.getMessage(), e);
-		}
-	}
-	
-	public void addItemMenu(ItemMenuEntity itemMenu){
-		
-		try {
-			
-			if (this.getItemMenu(itemMenu) != null) {
-				return;
-			}
-			
-			itemMenu.setParentMenu(this);
-			
-			this.getItemMenuList().add(itemMenu);
-			
-		} catch (Exception e) {
-			MenuEntity.log.error(e.getMessage(), e);
-		}
-		
-	}
-	
-	public MenuEntity getChildMenu(MenuEntity menu){
-		
-		try {
-			
-			if (menu == null) {
-				return null;
-			}
-			
-			for (MenuEntity child : this.getChildMenuList()) {
-				if (menu.equals(child)) {
-					return child;
-				}
-			}
-			
-		} catch (Exception e) {
-			MenuEntity.log.error(e.getMessage(), e);
-		}
-		
-		return null;
-	}
-	
-	public ItemMenuEntity getItemMenu(ItemMenuEntity itemMenu){
-		
-		try {
-			
-			if (itemMenu == null) {
-				return null;
-			}
-			
-			for (ItemMenuEntity child : this.getItemMenuList()) {
-				if (itemMenu.equals(child)) {
-					return child;
-				}
-			}
-			
-		} catch (Exception e) {
-			MenuEntity.log.error(e.getMessage(), e);
-		}
-		
-		return null;
-	}
-	
-	public void setChildMenu(MenuEntity childMenu, boolean addNew) {
-		
-		try {
-			
-			if (this.getChildMenu(childMenu) == null) {
-				
-				if (addNew) {
-					this.addChildMenu(childMenu);
-				}
-				
-				return;
-			}
-			
-			this.getChildMenuList().set(this.getChildMenuList().indexOf(childMenu), childMenu);
-			
-		} catch (Exception e) {
-			MenuEntity.log.error(e.getMessage(), e);
-		}
-	}
-	
-	public void setItemMenu(ItemMenuEntity itemMenu, boolean addNew) {
-		
-		try {
-			
-			if (this.getItemMenu(itemMenu) == null) {
-				
-				if (addNew) {
-					this.addItemMenu(itemMenu);
-				}
-				
-				return;
-			}
-			
-			this.getItemMenuList().set(this.getItemMenuList().indexOf(itemMenu), itemMenu);
-			
-		} catch (Exception e) {
-			MenuEntity.log.error(e.getMessage(), e);
-		}
-	}
-	
-		
 	@Override
 	public boolean equals(Object object) {
-		
 		try {
-			
-			if (this == object){ 
-				return true;
-			}
-			
-			if (object == null) {
-				return false;
-			}
-			
 			if (!(object instanceof MenuEntity)) {
 				return false;
 			}
-			
-			MenuEntity other = (MenuEntity)object;
-			
-			if (StringHelper.isNullOrEmpty(this.getName()) || StringHelper.isNullOrEmpty(other.getName())) {
-				return super.equals(object);
-			}
-			
-			return this.getName().equals(other.getName());
-			
+			return 
+				new EqualsBuilder()
+					.append(this.getClass(), object.getClass())
+					.append(this.toString(), object.toString())
+					.isEquals();
 		} catch (Exception e) {
 			MenuEntity.log.error(e.getMessage(), e);
 		}
-		
 		return super.equals(object);
-	} 
+	}
 	
 	@Override
-	public int compareTo(MenuEntity other) {
-		
+	public int hashCode() {
 		try {
-			
-			if (other == null) {
-				return -1;
-			}
-			
-			if (!StringHelper.isNullOrEmpty(other.getName()) && !StringHelper.isNullOrEmpty(this.getName())) {
-				return this.getName().compareTo(other.getName());
-			}
-			
+			return 
+				new HashCodeBuilder()
+					.append(this.getClass())
+					.append(this.toString())
+					.toHashCode();
 		} catch (Exception e) {
 			MenuEntity.log.error(e.getMessage(), e);
 		}
+		return super.hashCode();
+	}
+
+	
+	public static MenuEntity getInstance(String menu, String view, Separator separator, String...permissionArray) throws ProgressusException {
 		
-		return super.compareTo(other);
+		try {
+		
+			if (StringHelper.isNullOrEmpty(menu)) {
+				return null;
+			}
+			
+			String[] menuArray = menu.split("\\.");
+			
+			if (CollectionHelper.isNullOrEmpty(menuArray)) {
+				return null;
+			}
+			
+			MenuEntity entity = new MenuEntity(menuArray[0]);
+			
+			menu = menu.replace(entity.getName(), "");
+			
+			if (menu.length() > 0 && menu.charAt(0) == '.') {
+				menu = menu.substring(1);
+			}
+			
+			if (!StringHelper.isNullOrEmpty(menu)) {
+				entity.addChildMenu(MenuEntity.getInstance(menu, view, separator, permissionArray));
+				return entity;
+			}
+			
+			if (StringHelper.isNullOrEmpty(view)) {
+				return entity;
+			}
+			
+			entity.addItemMenu(ItemMenuEntity.getInstance(view, separator, permissionArray));
+			return entity;
+			
+		} catch (Exception e) {
+			throw new UnableToCompleteOperationException("getInstance");
+		}
+	}
+	
+	public static List<MenuEntity> addMenuInList(List<MenuEntity> menuList, MenuEntity menu) throws ProgressusException {	
+		
+		try {
+		
+			if (menuList == null) {
+				menuList = new ArrayList<>();
+			}
+			
+			if (menu == null) {
+				return menuList;
+			}
+			
+			if (menuList.contains(menu)) {
+				
+				int index = menuList.indexOf(menu);
+				
+				for (MenuEntity childMenu : menu.getChildMenuList()) {
+					
+					menuList.get(index).setChildMenuList(MenuEntity.addMenuInList(menuList.get(index).getChildMenuList(), childMenu));
+					
+				}
+				
+				for (ItemMenuEntity itemMenu : menu.getItemMenuList()) {
+					
+					menuList.get(index).setItemMenuList(ItemMenuEntity.addItemMenuInList(menuList.get(index).getItemMenuList(), itemMenu));
+					
+				}
+				
+				return menuList;
+				
+			}
+			
+			menuList.add(menu);
+			
+			return menuList;
+			
+		} catch (ProgressusException pe) {
+			throw pe;
+		} catch(Exception ee) {
+			throw new UnableToCompleteOperationException("addMenuInList");
+		}
 	}
 }

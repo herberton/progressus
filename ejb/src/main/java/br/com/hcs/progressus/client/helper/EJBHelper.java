@@ -62,7 +62,7 @@ public final class EJBHelper implements Serializable {
 	}
 
 
-	public static final <T extends ProgressusEntity<T>> String getDAOName(Class<T> entityClazz, boolean isGetSimpleName) throws ProgressusException {
+	public static final <T extends ProgressusEntity<?>> String getDAOName(Class<T> entityClazz, boolean isGetSimpleName) throws ProgressusException {
 		
 		try {
 			
@@ -80,7 +80,7 @@ public final class EJBHelper implements Serializable {
 		}
 	}
 	
-	public static final <T extends ProgressusEntity<T>> String getBOEntityName(Class<T> entityClazz, boolean isGetSimpleName) throws ProgressusException {
+	public static final <T extends ProgressusEntity<?>> String getBOEntityName(Class<T> entityClazz, boolean isGetSimpleName) throws ProgressusException {
 		
 		try {
 			
@@ -100,7 +100,7 @@ public final class EJBHelper implements Serializable {
 	
 	
 	@SuppressWarnings("unchecked")
-	public static final <T extends ProgressusEntity<T>> ProgressusDAOLocal<T> getDAO(Class<T> entityClazz) throws ProgressusException {
+	public static final <T extends ProgressusEntity<?>> ProgressusDAOLocal<T> getDAO(Class<T> entityClazz) throws ProgressusException {
 		
 		ValidatorHelper.validateFilling("entityClazz", entityClazz);
 		
@@ -125,7 +125,7 @@ public final class EJBHelper implements Serializable {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static final <T extends ProgressusEntity<T>> ProgressusBOEntityRemote<T> getBOEntity(Class<T> entityClazz) throws ProgressusException {
+	public static final <T extends ProgressusEntity<?>> ProgressusBOEntityRemote<T> getBOEntity(Class<T> entityClazz) throws ProgressusException {
 		
 		ValidatorHelper.validateFilling("entityClazz", entityClazz);
 		
