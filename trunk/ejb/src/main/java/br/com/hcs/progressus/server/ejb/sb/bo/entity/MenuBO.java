@@ -73,54 +73,76 @@ public class MenuBO extends ProgressusBOEntity<MenuEntity> implements MenuBORemo
 	}
 	
 	
-	private void print(List<MenuEntity> menuTreeList) {
+	private void print(List<MenuEntity> menuTreeList) throws ProgressusException {
 		if (menuTreeList == null) {
 			return;
 		}
-		System.out.println("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
-		System.out.println("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
-		System.out.println("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
-		System.out.println("\tMODULE STRUCTURE:");
-		System.out.println("\t\t[");
+		StringBuffer stringBuffer = new StringBuffer();
+		
+		stringBuffer.append("\n-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+		stringBuffer.append("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+		stringBuffer.append("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+		stringBuffer.append("MODULE STRUCTURE:\n");
+		stringBuffer.append("[\n");
 		for (MenuEntity menuTree : menuTreeList) {
-			this.print("\t\t\t", menuTree);
+			this.print(stringBuffer, "  ", menuTree);
 		}
-		System.out.println("\t\t]");
-		System.out.println("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
-		System.out.println("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
-		System.out.println("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+		stringBuffer.append("]\n");
+		stringBuffer.append("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+		stringBuffer.append("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+		stringBuffer.append("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+		
+		MenuBO.log.info(stringBuffer.toString());
 	}
 	
-	private void print(String tab, MenuEntity menu) {
+	private void print(StringBuffer stringBuffer, String tab, MenuEntity menu) throws ProgressusException {
 		
-		System.out.println(tab + "+ " + menu.getName());
-		tab +="\t";
+		stringBuffer.append(tab);
+		stringBuffer.append("+ ");
+		stringBuffer.append(menu.toString());
+		
+		stringBuffer.append("\n");
+		
+		tab += "  ";
 		
 		for (MenuEntity child : menu.getChildMenuList()) {
-			this.print(tab, child);
+			this.print(stringBuffer, tab, child);
 		}
 		
+		stringBuffer.append("\n");
+		
 		for (ItemMenuEntity child : menu.getItemMenuList()) {			
-			this.print(tab, child.getView());
+			this.print(stringBuffer, tab, child);
 		}
 	}
 	
-	private void print(String tab, ViewEntity view) {
+	private void print(StringBuffer stringBuffer, String tab, ViewEntity view) throws ProgressusException {
 		
-		String itemMenuIcon =
-			view.getItemMenu() == null ?
-				"" :
-				" [" + view.getItemMenu().getIcon() + "]";
+		stringBuffer.append(tab);
+		stringBuffer.append("- ");
+		stringBuffer.append(view.toString());
 		
-		System.out.println(tab + "- " + view.getFullName() + itemMenuIcon);
-		tab +="\t";
+		if (view instanceof ItemMenuEntity) {
+			stringBuffer.append("  [  ");
+			stringBuffer.append(((ItemMenuEntity)view).getIcon());
+			stringBuffer.append("  ]");
+		} 
 		
-		for (PermissionEntity child : view.getPermissionList()) {
-			System.out.println(tab + ": " + child.getFullName());
+		stringBuffer.append("\n");
+		
+		tab +="  ";
+		
+		for (PermissionEntity permission : view.getPermissionList()) {
+			stringBuffer.append(tab);
+			stringBuffer.append(": ");
+			stringBuffer.append(permission.toString());
+			stringBuffer.append("\n");
 		}
 		
+		stringBuffer.append("\n");
+		
 		for (ViewEntity child : view.getChildViewList()) {
-			this.print(tab, child);
+			this.print(stringBuffer, tab, child);
 		}
 	}
 }

@@ -95,7 +95,6 @@ public class MenuDAO extends ProgressusDAO<MenuEntity> implements MenuDAOLocal {
 				treeList.set(i, this.saveTree(iterator.next()));
 			}
 			
-			
 			this.commitTransaction(userTransaction);
 			
 			return treeList;
@@ -111,64 +110,62 @@ public class MenuDAO extends ProgressusDAO<MenuEntity> implements MenuDAOLocal {
 	}
 	
 	
-	private MenuEntity saveTree(MenuEntity tree) throws ProgressusException {
+	private MenuEntity saveTree(MenuEntity menu) throws ProgressusException {
 		
 		try {
 			
-			List<MenuEntity> childMenuList = tree.getChildMenuList();
-			tree.setChildMenuList(null);
+			List<MenuEntity> childMenuList = menu.getChildMenuList();
+			menu.setChildMenuList(null);
 			
-			List<ItemMenuEntity> itemMenuList = tree.getItemMenuList();
-			tree.setItemMenuList(null);
+			List<ItemMenuEntity> itemMenuList = menu.getItemMenuList();
+			menu.setItemMenuList(null);
 			
-			if (tree.hasId()) {
-				
-				tree = this.getBO().select(tree);
-				
-				if (tree == null) {
-					throw new UnableToCompleteOperationException("saveTreeList", "entityNotFound");
-				}
-				
-			} else {			
-				tree = this.insert(tree, false);
-			}
+			menu = this.insertOrSelectEntity(menu, false);
 			
+			menu.setChildMenuList(null);
+			menu.setItemMenuList(null);
 			
-			for (MenuEntity child : childMenuList) {
-				
-				child.setParentMenu(null);
-				
-				child = this.saveTree(child);
-				
-				tree.addChildMenu(child);
-				
+			menu = this.updateEntity(menu, false);
+			
+			for (MenuEntity childMenu : childMenuList) {
+				childMenu.setParentMenu(null);
+				menu.addChildMenu(this.saveTree(childMenu));
 			}
 			
 			for (ItemMenuEntity itemMenu : itemMenuList) {
 				
 				itemMenu.setParentMenu(null);
 				
-				ViewEntity view = itemMenu.getView();
+				List<ViewEntity> childViewList = itemMenu.getChildViewList();
+				itemMenu.setChildViewList(null);
 				
-				view.setItemMenu(null);
-				itemMenu.setView(null);
+				List<PermissionEntity> permissionList = itemMenu.getPermissionList();
+				itemMenu.setPermissionList(null);
 				
-				view = this.saveView(view);
+				itemMenu = this.insertOrSelectEntity(itemMenu, false);
 				
-				if (itemMenu.hasId()) {
-					itemMenu = this.getItemMenuBO().select(itemMenu);
-				} else {
-					itemMenu = this.insertEntity(itemMenu, false);
+				itemMenu.setChildViewList(null);
+				itemMenu.setPermissionList(null);
+				
+				itemMenu = this.updateEntity(itemMenu, false);
+				
+				for (ViewEntity childView : childViewList) {
+					childView.setParentView(null);
+					itemMenu.addChildView(this.saveView(childView));
 				}
 				
-				itemMenu.setView(view);
-				tree.addItemMenu(itemMenu);
+				for (PermissionEntity permission : permissionList) {
+					permission.setView(null);
+					itemMenu.addPermission(this.insertOrSelectEntity(permission, false));
+				}
+				
+				menu.addItemMenu(itemMenu);
 				
 				itemMenu = this.updateEntity(itemMenu, false);
 				
 			}
 					
-			return this.update(tree, false);
+			return this.update(menu, false);
 			
 		} catch (ProgressusException pe) {
 			throw pe;
@@ -188,33 +185,21 @@ public class MenuDAO extends ProgressusDAO<MenuEntity> implements MenuDAOLocal {
 			List<PermissionEntity> permissionList = view.getPermissionList();
 			view.setPermissionList(null);
 			
-			if (view.hasId()) {
-				view = this.getViewBO().select(view);
-			} else {
-				view = this.insertEntity(view, false);
-			}
+			view = this.insertOrSelectEntity(view, false);
+			
+			view.setChildViewList(null);
+			view.setPermissionList(null);
+			
+			view = this.updateEntity(view,  false);
 			
 			for (ViewEntity child : childViewList) {
-				
 				child.setParentView(null);
-				
-				child = this.saveView(child);
-			
-				view.addChildView(child);
+				view.addChildView(this.saveView(child));
 			}
 			
-			
 			for (PermissionEntity permission : permissionList) {
-				
 				permission.setView(null);
-				
-				if (permission.hasId()) {
-					permission = this.getPermissionBO().select(permission);
-				}else{
-					permission = this.insertEntity(permission, false);
-				}
-				
-				view.addPermision(this.updateEntity(permission, false));
+				view.addPermission(this.insertOrSelectEntity(permission, false));
 			}
 			
 			return this.updateEntity(view, false);
@@ -242,7 +227,7 @@ public class MenuDAO extends ProgressusDAO<MenuEntity> implements MenuDAOLocal {
 				Collections.sort((List<ItemMenuEntity>)menu.getItemMenuList());
 				
 				for (ItemMenuEntity item : menu.getItemMenuList()) {
-					this.sort(item.getView());
+					this.sort(item);
 				}
 				this.sort((List<MenuEntity>)menu.getChildMenuList());
 			}

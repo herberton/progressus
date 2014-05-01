@@ -32,6 +32,7 @@ import br.com.hcs.progressus.exception.CountException;
 import br.com.hcs.progressus.exception.DeleteException;
 import br.com.hcs.progressus.exception.EntityNotFoundException;
 import br.com.hcs.progressus.exception.InsertException;
+import br.com.hcs.progressus.exception.InsertOrSelectException;
 import br.com.hcs.progressus.exception.ProgressusException;
 import br.com.hcs.progressus.exception.RemoveException;
 import br.com.hcs.progressus.exception.RollbackTransactionException;
@@ -55,7 +56,7 @@ import br.com.hcs.progressus.to.ProgressusTO;
 @Stateless
 @LocalBean
 @TransactionManagement(TransactionManagementType.BEAN)
-public class ProgressusDAO<T extends ProgressusEntity<T>> implements ProgressusDAOLocal<T> {
+public class ProgressusDAO<T extends ProgressusEntity<?>> implements ProgressusDAOLocal<T> {
 
 	private static final long serialVersionUID = 3603846302496627366L;
 	
@@ -67,7 +68,9 @@ public class ProgressusDAO<T extends ProgressusEntity<T>> implements ProgressusD
 	@PersistenceContext(name="progressus.pu")
 	private EntityManager entityManager;
 	
-
+	
+	// INSERT...
+	
 	@Override
 	public T insert(T entity) throws ProgressusException {
 		try {
@@ -92,11 +95,12 @@ public class ProgressusDAO<T extends ProgressusEntity<T>> implements ProgressusD
 		}
 	}
 	
-	protected <X extends ProgressusEntity<X>> X insertEntity(X entity, boolean isControlTransaction) throws ProgressusException {
+	protected <X extends ProgressusEntity<?>> X insertEntity(X entity, boolean isControlTransaction) throws ProgressusException {
 		
 		ValidatorHelper.validateFilling("entity", entity);
    		
-		Class<?> clazz = entity.getClass();
+		@SuppressWarnings("unchecked")
+		Class<X> clazz = (Class<X>) entity.getClass();
 		
    		UserTransaction userTransaction = null;
 		
@@ -127,7 +131,9 @@ public class ProgressusDAO<T extends ProgressusEntity<T>> implements ProgressusD
 			
 		}
 	}
+
 	
+	// INSERT LIST...
 	
 	@Override
 	public List<T> insertList(List<T> entityList) throws ProgressusException {
@@ -152,7 +158,7 @@ public class ProgressusDAO<T extends ProgressusEntity<T>> implements ProgressusD
 		}
 	}
 
-	protected <X extends ProgressusEntity<X>> List<X> insertEntityList(List<X> entityList, boolean isControlTransaction) throws ProgressusException {
+	protected <X extends ProgressusEntity<?>> List<X> insertEntityList(List<X> entityList, boolean isControlTransaction) throws ProgressusException {
 		
 		ValidatorHelper.validateFilling("entityList", entityList);
    		
@@ -160,7 +166,8 @@ public class ProgressusDAO<T extends ProgressusEntity<T>> implements ProgressusD
 			return entityList;
 		}
    		
-   		Class<?> clazz = entityList.get(0).getClass();
+		@SuppressWarnings("unchecked")
+		Class<X> clazz = (Class<X>) entityList.get(0).getClass();
 		
    		UserTransaction userTransaction = null;
 		
@@ -196,6 +203,8 @@ public class ProgressusDAO<T extends ProgressusEntity<T>> implements ProgressusD
 	}
 	
 	
+	// UPDATE...
+	
 	@Override
 	public T update(T entity) throws ProgressusException {
 		try {
@@ -220,11 +229,12 @@ public class ProgressusDAO<T extends ProgressusEntity<T>> implements ProgressusD
 		}
 	}
 
-	protected <X extends ProgressusEntity<X>> X updateEntity(X entity, boolean isControlTransaction) throws ProgressusException {
+	protected <X extends ProgressusEntity<?>> X updateEntity(X entity, boolean isControlTransaction) throws ProgressusException {
 
 		ValidatorHelper.validateFilling("entity", entity);
 		
-		Class<?> clazz = entity.getClass();
+		@SuppressWarnings("unchecked")
+		Class<X> clazz = (Class<X>) entity.getClass();
 		
 		UserTransaction userTransaction = null;
 		
@@ -259,6 +269,8 @@ public class ProgressusDAO<T extends ProgressusEntity<T>> implements ProgressusD
 	}
 	
 	
+	// UPDATE LIST...
+	
 	@Override
 	public List<T> updateList(List<T> entityList) throws ProgressusException {
 		try {
@@ -282,7 +294,7 @@ public class ProgressusDAO<T extends ProgressusEntity<T>> implements ProgressusD
 		}
 	}
 	
-	protected <X extends ProgressusEntity<X>> List<X> updateEntityList(List<X> entityList, boolean isControlTransaction) throws ProgressusException {
+	protected <X extends ProgressusEntity<?>> List<X> updateEntityList(List<X> entityList, boolean isControlTransaction) throws ProgressusException {
 
 		ValidatorHelper.validateFilling("entityList", entityList);
    		
@@ -290,7 +302,8 @@ public class ProgressusDAO<T extends ProgressusEntity<T>> implements ProgressusD
 			return entityList;
 		}
    		
-   		Class<?> clazz = entityList.get(0).getClass();
+   		@SuppressWarnings("unchecked")
+		Class<X> clazz = (Class<X>) entityList.get(0).getClass();
 		
    		UserTransaction userTransaction = null;
    		
@@ -326,6 +339,8 @@ public class ProgressusDAO<T extends ProgressusEntity<T>> implements ProgressusD
 	}
 
 	
+	// SAVE...
+	
 	@Override
 	public T save(T entity) throws ProgressusException {
 		try {
@@ -350,12 +365,12 @@ public class ProgressusDAO<T extends ProgressusEntity<T>> implements ProgressusD
 		}
 	}
 	
-	protected <X extends ProgressusEntity<X>> X saveEntity(X entity, boolean isControlTransaction) throws ProgressusException {
+	protected <X extends ProgressusEntity<?>> X saveEntity(X entity, boolean isControlTransaction) throws ProgressusException {
 
 		ValidatorHelper.validateFilling("entity", entity);
 		
 		@SuppressWarnings("unchecked")
-		Class<X> clazz = (Class<X>)entity.getClass();
+		Class<X> clazz = (Class<X>) entity.getClass();
 		
 		UserTransaction userTransaction = null;
 		
@@ -369,9 +384,9 @@ public class ProgressusDAO<T extends ProgressusEntity<T>> implements ProgressusD
 			
 			if (entity.hasId()) {
 				
-				X beforeEntity = this.getBO(clazz).select(entity);
+				List<X> beforeEntityList = this.selectEntityList(clazz, entity.toParameterMap(), 0, 1, null);
 				
-				if (beforeEntity == null) {
+				if (CollectionHelper.isNullOrEmpty(beforeEntityList)) {
 					throw new EntityNotFoundException(clazz);
 				}
 				
@@ -404,6 +419,8 @@ public class ProgressusDAO<T extends ProgressusEntity<T>> implements ProgressusD
 	}
 
 	
+	// SAVE LIST...
+	
 	@Override
 	public List<T> saveList(List<T> entityList) throws ProgressusException {
 		try {
@@ -427,7 +444,7 @@ public class ProgressusDAO<T extends ProgressusEntity<T>> implements ProgressusD
 		}
 	}
 	
-	protected <X extends ProgressusEntity<X>> List<X> saveEntityList(List<X> entityList, boolean isControlTransaction) throws ProgressusException {
+	protected <X extends ProgressusEntity<?>> List<X> saveEntityList(List<X> entityList, boolean isControlTransaction) throws ProgressusException {
 
 		ValidatorHelper.validateFilling("entityList", entityList);
    		
@@ -435,7 +452,8 @@ public class ProgressusDAO<T extends ProgressusEntity<T>> implements ProgressusD
 			return entityList;
 		}
    		
-   		Class<?> clazz = entityList.get(0).getClass();
+   		@SuppressWarnings("unchecked")
+		Class<X> clazz = (Class<X>) entityList.get(0).getClass();
 		
    		UserTransaction userTransaction = null;
    		
@@ -471,6 +489,8 @@ public class ProgressusDAO<T extends ProgressusEntity<T>> implements ProgressusD
 	}
 
 	
+	// DELETE...
+	
 	@Override
 	public void delete(T entity) throws ProgressusException {
 		try {
@@ -495,11 +515,12 @@ public class ProgressusDAO<T extends ProgressusEntity<T>> implements ProgressusD
 		}
 	}
 	
-	protected <X extends ProgressusEntity<X>> void deleteEntity(X entity, boolean isControlTransaction) throws ProgressusException {
+	protected <X extends ProgressusEntity<?>> void deleteEntity(X entity, boolean isControlTransaction) throws ProgressusException {
 
 		ValidatorHelper.validateFilling("entity", entity);
 		
-		Class<?> clazz = entity.getClass();
+		@SuppressWarnings("unchecked")
+		Class<X> clazz = (Class<X>) entity.getClass();
 		
 		UserTransaction userTransaction = null;
 		
@@ -533,6 +554,8 @@ public class ProgressusDAO<T extends ProgressusEntity<T>> implements ProgressusD
 	}
 
 	
+	// DELETE LIST...
+	
 	@Override
 	public void deleteList(List<T> entityList) throws ProgressusException {
 		try {
@@ -557,7 +580,7 @@ public class ProgressusDAO<T extends ProgressusEntity<T>> implements ProgressusD
 		}
 	}
 	
-	protected <X extends ProgressusEntity<X>> void deleteEntityList(List<X> entityList, boolean isControlTransaction) throws ProgressusException {
+	protected <X extends ProgressusEntity<?>> void deleteEntityList(List<X> entityList, boolean isControlTransaction) throws ProgressusException {
 
 		ValidatorHelper.validateFilling("entityList", entityList);
    		
@@ -565,7 +588,8 @@ public class ProgressusDAO<T extends ProgressusEntity<T>> implements ProgressusD
 			return;
 		}
    		
-   		Class<?> clazz = entityList.get(0).getClass();
+		@SuppressWarnings("unchecked")
+		Class<X> clazz = (Class<X>) entityList.get(0).getClass();
 		
    		UserTransaction userTransaction = null;
 		
@@ -599,6 +623,8 @@ public class ProgressusDAO<T extends ProgressusEntity<T>> implements ProgressusD
 	}
 
 	
+	// REMOVE...
+	
 	@Override
 	public void remove(T entity) throws ProgressusException {
 		try {
@@ -623,11 +649,12 @@ public class ProgressusDAO<T extends ProgressusEntity<T>> implements ProgressusD
 		}
 	}
 
-	protected <X extends ProgressusEntity<X>> void removeEntity(X entity, boolean isControlTransaction) throws ProgressusException {
+	protected <X extends ProgressusEntity<?>> void removeEntity(X entity, boolean isControlTransaction) throws ProgressusException {
 
 		ValidatorHelper.validateFilling("entity", entity);
 		
-		Class<?> clazz = entity.getClass();
+		@SuppressWarnings("unchecked")
+		Class<X> clazz = (Class<X>) entity.getClass();
 		
 		UserTransaction userTransaction = null;
 		
@@ -658,6 +685,8 @@ public class ProgressusDAO<T extends ProgressusEntity<T>> implements ProgressusD
 	}
 	
 	
+	// REMOVE LIST...
+	
 	@Override
 	public void removeList(List<T> entityList) throws ProgressusException {
 		try {
@@ -681,7 +710,7 @@ public class ProgressusDAO<T extends ProgressusEntity<T>> implements ProgressusD
 		}
 	}
 	
-	protected <X extends ProgressusEntity<X>> void removeEntityList(List<X> entityList, boolean isControlTransaction) throws ProgressusException {
+	protected <X extends ProgressusEntity<?>> void removeEntityList(List<X> entityList, boolean isControlTransaction) throws ProgressusException {
 
 		ValidatorHelper.validateFilling("entityList", entityList);
    		
@@ -689,7 +718,8 @@ public class ProgressusDAO<T extends ProgressusEntity<T>> implements ProgressusD
 			return;
 		}
    		
-   		Class<?> clazz = entityList.get(0).getClass();
+		@SuppressWarnings("unchecked")
+		Class<X> clazz = (Class<X>) entityList.get(0).getClass();
 		
    		UserTransaction userTransaction = null;
 		
@@ -723,6 +753,139 @@ public class ProgressusDAO<T extends ProgressusEntity<T>> implements ProgressusD
 	}
 
 	
+	// INSERT OR SELECT...
+	
+	@Override
+	public T insertOrSelect(T entity) throws ProgressusException {
+		try {
+			return this.insertOrSelect(entity, true);
+		} catch (ProgressusException pe) {
+			throw pe;
+		} catch (Exception e) {
+			ProgressusDAO.log.error(e.getMessage(), e);
+			throw new InsertOrSelectException(this.getEntityClazz("insertOrSelect"), e);
+		}
+	}
+	
+	protected T insertOrSelect(T entity, boolean isControlTransaction) throws ProgressusException {
+		try {
+			return this.insertOrSelectEntity(entity, true);
+		} catch (ProgressusException pe) {
+			throw pe;
+		} catch (Exception e) {
+			ProgressusDAO.log.error(e.getMessage(), e);
+			throw new InsertOrSelectException(this.getEntityClazz("insertOrSelect"), e);
+		}
+	}
+	
+	protected <X extends ProgressusEntity<?>> X insertOrSelectEntity(X entity, boolean isControlTransaction) throws ProgressusException {
+		
+		ValidatorHelper.validateFilling("entity", entity);
+   		
+		if (ObjectHelper.isNullOrEmpty(entity)) {
+			return entity;
+		}
+   		
+   		@SuppressWarnings("unchecked")
+		Class<X> clazz = (Class<X>) entity.getClass();
+		
+   		try {
+			
+			if (entity.hasId()) {
+				
+				entity = this.getBO(clazz).select(entity);
+				
+				if (ObjectHelper.isNullOrEmpty(entity)) {
+					throw new EntityNotFoundException(clazz);
+				}
+				
+				return entity;
+			}
+			
+			return this.insertEntity(entity, isControlTransaction);
+			
+		} catch (ProgressusException pe) {
+			throw pe;
+		} catch (Exception e) {
+			ProgressusDAO.log.error(e.getMessage(), e);
+			throw new InsertOrSelectException(clazz, e);
+		}
+	}
+	
+	
+	// INSERT OR SELECT LIST...
+	
+	@Override
+	public List<T> insertOrSelectList(List<T> entityList) throws ProgressusException {
+		try {
+			return this.insertOrSelectList(entityList, true);
+		} catch (ProgressusException pe) {
+			throw pe;
+		} catch (Exception e) {
+			ProgressusDAO.log.error(e.getMessage(), e);
+			throw new InsertOrSelectException(this.getEntityClazz("insertOrSelectList"), e);
+		}
+	}
+	
+	protected List<T> insertOrSelectList(List<T> entityList, boolean isControlTransaction) throws ProgressusException {
+		try {
+			return this.insertOrSelectEntityList(entityList, true);
+		} catch (ProgressusException pe) {
+			throw pe;
+		} catch (Exception e) {
+			ProgressusDAO.log.error(e.getMessage(), e);
+			throw new InsertOrSelectException(this.getEntityClazz("insertOrSelectList"), e);
+		}
+	}
+	
+	protected <X extends ProgressusEntity<?>> List<X> insertOrSelectEntityList(List<X> entityList, boolean isControlTransaction) throws ProgressusException {
+		
+		ValidatorHelper.validateFilling("entityList", entityList);
+   		
+		if (CollectionHelper.isNullOrEmpty(entityList)) {
+			return entityList;
+		}
+   		
+   		@SuppressWarnings("unchecked")
+		Class<X> clazz = (Class<X>) entityList.get(0).getClass();
+		
+   		UserTransaction userTransaction = null;
+		
+		try {
+			
+			if (isControlTransaction) {
+				userTransaction = this.beginTransaction();
+			}
+			
+			Iterator<X> iterator = entityList.iterator();
+			for (int i = 0; iterator.hasNext(); i++) {
+				entityList.set(i, this.insertOrSelectEntity(iterator.next(), false));
+			}
+			
+			if (isControlTransaction) {
+				this.commitTransaction(userTransaction);
+			}
+			
+			return entityList;
+			
+		} catch (ProgressusException pe) {
+			if (isControlTransaction) {
+				this.rollbackTransaction(userTransaction);
+			}
+			throw pe;
+		} catch (Exception e) {
+			if (isControlTransaction) {
+				this.rollbackTransaction(userTransaction);
+			}
+			ProgressusDAO.log.error(e.getMessage(), e);
+			throw new InsertOrSelectException(clazz, e);
+		}
+	}
+
+	
+	// SELECT LIST...
+	
+	
 	@Override
 	public List<T> selectList(Map<String, Object> parameterMap, Integer firstResult, Integer maxResult, OrderByTO orderBy) throws ProgressusException {
 		
@@ -738,7 +901,9 @@ public class ProgressusDAO<T extends ProgressusEntity<T>> implements ProgressusD
 		}
 	}
 	
-	protected <X extends ProgressusEntity<X>> List<X> selectEntityList(Class<X> clazz, Map<String, Object> parameterMap, Integer firstResult, Integer maxResult, OrderByTO orderBy) throws ProgressusException {
+	
+	
+	protected <X extends ProgressusEntity<?>> List<X> selectEntityList(Class<X> clazz, Map<String, Object> parameterMap, Integer firstResult, Integer maxResult, OrderByTO orderBy) throws ProgressusException {
 
 		ValidatorHelper.validateFilling("parameterMap", parameterMap);
 		ValidatorHelper.validateFilling("clazz", clazz);
@@ -770,6 +935,11 @@ public class ProgressusDAO<T extends ProgressusEntity<T>> implements ProgressusD
 	}
 	
 	
+	
+	// COUNT...
+	
+	
+	
 	@Override
 	public int count(Map<String, Object> parameterMap) throws ProgressusException {
 
@@ -785,7 +955,9 @@ public class ProgressusDAO<T extends ProgressusEntity<T>> implements ProgressusD
 		}
 	}
 	
-	protected <X extends ProgressusEntity<X>> int countEntity(Class<X> clazz, Map<String, Object> parameterMap) throws ProgressusException {
+	
+	
+	protected <X extends ProgressusEntity<?>> int countEntity(Class<X> clazz, Map<String, Object> parameterMap) throws ProgressusException {
 		
 		ValidatorHelper.validateFilling("clazz", clazz);
 		
@@ -809,6 +981,11 @@ public class ProgressusDAO<T extends ProgressusEntity<T>> implements ProgressusD
 		}
 	}
 	
+	
+	
+	// TRANSACTION...
+	
+	
 		
 	protected UserTransaction beginTransaction() throws ProgressusException {
 		try {
@@ -822,6 +999,7 @@ public class ProgressusDAO<T extends ProgressusEntity<T>> implements ProgressusD
 		
 	}
     
+	
 	protected void commitTransaction(UserTransaction userTransaction) throws ProgressusException {
     	try {
     		userTransaction.commit();
@@ -832,7 +1010,8 @@ public class ProgressusDAO<T extends ProgressusEntity<T>> implements ProgressusD
 		}
 	}
 	
-    protected void rollbackTransaction(UserTransaction userTransaction) throws ProgressusException {
+    
+	protected void rollbackTransaction(UserTransaction userTransaction) throws ProgressusException {
 		try {
 			userTransaction.rollback();
 		} catch (Exception e) {
@@ -840,6 +1019,11 @@ public class ProgressusDAO<T extends ProgressusEntity<T>> implements ProgressusD
 			throw new RollbackTransactionException(e);
 		}
 	}
+	
+	
+	
+	// GET ENTITY CLASS...
+	
     
 	
 	protected Class<T> getEntityClazz() throws ProgressusException {
@@ -851,6 +1035,7 @@ public class ProgressusDAO<T extends ProgressusEntity<T>> implements ProgressusD
 			throw new UnableToCompleteOperationException("getEntityClazz");
 		}
 	}
+	
 	
 	@SuppressWarnings("unchecked")
 	protected Class<T> getEntityClazz(String operation) throws ProgressusException {
@@ -872,6 +1057,11 @@ public class ProgressusDAO<T extends ProgressusEntity<T>> implements ProgressusD
 	}
 	
 	
+	
+	// GET BO...
+	
+	
+	
 	protected ProgressusBOEntityRemote<T> getBO() throws ProgressusException {
 		try {
 			return this.getBO(this.getEntityClazz());
@@ -883,7 +1073,9 @@ public class ProgressusDAO<T extends ProgressusEntity<T>> implements ProgressusD
 		}
 	}
 	
-	protected <X extends ProgressusEntity<X>> ProgressusBOEntityRemote<X> getBO(Class<X> clazz) throws ProgressusException {
+	
+	
+	protected <X extends ProgressusEntity<?>> ProgressusBOEntityRemote<X> getBO(Class<X> clazz) throws ProgressusException {
 		try {
 			return EJBHelper.getBOEntity(clazz);
 		} catch (ProgressusException pe) {
@@ -896,7 +1088,12 @@ public class ProgressusDAO<T extends ProgressusEntity<T>> implements ProgressusD
 	
 	
 	
-	protected <X extends ProgressusTO<X>> TypedQuery<X> createTypedQuery(Class<X> clazz, Map<String, Object> parameterMap, String jpql)  throws ProgressusException {
+	// CREATE TYPED QUERY...
+	
+	
+	
+	
+	protected <X extends ProgressusTO<?>> TypedQuery<X> createTypedQuery(Class<X> clazz, Map<String, Object> parameterMap, String jpql)  throws ProgressusException {
 		try {
 			
 			if (ObjectHelper.isNullOrEmpty(clazz)) {
@@ -913,8 +1110,10 @@ public class ProgressusDAO<T extends ProgressusEntity<T>> implements ProgressusD
 	}
 	
 	
+	
+	
 	@SuppressWarnings("unchecked")
-	protected <X extends ProgressusTO<X>> TypedQuery<X> createTypedQuery(Class<X> clazz, Map<String, Object> parameterMap, String jpql, Integer firstResult, Integer maxResult)  throws ProgressusException {
+	protected <X extends ProgressusTO<?>> TypedQuery<X> createTypedQuery(Class<X> clazz, Map<String, Object> parameterMap, String jpql, Integer firstResult, Integer maxResult)  throws ProgressusException {
 		try {
 			
 			if (ObjectHelper.isNullOrEmpty(clazz)) {
@@ -929,6 +1128,11 @@ public class ProgressusDAO<T extends ProgressusEntity<T>> implements ProgressusD
 			throw new UnableToCompleteOperationException("createTypedQuery");
 		}
 	}
+	
+	
+	
+	// CREATE QUERY...
+	
 
 	
 	
@@ -947,6 +1151,8 @@ public class ProgressusDAO<T extends ProgressusEntity<T>> implements ProgressusD
 			throw new UnableToCompleteOperationException("createQuery");
 		}
 	}
+	
+	
 	
 	
 	protected <X> Query createQuery(Class<X> clazz, Map<String, Object> parameterMap, String jpql, Integer firstResult, Integer maxResult) throws ProgressusException {

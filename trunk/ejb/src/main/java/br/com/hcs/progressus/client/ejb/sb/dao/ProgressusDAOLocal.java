@@ -11,7 +11,7 @@ import br.com.hcs.progressus.server.jpa.entity.ProgressusEntity;
 import br.com.hcs.progressus.to.OrderByTO;
 
 @Local
-public interface ProgressusDAOLocal <T extends ProgressusEntity<T>> extends Serializable {
+public interface ProgressusDAOLocal<T extends ProgressusEntity<?>> extends Serializable {
 	
 	T insert(T entity) throws ProgressusException;
 	
@@ -36,6 +36,11 @@ public interface ProgressusDAOLocal <T extends ProgressusEntity<T>> extends Seri
 	void remove(T entity) throws ProgressusException;
 	
 	void removeList(List<T> entityList) throws ProgressusException;
+	
+	
+	T insertOrSelect(T entity) throws ProgressusException;
+	
+	List<T> insertOrSelectList(List<T> entityList) throws ProgressusException;
 	
 	
 	List<T> selectList(Map<String, Object> parameterMap, Integer firstResult, Integer maxResult, OrderByTO orderBy) throws ProgressusException;

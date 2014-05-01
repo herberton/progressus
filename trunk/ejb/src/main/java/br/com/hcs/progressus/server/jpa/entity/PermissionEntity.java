@@ -1,6 +1,8 @@
 package br.com.hcs.progressus.server.jpa.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,7 +14,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import br.com.hcs.progressus.enumerator.Setting;
+
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+import br.com.hcs.progressus.exception.ProgressusException;
+import br.com.hcs.progressus.exception.UnableToCompleteOperationException;
+import br.com.hcs.progressus.helper.ObjectHelper;
 import br.com.hcs.progressus.helper.StringHelper;
 
 @Slf4j
@@ -24,43 +32,57 @@ public class PermissionEntity extends ProgressusEntity<PermissionEntity> impleme
 	private static final long serialVersionUID = -5523880444300781930L;
 
 	
+	public PermissionEntity(String name) {
+		this.setName(name);
+	}
+	
+	
 	@Getter
 	@Setter
 	@Column(nullable=false)
 	private String name;
 	@Getter
-	@Setter
 	@ManyToOne(fetch=FetchType.LAZY)
 	private ViewEntity view;
 	
 	
-	public PermissionEntity(String name) {
-		this();
-		this.setName(name);
+	public void setView(ViewEntity view) throws ProgressusException {
+		this.view = view;
+		try {
+			if (this.getView() == null) {
+				return;
+			}
+			if (this.getView().getPermissionList().contains(this)) {
+				return;
+			}
+			this.getView().getPermissionList().add(this);
+		} catch (Exception e) {
+			throw new UnableToCompleteOperationException("setView");
+		}
 	}
 	
 	
-	public String getFullName() {
+	@Override
+	public String toString() {
 		
 		try {
 			
-			String name = 
-				StringHelper.isNullOrEmpty(this.getName()) ? "" : this.getName();
-				
-			name = name.replaceAll("\\.", Setting.SEPARATOR.toString()); 
-			
-			if (this.getView() == null) {
-				return name;
+			if (ObjectHelper.isNullOrEmpty(this.getView())) {
+				return StringHelper.isNullOrEmpty(this.getName()) ? "" : this.getName();
 			}
 			
-			String viewName = 
-				StringHelper.isNullOrEmpty(this.getView().getFullName()) ? "" : this.getView().getFullName();
+			String string = this.getView().toString();
 			
+			if (StringHelper.isNullOrEmpty(string)) {
+				return StringHelper.isNullOrEmpty(this.getName()) ? "" : this.getName();
+			}
 			
-			viewName = viewName.replaceAll("\\.", Setting.SEPARATOR.toString());
+			if (StringHelper.isNullOrEmpty(this.getName())) {
+				return string;
+			}
 			
-			return viewName.concat(Setting.SEPARATOR.toString()).concat(name).replaceAll("\\.", Setting.SEPARATOR.toString());
-		
+			return string.concat(".").concat(this.getName());
+			
 		} catch (Exception e) {
 			PermissionEntity.log.error(e.getMessage(), e);
 		}
@@ -68,58 +90,58 @@ public class PermissionEntity extends ProgressusEntity<PermissionEntity> impleme
 		return "";
 	}
 	
-	
 	@Override
 	public boolean equals(Object object) {
-		
 		try {
-			
-			if (this == object){ 
-				return true;
-			}
-			
-			if (object == null) {
+			if (!(object instanceof PermissionEntity)) {
 				return false;
 			}
-			
-			if (!this.getClass().equals(object.getClass())) {
-				return false;
-			}
-			
-			PermissionEntity other = (PermissionEntity)object;
-			
-			if (StringHelper.isNullOrEmpty(this.getFullName()) || StringHelper.isNullOrEmpty(other.getFullName())) {
-				return super.equals(object);
-			}
-			
-			return this.getFullName().equals(other.getFullName());
-			
+			return 
+				new EqualsBuilder()
+					.append(this.getClass(), object.getClass())
+					.append(this.toString(), object.toString())
+					.isEquals();
 		} catch (Exception e) {
 			PermissionEntity.log.error(e.getMessage(), e);
 		}
-		
 		return super.equals(object);
 	}
 	
 	@Override
-	public int compareTo(PermissionEntity other) {
-		
+	public int hashCode() {
 		try {
-			
-			if (StringHelper.isNullOrEmpty(this.getName()) ||  StringHelper.isNullOrEmpty(other.getName()) ||
-				this.getView() == null || other.getView() == null) {
-				
-				return super.compareTo(other);
-				
-			}
-			
-			return this.getFullName().compareTo(other.getFullName());
-			
+			return 
+				new HashCodeBuilder()
+					.append(this.getClass())
+					.append(this.toString())
+					.toHashCode();
 		} catch (Exception e) {
 			PermissionEntity.log.error(e.getMessage(), e);
 		}
-		
-		return super.compareTo(other);
+		return super.hashCode();
 	}
-
+	
+	
+	public static List<PermissionEntity> addPermissionInList(List<PermissionEntity> permissionList, PermissionEntity permission) throws ProgressusException {
+		
+		try {
+			
+			if (permissionList == null) {
+				permissionList = new ArrayList<>();
+			}
+			
+			if (permission == null) {
+				return permissionList;
+			}
+			
+			if (!permissionList.contains(permission)) {
+				permissionList.add(permission);
+			}
+			
+			return permissionList;
+			
+		} catch (Exception e) {
+			throw new UnableToCompleteOperationException("addPermissionInList");
+		}
+	}
 }

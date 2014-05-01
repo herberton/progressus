@@ -18,6 +18,7 @@ import br.com.hcs.progressus.client.ejb.sb.dao.ProgressusDAOLocal;
 import br.com.hcs.progressus.client.helper.EJBHelper;
 import br.com.hcs.progressus.exception.CountException;
 import br.com.hcs.progressus.exception.DeleteException;
+import br.com.hcs.progressus.exception.InsertOrSelectException;
 import br.com.hcs.progressus.exception.ProgressusException;
 import br.com.hcs.progressus.exception.RemoveException;
 import br.com.hcs.progressus.exception.SaveException;
@@ -37,7 +38,7 @@ import br.com.hcs.progressus.to.OrderByTO;
 @LocalBean
 @TransactionManagement(TransactionManagementType.CONTAINER)
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
-public class ProgressusBOEntity<T extends ProgressusEntity<T>>
+public class ProgressusBOEntity<T extends ProgressusEntity<?>>
 	extends
 		ProgressusBOProcess
 	implements 
@@ -45,6 +46,9 @@ public class ProgressusBOEntity<T extends ProgressusEntity<T>>
 
     private static final long serialVersionUID = -6079133477965729028L;
 
+    
+    // SAVE...
+    
     @Override    
     public T save(T entity) throws ProgressusException {
     	try {
@@ -57,6 +61,9 @@ public class ProgressusBOEntity<T extends ProgressusEntity<T>>
 			throw new SaveException(this.getEntityClass(), e);
 		}
     }
+    
+    
+    // SAVE LIST...
     
     @Override    
     public List<T> saveList(List<T> entityList) throws ProgressusException {
@@ -71,6 +78,8 @@ public class ProgressusBOEntity<T extends ProgressusEntity<T>>
     }
 	
 	
+    // DELETE...
+    
 	@Override
 	public void delete(T entity) throws ProgressusException {
 		try {
@@ -84,6 +93,9 @@ public class ProgressusBOEntity<T extends ProgressusEntity<T>>
 		}
 	}
 	
+	
+    // DELETE LIST...
+	
 	@Override
 	public void deleteList(List<T> entityList) throws ProgressusException {
 		try {
@@ -95,6 +107,9 @@ public class ProgressusBOEntity<T extends ProgressusEntity<T>>
 			throw new DeleteException(this.getEntityClass(), e);
 		}
 	}
+	
+	
+    // REMNOVE...
 	
 	@Override
 	public void remove(T entity) throws ProgressusException {
@@ -108,7 +123,10 @@ public class ProgressusBOEntity<T extends ProgressusEntity<T>>
 			throw new RemoveException(this.getEntityClass(), e);
 		}
 	}
-		
+	
+	
+    // REMOVE LIST...
+	
 	@Override
 	public void removeList(List<T> entityList) throws ProgressusException {
 		try {
@@ -121,6 +139,40 @@ public class ProgressusBOEntity<T extends ProgressusEntity<T>>
 		}
 	}
 	
+	
+    // INSERT OR SELECT...
+	
+	@Override
+	public T insertOrSelect(T entity) throws ProgressusException {
+		try {
+    		ValidatorHelper.validateFilling(StringHelper.getI18N(this.getEntityClass()), entity);
+    		return this.getDAO().insertOrSelect(entity);
+		} catch (ProgressusException pe) {
+			throw pe;
+		} catch (Exception e) {
+			ProgressusBOEntity.log.error(e.getMessage(), e);
+			throw new InsertOrSelectException(this.getEntityClass(), e);
+		}
+	}
+	
+	
+    // INSERT OR SELECT LIST...
+	
+	@Override
+	public List<T> insertOrSelectList(List<T> entityList) throws ProgressusException {
+		try {
+    		ValidatorHelper.validateFilling(StringHelper.getI18N(this.getEntityClass()), entityList);
+			return this.getDAO().insertOrSelectList(entityList);
+		} catch (ProgressusException pe) {
+			throw pe;
+		} catch (Exception e) {
+			ProgressusBOEntity.log.error(e.getMessage(), e);
+			throw new InsertOrSelectException(this.getEntityClass(), e);
+		}
+	}
+	
+	
+    // SELECT...
 	
 	@Override
 	public T select(T entity) throws ProgressusException {
@@ -156,6 +208,8 @@ public class ProgressusBOEntity<T extends ProgressusEntity<T>>
 		}
 	}
 
+	
+    // SELECT LIST...
 	
 	@Override
 	public List<T> selectList() throws ProgressusException {
@@ -267,6 +321,9 @@ public class ProgressusBOEntity<T extends ProgressusEntity<T>>
 		}
 	}
 
+	
+    // COUNT...
+	
 	@Override
 	public int count() throws ProgressusException {
 		try {
@@ -305,6 +362,9 @@ public class ProgressusBOEntity<T extends ProgressusEntity<T>>
 		}
 	}
 	
+	
+    // GET ENTITY CLASS...
+	
 	@Override
 	public Class<T> getEntityClass() throws ProgressusException {
 		try {
@@ -316,8 +376,7 @@ public class ProgressusBOEntity<T extends ProgressusEntity<T>>
 			throw new UnableToCompleteOperationException("getEntityClass");
 		}
 	}
-	
-	
+		
 	@SuppressWarnings("unchecked")
 	protected Class<T> getEntityClass(String operation) throws ProgressusException {
 		try {
@@ -337,7 +396,9 @@ public class ProgressusBOEntity<T extends ProgressusEntity<T>>
 			throw new UnableToCompleteOperationException(operation);
 		}
 	}
-		
+	
+	
+    // GET DAO...
 	
 	protected ProgressusDAOLocal<T> getDAO() {
 		try {

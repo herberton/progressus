@@ -11,7 +11,7 @@ import br.com.hcs.progressus.server.jpa.entity.ProgressusEntity;
 import br.com.hcs.progressus.to.OrderByTO;
 
 @Remote
-public interface ProgressusBOEntityRemote<T extends ProgressusEntity<T>> extends ProgressusBOProcessRemote {
+public interface ProgressusBOEntityRemote<T extends ProgressusEntity<?>> extends ProgressusBOProcessRemote {
 
 	T save(T entity) throws ProgressusException;
 	
@@ -26,6 +26,11 @@ public interface ProgressusBOEntityRemote<T extends ProgressusEntity<T>> extends
 	void remove(T entity) throws ProgressusException;
 	
 	void removeList(List<T> entityList) throws ProgressusException;
+	
+	
+	T insertOrSelect(T entity) throws ProgressusException;
+	
+	List<T> insertOrSelectList(List<T> entityList) throws ProgressusException;
 	
 	
 	T select(T entity) throws ProgressusException;
