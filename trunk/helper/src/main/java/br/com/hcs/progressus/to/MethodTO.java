@@ -7,13 +7,11 @@ import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 import br.com.hcs.progressus.exception.ProgressusException;
 import br.com.hcs.progressus.exception.UnableToCompleteOperationException;
 import br.com.hcs.progressus.helper.CollectionHelper;
 import br.com.hcs.progressus.helper.ReflectionHelper;
 
-@Slf4j
 public class MethodTO implements Serializable {
 	
 	private static final long serialVersionUID = 2701723307246976637L;
@@ -33,8 +31,7 @@ public class MethodTO implements Serializable {
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			MethodTO.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("MethodTO");
+			throw new UnableToCompleteOperationException("newMethodTO", e);
 		}
 	}
 	
@@ -45,8 +42,7 @@ public class MethodTO implements Serializable {
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			MethodTO.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("MethodTO");
+			throw new UnableToCompleteOperationException("newMethodTO", e);
 		}
 	}
 	
@@ -58,8 +54,7 @@ public class MethodTO implements Serializable {
 			}
 			return parameterList;
 		} catch (Exception e) {
-			MethodTO.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("getParameterList");
+			throw new UnableToCompleteOperationException("getParameterList", e);
 		}
 	}
 
@@ -74,8 +69,7 @@ public class MethodTO implements Serializable {
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			MethodTO.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("getParameterTypeArray");
+			throw new UnableToCompleteOperationException("getParameterTypeArray", e);
 		}
 	}
 	
@@ -89,8 +83,7 @@ public class MethodTO implements Serializable {
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			MethodTO.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("getParameterValueArray");
+			throw new UnableToCompleteOperationException("getParameterValueArray", e);
 		}
 	}
 
@@ -107,8 +100,7 @@ public class MethodTO implements Serializable {
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			MethodTO.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("setParameterValue");
+			throw new UnableToCompleteOperationException("setParameterValue", e);
 		}
 	}
 	
@@ -119,8 +111,7 @@ public class MethodTO implements Serializable {
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			MethodTO.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("addParameter");
+			throw new UnableToCompleteOperationException("addParameter", e);
 		}
 	}
 	
@@ -130,8 +121,7 @@ public class MethodTO implements Serializable {
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			MethodTO.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("addParameter");
+			throw new UnableToCompleteOperationException("addParameter", e);
 		}
 	}
 	
@@ -141,8 +131,7 @@ public class MethodTO implements Serializable {
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			MethodTO.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("addParameter");
+			throw new UnableToCompleteOperationException("addParameter", e);
 		}
 	}
 
@@ -155,8 +144,7 @@ public class MethodTO implements Serializable {
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			MethodTO.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("getMethod");
+			throw new UnableToCompleteOperationException("getMethod", e);
 		}
 	}
 	

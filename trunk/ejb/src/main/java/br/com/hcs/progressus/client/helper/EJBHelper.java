@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 import javax.naming.InitialContext;
 
-import lombok.extern.slf4j.Slf4j;
 import br.com.hcs.progressus.client.ejb.sb.bo.entity.ProgressusBOEntityRemote;
 import br.com.hcs.progressus.client.ejb.sb.dao.ProgressusDAOLocal;
 import br.com.hcs.progressus.enumerator.Setting;
@@ -15,7 +14,6 @@ import br.com.hcs.progressus.helper.StringHelper;
 import br.com.hcs.progressus.helper.ValidatorHelper;
 import br.com.hcs.progressus.server.jpa.entity.ProgressusEntity;
 
-@Slf4j
 public final class EJBHelper implements Serializable {
 
 	private static final long serialVersionUID = 1695533750798681853L;
@@ -35,8 +33,7 @@ public final class EJBHelper implements Serializable {
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			EJBHelper.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("getJNDIForLookup");
+			throw new UnableToCompleteOperationException("getJNDIForLookup", e);
 		}
 	}
 	
@@ -56,8 +53,7 @@ public final class EJBHelper implements Serializable {
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			EJBHelper.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("getJNDIForLookup");
+			throw new UnableToCompleteOperationException("getJNDIForLookup", e);
 		}
 	}
 
@@ -75,8 +71,7 @@ public final class EJBHelper implements Serializable {
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			EJBHelper.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("getDAOName");
+			throw new UnableToCompleteOperationException("getDAOName", e);
 		}
 	}
 	
@@ -93,8 +88,7 @@ public final class EJBHelper implements Serializable {
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			EJBHelper.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("getBOEntityName");
+			throw new UnableToCompleteOperationException("getBOEntityName", e);
 		}
 	}
 	
@@ -119,8 +113,7 @@ public final class EJBHelper implements Serializable {
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			EJBHelper.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("getDAO");
+			throw new UnableToCompleteOperationException("getDAO", e);
 		}
 	}
 	
@@ -144,8 +137,7 @@ public final class EJBHelper implements Serializable {
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			EJBHelper.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("getBOEntity");
+			throw new UnableToCompleteOperationException("getBOEntity", e);
 		}
 	}
 }

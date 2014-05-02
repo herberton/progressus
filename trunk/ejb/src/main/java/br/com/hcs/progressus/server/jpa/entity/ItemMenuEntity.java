@@ -71,7 +71,7 @@ public class ItemMenuEntity extends ViewEntity implements Serializable {
 			}
 			this.getParentMenu().getItemMenuList().add(this);
 		} catch (Exception e) {
-			throw new UnableToCompleteOperationException("setParentMenu");
+			throw new UnableToCompleteOperationException("setParentMenu", e);
 		}
 	}
 	
@@ -179,7 +179,7 @@ public class ItemMenuEntity extends ViewEntity implements Serializable {
 			return entity;
 			
 		} catch (Exception e) {
-			throw new UnableToCompleteOperationException("getInstance");
+			throw new UnableToCompleteOperationException("getInstance", e);
 		}
 		
 	}
@@ -222,7 +222,7 @@ public class ItemMenuEntity extends ViewEntity implements Serializable {
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			throw new UnableToCompleteOperationException("addItemMenuInList");
+			throw new UnableToCompleteOperationException("addItemMenuInList", e);
 		}
 	}
 }

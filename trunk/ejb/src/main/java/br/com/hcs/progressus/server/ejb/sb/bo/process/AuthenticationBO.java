@@ -6,7 +6,6 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
 import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 import br.com.hcs.progressus.client.ejb.sb.bo.entity.UserBORemote;
 import br.com.hcs.progressus.client.ejb.sb.bo.process.AuthenticationBORemote;
 import br.com.hcs.progressus.enumerator.Setting;
@@ -17,7 +16,6 @@ import br.com.hcs.progressus.helper.ValidatorHelper;
 import br.com.hcs.progressus.server.jpa.entity.RoleEntity;
 import br.com.hcs.progressus.server.jpa.entity.UserEntity;
 
-@Slf4j
 @Stateless
 public class AuthenticationBO extends ProgressusBOProcess implements AuthenticationBORemote {
 
@@ -53,8 +51,7 @@ public class AuthenticationBO extends ProgressusBOProcess implements Authenticat
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			AuthenticationBO.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("authenticate");
+			throw new UnableToCompleteOperationException("authenticate", e);
 		}
 		
 		try {
@@ -69,8 +66,7 @@ public class AuthenticationBO extends ProgressusBOProcess implements Authenticat
 			}
 			
 		} catch (Exception e) {
-			AuthenticationBO.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("authenticate");
+			throw new UnableToCompleteOperationException("authenticate", e);
 		}
 		
 		return this.getUserBO().save(userDB);
@@ -90,8 +86,7 @@ public class AuthenticationBO extends ProgressusBOProcess implements Authenticat
 				System.getProperty(Setting.SERVER_KEY_ADMIN_PASSWORD.toString()).equals(user.getPassword());
 		
 		} catch (Exception e) {
-			AuthenticationBO.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("authenticate");
+			throw new UnableToCompleteOperationException("authenticate", e);
 		}
 	}
 

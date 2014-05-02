@@ -6,14 +6,12 @@ import java.util.Map;
 import javax.ejb.Stateless;
 
 import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import br.com.hcs.progressus.client.ejb.sb.dao.UserDAOLocal;
 import br.com.hcs.progressus.exception.ProgressusException;
 import br.com.hcs.progressus.exception.UnableToCompleteOperationException;
 import br.com.hcs.progressus.helper.ValidatorHelper;
 import br.com.hcs.progressus.server.jpa.entity.UserEntity;
 
-@Slf4j
 @NoArgsConstructor
 @Stateless
 public class UserDAO extends ProgressusDAO<UserEntity> implements UserDAOLocal {
@@ -44,8 +42,7 @@ public class UserDAO extends ProgressusDAO<UserEntity> implements UserDAOLocal {
 			return returnValue.booleanValue();
 			
 		} catch (Exception e) {
-			UserDAO.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("isValidPassword");
+			throw new UnableToCompleteOperationException("isValidPassword", e);
 		}
 	}
 }

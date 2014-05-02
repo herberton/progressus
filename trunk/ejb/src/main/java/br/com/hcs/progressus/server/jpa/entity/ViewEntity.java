@@ -75,7 +75,7 @@ public class ViewEntity extends ProgressusEntity<ViewEntity> implements Serializ
 			}
 			this.getParentView().getChildViewList().add(this);
 		} catch (Exception e) {
-			throw new UnableToCompleteOperationException("setParentView");
+			throw new UnableToCompleteOperationException("setParentView", e);
 		}
 	}
 	
@@ -87,8 +87,8 @@ public class ViewEntity extends ProgressusEntity<ViewEntity> implements Serializ
 			return this.childViewList;
 		} catch (ProgressusException pe) {
 			throw pe;
-		} catch(Exception ee) {
-			throw new UnableToCompleteOperationException("getChildViewList");
+		} catch(Exception e) {
+			throw new UnableToCompleteOperationException("getChildViewList", e);
 		}
 	}
 	
@@ -107,8 +107,8 @@ public class ViewEntity extends ProgressusEntity<ViewEntity> implements Serializ
 			}
 		} catch (ProgressusException pe) {
 			throw pe;
-		} catch(Exception ee) {
-			throw new UnableToCompleteOperationException("setChildViewList");
+		} catch(Exception e) {
+			throw new UnableToCompleteOperationException("setChildViewList", e);
 		}
 	}
 	
@@ -120,8 +120,8 @@ public class ViewEntity extends ProgressusEntity<ViewEntity> implements Serializ
 			return this.permissionList;
 		} catch (ProgressusException pe) {
 			throw pe;
-		} catch(Exception ee) {
-			throw new UnableToCompleteOperationException("getPermissionList");
+		} catch(Exception e) {
+			throw new UnableToCompleteOperationException("getPermissionList", e);
 		}
 	}
 	
@@ -140,8 +140,8 @@ public class ViewEntity extends ProgressusEntity<ViewEntity> implements Serializ
 			}
 		} catch (ProgressusException pe) {
 			throw pe;
-		} catch(Exception ee) {
-			throw new UnableToCompleteOperationException("setPermissionList");
+		} catch(Exception e) {
+			throw new UnableToCompleteOperationException("setPermissionList", e);
 		}
 	}
 	
@@ -155,7 +155,7 @@ public class ViewEntity extends ProgressusEntity<ViewEntity> implements Serializ
 			this.getChildViewList().add(childView);
 			childView.setParentView(this);
 		} catch (Exception e) {
-			throw new UnableToCompleteOperationException("addChildView");
+			throw new UnableToCompleteOperationException("addChildView", e);
 		}
 	}
 	
@@ -165,7 +165,7 @@ public class ViewEntity extends ProgressusEntity<ViewEntity> implements Serializ
 			this.getPermissionList().add(permission);
 			permission.setView(this);
 		} catch (Exception e) {
-			throw new UnableToCompleteOperationException("addPermission");
+			throw new UnableToCompleteOperationException("addPermission", e);
 		}
 	}
 	
@@ -268,7 +268,7 @@ public class ViewEntity extends ProgressusEntity<ViewEntity> implements Serializ
 			return entity;
 			
 		} catch (Exception e) {
-			throw new UnableToCompleteOperationException("getInstance");
+			throw new UnableToCompleteOperationException("getInstance", e);
 		}
 	}
 	
@@ -311,7 +311,7 @@ public class ViewEntity extends ProgressusEntity<ViewEntity> implements Serializ
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			throw new UnableToCompleteOperationException("addViewInList");
+			throw new UnableToCompleteOperationException("addViewInList", e);
 		}
 	}
 }

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import lombok.extern.slf4j.Slf4j;
 import br.com.hcs.progressus.client.ejb.sb.bo.entity.ProgressusBOEntityRemote;
 import br.com.hcs.progressus.exception.ProgressusException;
 import br.com.hcs.progressus.exception.UnableToCompleteOperationException;
@@ -13,7 +12,6 @@ import br.com.hcs.progressus.server.jpa.entity.ProgressusEntity;
 import br.com.hcs.progressus.to.MethodTO;
 import br.com.hcs.progressus.to.ParameterTO;
 
-@Slf4j
 public class CountMethodTO extends MethodTO {
 
 	
@@ -47,8 +45,7 @@ public class CountMethodTO extends MethodTO {
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			CountMethodTO.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("getDefaultParameterList");
+			throw new UnableToCompleteOperationException("getDefaultParameterList", e);
 		}
 	}
 
@@ -59,8 +56,7 @@ public class CountMethodTO extends MethodTO {
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			CountMethodTO.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("execute");
+			throw new UnableToCompleteOperationException("execute", e);
 		}
 	}
 	
@@ -72,8 +68,7 @@ public class CountMethodTO extends MethodTO {
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			CountMethodTO.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("execute");
+			throw new UnableToCompleteOperationException("execute", e);
 		}
 	}
 }

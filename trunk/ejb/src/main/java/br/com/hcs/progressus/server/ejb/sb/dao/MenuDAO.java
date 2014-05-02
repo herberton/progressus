@@ -70,11 +70,11 @@ public class MenuDAO extends ProgressusDAO<MenuEntity> implements MenuDAOLocal {
 			
 			return this.sort(moduleList);
 			
+		} catch (ProgressusException pe) {
+			throw pe;
 		} catch (Exception e) {
-			MenuDAO.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("selectList", e);
 		}
-		
-		return new ArrayList<>();
 	}
 
 	@Override
@@ -104,8 +104,7 @@ public class MenuDAO extends ProgressusDAO<MenuEntity> implements MenuDAOLocal {
 			throw pe;
 		} catch (Exception e) {
 			this.rollbackTransaction(userTransaction);
-			MenuDAO.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("saveTreeList");
+			throw new UnableToCompleteOperationException("saveTreeList", e);
 		}
 	}
 	
@@ -170,8 +169,7 @@ public class MenuDAO extends ProgressusDAO<MenuEntity> implements MenuDAOLocal {
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			MenuDAO.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("saveTreeList");
+			throw new UnableToCompleteOperationException("selectList", e);
 		}
 	}
 	
@@ -207,13 +205,12 @@ public class MenuDAO extends ProgressusDAO<MenuEntity> implements MenuDAOLocal {
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			MenuDAO.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("saveTreeList");
+			throw new UnableToCompleteOperationException("saveTreeList", e);
 		}
 	}
 	
 
-	private List<MenuEntity> sort(List<MenuEntity> menuList){
+	private List<MenuEntity> sort(List<MenuEntity> menuList) {
 		try {
 			Collections.sort((List<MenuEntity>)menuList);
 			for (MenuEntity menu : menuList) {

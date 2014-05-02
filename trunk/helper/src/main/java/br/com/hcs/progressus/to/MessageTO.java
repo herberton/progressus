@@ -12,6 +12,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import br.com.hcs.progressus.enumerator.MessageType;
 import br.com.hcs.progressus.exception.ProgressusException;
+import br.com.hcs.progressus.exception.UnableToCompleteOperationException;
 import br.com.hcs.progressus.helper.StringHelper;
 
 @Slf4j
@@ -55,8 +56,10 @@ public class MessageTO extends ProgressusTO<MessageTO> {
 			
 			this.setKey(StringHelper.getI18N(throwable.getClass()));
 			
+		} catch (ProgressusException pe) {
+			throw pe;
 		} catch (Exception e) {
-			MessageTO.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("newMessageTO", e);
 		}
 	}
 	

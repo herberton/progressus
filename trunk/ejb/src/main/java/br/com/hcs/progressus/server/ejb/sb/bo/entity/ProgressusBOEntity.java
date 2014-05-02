@@ -57,7 +57,6 @@ public class ProgressusBOEntity<T extends ProgressusEntity<?>>
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusBOEntity.log.error(e.getMessage(), e);
 			throw new SaveException(this.getEntityClass(), e);
 		}
     }
@@ -72,7 +71,6 @@ public class ProgressusBOEntity<T extends ProgressusEntity<?>>
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusBOEntity.log.error(e.getMessage(), e);
 			throw new SaveException(this.getEntityClass(), e);
 		}
     }
@@ -88,7 +86,6 @@ public class ProgressusBOEntity<T extends ProgressusEntity<?>>
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusBOEntity.log.error(e.getMessage(), e);
 			throw new DeleteException(this.getEntityClass(), e);
 		}
 	}
@@ -103,7 +100,6 @@ public class ProgressusBOEntity<T extends ProgressusEntity<?>>
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusBOEntity.log.error(e.getMessage(), e);
 			throw new DeleteException(this.getEntityClass(), e);
 		}
 	}
@@ -119,7 +115,6 @@ public class ProgressusBOEntity<T extends ProgressusEntity<?>>
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusBOEntity.log.error(e.getMessage(), e);
 			throw new RemoveException(this.getEntityClass(), e);
 		}
 	}
@@ -134,7 +129,6 @@ public class ProgressusBOEntity<T extends ProgressusEntity<?>>
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusBOEntity.log.error(e.getMessage(), e);
 			throw new RemoveException(this.getEntityClass(), e);
 		}
 	}
@@ -150,7 +144,6 @@ public class ProgressusBOEntity<T extends ProgressusEntity<?>>
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusBOEntity.log.error(e.getMessage(), e);
 			throw new InsertOrSelectException(this.getEntityClass(), e);
 		}
 	}
@@ -166,7 +159,6 @@ public class ProgressusBOEntity<T extends ProgressusEntity<?>>
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusBOEntity.log.error(e.getMessage(), e);
 			throw new InsertOrSelectException(this.getEntityClass(), e);
 		}
 	}
@@ -186,7 +178,6 @@ public class ProgressusBOEntity<T extends ProgressusEntity<?>>
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusBOEntity.log.error(e.getMessage(), e);
 			throw new SelectException(this.getEntityClass("select"), e);
 		}
 	}
@@ -203,7 +194,6 @@ public class ProgressusBOEntity<T extends ProgressusEntity<?>>
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusBOEntity.log.error(e.getMessage(), e);
 			throw new SelectException(this.getEntityClass("select"), e);
 		}
 	}
@@ -218,7 +208,6 @@ public class ProgressusBOEntity<T extends ProgressusEntity<?>>
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusBOEntity.log.error(e.getMessage(), e);
 			throw new SelectException(this.getEntityClass("select"), e);
 		}
 	}
@@ -230,7 +219,6 @@ public class ProgressusBOEntity<T extends ProgressusEntity<?>>
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusBOEntity.log.error(e.getMessage(), e);
 			throw new SelectException(this.getEntityClass("select"), e);
 		}
 	}
@@ -242,7 +230,6 @@ public class ProgressusBOEntity<T extends ProgressusEntity<?>>
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusBOEntity.log.error(e.getMessage(), e);
 			throw new SelectException(this.getEntityClass("select"), e);
 		}
 	}
@@ -254,7 +241,6 @@ public class ProgressusBOEntity<T extends ProgressusEntity<?>>
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusBOEntity.log.error(e.getMessage(), e);
 			throw new SelectException(this.getEntityClass("select"), e);
 		}
 	}
@@ -267,7 +253,6 @@ public class ProgressusBOEntity<T extends ProgressusEntity<?>>
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusBOEntity.log.error(e.getMessage(), e);
 			throw new SelectException(this.getEntityClass("select"), e);
 		}
 	}
@@ -279,7 +264,6 @@ public class ProgressusBOEntity<T extends ProgressusEntity<?>>
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusBOEntity.log.error(e.getMessage(), e);
 			throw new SelectException(this.getEntityClass("select"), e);
 		}
 	}
@@ -291,7 +275,6 @@ public class ProgressusBOEntity<T extends ProgressusEntity<?>>
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusBOEntity.log.error(e.getMessage(), e);
 			throw new SelectException(this.getEntityClass("select"), e);
 		}
 	}
@@ -303,7 +286,6 @@ public class ProgressusBOEntity<T extends ProgressusEntity<?>>
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusBOEntity.log.error(e.getMessage(), e);
 			throw new SelectException(this.getEntityClass("select"), e);
 		}
 	}
@@ -316,7 +298,6 @@ public class ProgressusBOEntity<T extends ProgressusEntity<?>>
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusBOEntity.log.error(e.getMessage(), e);
 			throw new SelectException(this.getEntityClass("select"), e);
 		}
 	}
@@ -331,7 +312,6 @@ public class ProgressusBOEntity<T extends ProgressusEntity<?>>
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusBOEntity.log.error(e.getMessage(), e);
 			throw new CountException(this.getEntityClass("count"), e);
 		}
 	}
@@ -344,7 +324,6 @@ public class ProgressusBOEntity<T extends ProgressusEntity<?>>
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusBOEntity.log.error(e.getMessage(), e);
 			throw new CountException(this.getEntityClass("count"), e);
 		}
 	}
@@ -357,7 +336,6 @@ public class ProgressusBOEntity<T extends ProgressusEntity<?>>
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusBOEntity.log.error(e.getMessage(), e);
 			throw new CountException(this.getEntityClass("count"), e);
 		}
 	}
@@ -372,8 +350,7 @@ public class ProgressusBOEntity<T extends ProgressusEntity<?>>
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusBOEntity.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("getEntityClass");
+			throw new UnableToCompleteOperationException("getEntityClass", e);
 		}
 	}
 		
@@ -384,7 +361,7 @@ public class ProgressusBOEntity<T extends ProgressusEntity<?>>
 			List<Class<?>> genericClassList = ReflectionHelper.getGenericClassList(this.getClass());
 			
 			if (CollectionHelper.isNullOrEmpty(genericClassList)) {
-				throw new UnableToCompleteOperationException(operation);
+				throw new UnableToCompleteOperationException(operation, "entityClassNotFound");
 			}
 			
 			return (Class<T>) genericClassList.get(0);
@@ -392,8 +369,7 @@ public class ProgressusBOEntity<T extends ProgressusEntity<?>>
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusBOEntity.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException(operation);
+			throw new UnableToCompleteOperationException(operation, e);
 		}
 	}
 	

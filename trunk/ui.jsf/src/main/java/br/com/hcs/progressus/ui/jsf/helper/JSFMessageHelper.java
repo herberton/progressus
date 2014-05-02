@@ -22,17 +22,17 @@ public final class JSFMessageHelper implements Serializable {
 	private static final long serialVersionUID = -2187139040679183965L;
 
 	
-	public static final void showMessage(ProgressusException ProgressusException) {
+	public static final void showMessage(ProgressusException pe) {
 		try {
 			
-			if (ProgressusException == null) {
+			if (pe == null) {
 				return;
 			}
 			
 			JSFMessageHelper
 				.showMessage(
-					ProgressusException.convert(), 
-					ProgressusException.getDetail()
+					pe.convert(), 
+					pe.getDetail()
 				);
 			
 		} catch (Exception e) {
@@ -40,18 +40,18 @@ public final class JSFMessageHelper implements Serializable {
 		}
 	}
 	
-	public static final void showMessage(FacesContext facesContext, ProgressusException ProgressusException) {
+	public static final void showMessage(FacesContext facesContext, ProgressusException pe) {
 		try {
 			
-			if (ProgressusException == null) {
+			if (pe == null) {
 				return;
 			}
 			
 			JSFMessageHelper
 				.showMessage(
 					facesContext,
-					ProgressusException.convert(), 
-					ProgressusException.getDetail()
+					pe.convert(), 
+					pe.getDetail()
 				);
 			
 		} catch (Exception e) {

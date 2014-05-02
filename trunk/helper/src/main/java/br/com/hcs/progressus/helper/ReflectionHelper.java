@@ -15,13 +15,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import lombok.extern.slf4j.Slf4j;
 import br.com.hcs.progressus.contract.ClassValidator;
 import br.com.hcs.progressus.exception.ProgressusException;
 import br.com.hcs.progressus.exception.UnableToCompleteOperationException;
 import br.com.hcs.progressus.to.ParameterTO;
 
-@Slf4j
 public final class ReflectionHelper implements Serializable {
 
 	private static final long serialVersionUID = 3631371700571515093L;
@@ -105,8 +103,7 @@ public final class ReflectionHelper implements Serializable {
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ReflectionHelper.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("findMethodList");
+			throw new UnableToCompleteOperationException("findMethodList", e);
 		}
 	}
 		
@@ -128,8 +125,7 @@ public final class ReflectionHelper implements Serializable {
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ReflectionHelper.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("findMethod");
+			throw new UnableToCompleteOperationException("findMethod", e);
 		}
 	}
 	
@@ -150,8 +146,7 @@ public final class ReflectionHelper implements Serializable {
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ReflectionHelper.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("findMethod");
+			throw new UnableToCompleteOperationException("findMethod", e);
 		}
 	}
 	
@@ -189,8 +184,7 @@ public final class ReflectionHelper implements Serializable {
 			}
 			
 		} catch (Exception e) {
-			ReflectionHelper.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("findMethod");
+			throw new UnableToCompleteOperationException("findMethod", e);
 		}
 		
 		return foundMethod;
@@ -212,8 +206,7 @@ public final class ReflectionHelper implements Serializable {
 			return method.invoke(object, parameterArgumentArray);
 			
 		} catch (Exception e) {
-			ReflectionHelper.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("executeMethod");
+			throw new UnableToCompleteOperationException("executeMethod", e);
 		}
 	}
 	
@@ -232,8 +225,7 @@ public final class ReflectionHelper implements Serializable {
 			return method.invoke(object);
 			
 		} catch (Exception e) {
-			ReflectionHelper.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("executeMethod");
+			throw new UnableToCompleteOperationException("executeMethod", e);
 		}
 	}
 
@@ -244,8 +236,7 @@ public final class ReflectionHelper implements Serializable {
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ReflectionHelper.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("newInstance");
+			throw new UnableToCompleteOperationException("newInstance", e);
 		}
 	}
 	
@@ -256,7 +247,7 @@ public final class ReflectionHelper implements Serializable {
 			try {
 				return clazz.newInstance();
 			} catch (Exception e) {
-				ReflectionHelper.log.error(e.getMessage(), e);
+				throw new UnableToCompleteOperationException("newInstance", e);
 			}
 		}
 		
@@ -285,8 +276,7 @@ public final class ReflectionHelper implements Serializable {
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ReflectionHelper.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("newInstance");
+			throw new UnableToCompleteOperationException("newInstance", e);
 		}
 	}
 	
@@ -297,8 +287,7 @@ public final class ReflectionHelper implements Serializable {
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ReflectionHelper.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("getPublicFieldList");
+			throw new UnableToCompleteOperationException("getPublicFieldList", e);
 		}
 	}
 	
@@ -347,8 +336,7 @@ public final class ReflectionHelper implements Serializable {
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ReflectionHelper.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("getPublicFieldList");
+			throw new UnableToCompleteOperationException("getPublicFieldList", e);
 		}
 	}
 	
@@ -381,8 +369,7 @@ public final class ReflectionHelper implements Serializable {
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ReflectionHelper.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("executeGetter");
+			throw new UnableToCompleteOperationException("executeGetter", e);
 		}
 	}
 	
@@ -415,8 +402,7 @@ public final class ReflectionHelper implements Serializable {
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ReflectionHelper.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("executeSetter");
+			throw new UnableToCompleteOperationException("executeSetter", e);
 		}
 	}
 	
@@ -475,8 +461,7 @@ public final class ReflectionHelper implements Serializable {
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ReflectionHelper.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("parse");
+			throw new UnableToCompleteOperationException("parse", e);
 		}
 	}
 	
@@ -530,8 +515,7 @@ public final class ReflectionHelper implements Serializable {
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ReflectionHelper.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("cast");
+			throw new UnableToCompleteOperationException("cast", e);
 		}
 	}
 	
@@ -561,8 +545,7 @@ public final class ReflectionHelper implements Serializable {
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ReflectionHelper.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("isCompatible");
+			throw new UnableToCompleteOperationException("isCompatible", e);
 		}
 		
 		return false;
@@ -587,8 +570,7 @@ public final class ReflectionHelper implements Serializable {
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ReflectionHelper.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("isPrimitiveOrWrapper");
+			throw new UnableToCompleteOperationException("isPrimitiveOrWrapper", e);
 		}
 	}
 		
@@ -617,8 +599,7 @@ public final class ReflectionHelper implements Serializable {
 			return wrapperList.contains(clazz);
 			
 		} catch (Exception e) {
-			ReflectionHelper.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("isWrapper");
+			throw new UnableToCompleteOperationException("isWrapper", e);
 		}
 	}
 	
@@ -631,8 +612,7 @@ public final class ReflectionHelper implements Serializable {
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ReflectionHelper.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("isCollectionOrArray");
+			throw new UnableToCompleteOperationException("isCollectionOrArray", e);
 		}
 	}
 	
@@ -647,8 +627,7 @@ public final class ReflectionHelper implements Serializable {
 			}
 			return clazz.getSuperclass().equals(AbstractList.class) || clazz.getSuperclass().equals(AbstractSet.class);
 		} catch (Exception e) {
-			ReflectionHelper.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("isCollection");
+			throw new UnableToCompleteOperationException("isCollection", e);
 		}
 	}
 
@@ -670,10 +649,34 @@ public final class ReflectionHelper implements Serializable {
 			}
 			
 		} catch (Exception e) {
-			ReflectionHelper.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("getGenericClassList");
+			throw new UnableToCompleteOperationException("getGenericClassList", e);
 		}
 		
 		return genericClasLsist;	
+	}
+
+	
+	@SafeVarargs
+	public static final <T> T[] newArray(Class<T> clazz, int length, T...valueArray) throws ProgressusException {
+		try {
+			
+			@SuppressWarnings("unchecked")
+			T[] array = (T[])Array.newInstance(clazz, length);
+			
+			if (CollectionHelper.isNullOrEmpty(valueArray)) {
+				return array;	
+			}
+			
+			for (int i = 0; i < valueArray.length; i++) {
+				array[i] = valueArray[i];
+			}
+			
+			return array;
+			
+		} catch (ProgressusException pe) {
+			throw pe;
+		} catch (Exception e) {
+			throw new UnableToCompleteOperationException("newArray", e);
+		}
 	}
 }

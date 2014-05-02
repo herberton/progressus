@@ -1,14 +1,17 @@
 package br.com.hcs.progressus.to;
 
 import java.security.InvalidParameterException;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import br.com.hcs.progressus.enumerator.OrderByType;
+import br.com.hcs.progressus.exception.ProgressusException;
+import br.com.hcs.progressus.exception.UnableToCompleteOperationException;
+import br.com.hcs.progressus.helper.MapHelper;
 import br.com.hcs.progressus.helper.StringHelper;
 
 @Slf4j
@@ -17,22 +20,34 @@ public class OrderByTO extends ProgressusTO<OrderByTO> {
 
 	private static final long serialVersionUID = 2933581165238344379L;
 	
-	@Getter
-	@Setter
-	private Map<String, OrderByType> orderByMap;
 	
-	
-	public OrderByTO(String field, OrderByType type) throws InvalidParameterException {
+	public OrderByTO(String field, OrderByType type) throws UnableToCompleteOperationException {
 		this();
 		this.addOrderBy(field, type);
 	}
-	public OrderByTO(Map<String, OrderByType> orderByMap) throws InvalidParameterException{
+	public OrderByTO(Map<String, OrderByType> orderByMap) throws UnableToCompleteOperationException{
 		this();
 		this.setOrderByMap(orderByMap);
 	}
 	
 	
-	public void addOrderBy(String field, OrderByType type) throws InvalidParameterException {
+	@Setter
+	private Map<String, OrderByType> orderByMap;
+	
+	
+	public Map<String, OrderByType> getOrderByMap() {
+		try {
+			if (MapHelper.isNullOrEmpty(this.orderByMap)) {
+				this.setOrderByMap(new HashMap<String, OrderByType>());
+			}
+		} catch (ProgressusException e) {
+			OrderByTO.log.error(e.getMessage(), e);
+		}
+		return this.orderByMap;
+	}
+	
+	
+	public void addOrderBy(String field, OrderByType type) throws UnableToCompleteOperationException {
 		
 		try {
 			
@@ -50,7 +65,7 @@ public class OrderByTO extends ProgressusTO<OrderByTO> {
 			this.getOrderByMap().put(field, type);
 			
 		} catch (Exception e) {
-			OrderByTO.log.error(e.getMessage());
+			throw new UnableToCompleteOperationException("addOrderBy", e);
 		}
 	}
 	

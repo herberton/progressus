@@ -21,7 +21,6 @@ import javax.transaction.UserTransaction;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import br.com.hcs.progressus.client.ejb.sb.bo.entity.ProgressusBOEntityRemote;
 import br.com.hcs.progressus.client.ejb.sb.dao.ProgressusDAOLocal;
 import br.com.hcs.progressus.client.helper.EJBHelper;
@@ -51,7 +50,6 @@ import br.com.hcs.progressus.server.jpa.entity.ProgressusEntity;
 import br.com.hcs.progressus.to.OrderByTO;
 import br.com.hcs.progressus.to.ProgressusTO;
 
-@Slf4j
 @NoArgsConstructor
 @Stateless
 @LocalBean
@@ -78,7 +76,6 @@ public class ProgressusDAO<T extends ProgressusEntity<?>> implements ProgressusD
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusDAO.log.error(e.getMessage(), e);
 			throw new InsertException(this.getEntityClazz("insert"), e);
 		}
 	}
@@ -90,7 +87,6 @@ public class ProgressusDAO<T extends ProgressusEntity<?>> implements ProgressusD
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusDAO.log.error(e.getMessage(), e);
 			throw new InsertException(this.getEntityClazz("insert"), e);
 		}
 	}
@@ -126,7 +122,6 @@ public class ProgressusDAO<T extends ProgressusEntity<?>> implements ProgressusD
 			if (isControlTransaction) {
 				this.rollbackTransaction(userTransaction);	
 			}
-			ProgressusDAO.log.error(e.getMessage(), e);
 			throw new InsertException(clazz, e);
 			
 		}
@@ -142,7 +137,6 @@ public class ProgressusDAO<T extends ProgressusEntity<?>> implements ProgressusD
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusDAO.log.error(e.getMessage(), e);
 			throw new InsertException(this.getEntityClazz("insert"), e);
 		}
 	}
@@ -153,7 +147,6 @@ public class ProgressusDAO<T extends ProgressusEntity<?>> implements ProgressusD
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusDAO.log.error(e.getMessage(), e);
 			throw new InsertException(this.getEntityClazz("insert"), e);
 		}
 	}
@@ -197,7 +190,6 @@ public class ProgressusDAO<T extends ProgressusEntity<?>> implements ProgressusD
 			if (isControlTransaction) {
 				this.rollbackTransaction(userTransaction);	
 			}
-			ProgressusDAO.log.error(e.getMessage(), e);
 			throw new InsertException(clazz, e);
 		}
 	}
@@ -212,7 +204,6 @@ public class ProgressusDAO<T extends ProgressusEntity<?>> implements ProgressusD
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusDAO.log.error(e.getMessage(), e);
 			throw new UpdateException(this.getEntityClazz("update"), e);
 		}
 	}
@@ -224,7 +215,6 @@ public class ProgressusDAO<T extends ProgressusEntity<?>> implements ProgressusD
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusDAO.log.error(e.getMessage(), e);
 			throw new UpdateException(this.getEntityClazz("update"), e);
 		}
 	}
@@ -263,7 +253,6 @@ public class ProgressusDAO<T extends ProgressusEntity<?>> implements ProgressusD
 			if (isControlTransaction) {
 				this.rollbackTransaction(userTransaction);
 			}
-			ProgressusDAO.log.error(e.getMessage(), e);
 			throw new UpdateException(clazz, e);
 		}
 	}
@@ -278,7 +267,6 @@ public class ProgressusDAO<T extends ProgressusEntity<?>> implements ProgressusD
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusDAO.log.error(e.getMessage(), e);
 			throw new UpdateException(this.getEntityClazz("update"), e);
 		}
 	}
@@ -289,7 +277,6 @@ public class ProgressusDAO<T extends ProgressusEntity<?>> implements ProgressusD
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusDAO.log.error(e.getMessage(), e);
 			throw new UpdateException(this.getEntityClazz("update"), e);
 		}
 	}
@@ -333,7 +320,6 @@ public class ProgressusDAO<T extends ProgressusEntity<?>> implements ProgressusD
 			if (isControlTransaction) {
 				this.rollbackTransaction(userTransaction);	
 			}
-			ProgressusDAO.log.error(e.getMessage(), e);
 			throw new UpdateException(clazz, e);
 		}
 	}
@@ -348,7 +334,6 @@ public class ProgressusDAO<T extends ProgressusEntity<?>> implements ProgressusD
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusDAO.log.error(e.getMessage(), e);
 			throw new SaveException(this.getEntityClazz("save"), e);
 		}
 	}
@@ -360,7 +345,6 @@ public class ProgressusDAO<T extends ProgressusEntity<?>> implements ProgressusD
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusDAO.log.error(e.getMessage(), e);
 			throw new SaveException(this.getEntityClazz("save"), e);
 		}
 	}
@@ -413,7 +397,6 @@ public class ProgressusDAO<T extends ProgressusEntity<?>> implements ProgressusD
 			if (isControlTransaction) {
 				this.rollbackTransaction(userTransaction);	
 			}
-			ProgressusDAO.log.error(e.getMessage(), e);
 			throw new SaveException(clazz, e);
 		}
 	}
@@ -428,7 +411,6 @@ public class ProgressusDAO<T extends ProgressusEntity<?>> implements ProgressusD
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusDAO.log.error(e.getMessage(), e);
 			throw new SaveException(this.getEntityClazz("save"), e);
 		}
 	}
@@ -439,7 +421,6 @@ public class ProgressusDAO<T extends ProgressusEntity<?>> implements ProgressusD
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusDAO.log.error(e.getMessage(), e);
 			throw new SaveException(this.getEntityClazz("save"), e);
 		}
 	}
@@ -483,7 +464,6 @@ public class ProgressusDAO<T extends ProgressusEntity<?>> implements ProgressusD
 			if (isControlTransaction) {
 				this.rollbackTransaction(userTransaction);	
 			}
-			ProgressusDAO.log.error(e.getMessage(), e);
 			throw new SaveException(clazz, e);
 		}
 	}
@@ -498,7 +478,6 @@ public class ProgressusDAO<T extends ProgressusEntity<?>> implements ProgressusD
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusDAO.log.error(e.getMessage(), e);
 			throw new DeleteException(this.getEntityClazz("delete"), e);
 		}
 	}
@@ -510,7 +489,6 @@ public class ProgressusDAO<T extends ProgressusEntity<?>> implements ProgressusD
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusDAO.log.error(e.getMessage(), e);
 			throw new DeleteException(this.getEntityClazz("delete"), e);
 		}
 	}
@@ -548,7 +526,6 @@ public class ProgressusDAO<T extends ProgressusEntity<?>> implements ProgressusD
 			if (isControlTransaction) {
 				this.rollbackTransaction(userTransaction);
 			}
-			ProgressusDAO.log.error(e.getMessage(), e);
 			throw new DeleteException(clazz, e);
 		}
 	}
@@ -563,7 +540,6 @@ public class ProgressusDAO<T extends ProgressusEntity<?>> implements ProgressusD
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusDAO.log.error(e.getMessage(), e);
 			throw new DeleteException(this.getEntityClazz("delete"), e);
 		}
 		
@@ -575,7 +551,6 @@ public class ProgressusDAO<T extends ProgressusEntity<?>> implements ProgressusD
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusDAO.log.error(e.getMessage(), e);
 			throw new DeleteException(this.getEntityClazz("delete"), e);
 		}
 	}
@@ -617,7 +592,6 @@ public class ProgressusDAO<T extends ProgressusEntity<?>> implements ProgressusD
 			if (isControlTransaction) {
 				this.rollbackTransaction(userTransaction);	
 			}
-			ProgressusDAO.log.error(e.getMessage(), e);
 			throw new DeleteException(clazz, e);
 		}
 	}
@@ -632,7 +606,6 @@ public class ProgressusDAO<T extends ProgressusEntity<?>> implements ProgressusD
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusDAO.log.error(e.getMessage(), e);
 			throw new RemoveException(this.getEntityClazz("remove"), e);
 		}
 	}
@@ -644,7 +617,6 @@ public class ProgressusDAO<T extends ProgressusEntity<?>> implements ProgressusD
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusDAO.log.error(e.getMessage(), e);
 			throw new RemoveException(this.getEntityClazz("remove"), e);
 		}
 	}
@@ -679,7 +651,6 @@ public class ProgressusDAO<T extends ProgressusEntity<?>> implements ProgressusD
 			if (isControlTransaction) {
 				this.rollbackTransaction(userTransaction);
 			}
-			ProgressusDAO.log.error(e.getMessage(), e);
 			throw new RemoveException(clazz, e);
 		}
 	}
@@ -694,7 +665,6 @@ public class ProgressusDAO<T extends ProgressusEntity<?>> implements ProgressusD
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusDAO.log.error(e.getMessage(), e);
 			throw new RemoveException(this.getEntityClazz("remove"), e);
 		}
 	}
@@ -705,7 +675,6 @@ public class ProgressusDAO<T extends ProgressusEntity<?>> implements ProgressusD
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusDAO.log.error(e.getMessage(), e);
 			throw new RemoveException(this.getEntityClazz("remove"), e);
 		}
 	}
@@ -747,7 +716,6 @@ public class ProgressusDAO<T extends ProgressusEntity<?>> implements ProgressusD
 			if (isControlTransaction) {
 				this.rollbackTransaction(userTransaction);	
 			}
-			ProgressusDAO.log.error(e.getMessage(), e);
 			throw new RemoveException(clazz, e);
 		}
 	}
@@ -762,7 +730,6 @@ public class ProgressusDAO<T extends ProgressusEntity<?>> implements ProgressusD
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusDAO.log.error(e.getMessage(), e);
 			throw new InsertOrSelectException(this.getEntityClazz("insertOrSelect"), e);
 		}
 	}
@@ -773,7 +740,6 @@ public class ProgressusDAO<T extends ProgressusEntity<?>> implements ProgressusD
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusDAO.log.error(e.getMessage(), e);
 			throw new InsertOrSelectException(this.getEntityClazz("insertOrSelect"), e);
 		}
 	}
@@ -807,7 +773,6 @@ public class ProgressusDAO<T extends ProgressusEntity<?>> implements ProgressusD
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusDAO.log.error(e.getMessage(), e);
 			throw new InsertOrSelectException(clazz, e);
 		}
 	}
@@ -822,7 +787,6 @@ public class ProgressusDAO<T extends ProgressusEntity<?>> implements ProgressusD
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusDAO.log.error(e.getMessage(), e);
 			throw new InsertOrSelectException(this.getEntityClazz("insertOrSelectList"), e);
 		}
 	}
@@ -833,7 +797,6 @@ public class ProgressusDAO<T extends ProgressusEntity<?>> implements ProgressusD
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusDAO.log.error(e.getMessage(), e);
 			throw new InsertOrSelectException(this.getEntityClazz("insertOrSelectList"), e);
 		}
 	}
@@ -877,7 +840,6 @@ public class ProgressusDAO<T extends ProgressusEntity<?>> implements ProgressusD
 			if (isControlTransaction) {
 				this.rollbackTransaction(userTransaction);
 			}
-			ProgressusDAO.log.error(e.getMessage(), e);
 			throw new InsertOrSelectException(clazz, e);
 		}
 	}
@@ -896,7 +858,6 @@ public class ProgressusDAO<T extends ProgressusEntity<?>> implements ProgressusD
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusDAO.log.error(e.getMessage(), e);
 			throw new SelectException(clazz, e);
 		}
 	}
@@ -929,7 +890,6 @@ public class ProgressusDAO<T extends ProgressusEntity<?>> implements ProgressusD
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusDAO.log.error(e.getMessage(), e);
 			throw new SelectException(clazz, e);
 		}
 	}
@@ -950,7 +910,6 @@ public class ProgressusDAO<T extends ProgressusEntity<?>> implements ProgressusD
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusDAO.log.error(e.getMessage(), e);
 			throw new CountException(clazz, e);
 		}
 	}
@@ -976,7 +935,6 @@ public class ProgressusDAO<T extends ProgressusEntity<?>> implements ProgressusD
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusDAO.log.error(e.getMessage(), e);
 			throw new CountException(clazz, e);
 		}
 	}
@@ -993,7 +951,6 @@ public class ProgressusDAO<T extends ProgressusEntity<?>> implements ProgressusD
 			userTransaction.begin();
 			return userTransaction;
 		} catch (Exception e) {
-			ProgressusDAO.log.error(e.getMessage(), e);
 			throw new BeginTransactionException(e);
 		}
 		
@@ -1004,7 +961,6 @@ public class ProgressusDAO<T extends ProgressusEntity<?>> implements ProgressusD
     	try {
     		userTransaction.commit();
 		} catch (Exception e) {
-			ProgressusDAO.log.error(e.getMessage(), e);
 			this.rollbackTransaction(userTransaction);
 			throw new CommitTransactionException(e);
 		}
@@ -1015,7 +971,6 @@ public class ProgressusDAO<T extends ProgressusEntity<?>> implements ProgressusD
 		try {
 			userTransaction.rollback();
 		} catch (Exception e) {
-			ProgressusDAO.log.error(e.getMessage(), e);
 			throw new RollbackTransactionException(e);
 		}
 	}
@@ -1032,7 +987,7 @@ public class ProgressusDAO<T extends ProgressusEntity<?>> implements ProgressusD
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			throw new UnableToCompleteOperationException("getEntityClazz");
+			throw new UnableToCompleteOperationException("getEntityClazz", e);
 		}
 	}
 	
@@ -1044,7 +999,7 @@ public class ProgressusDAO<T extends ProgressusEntity<?>> implements ProgressusD
 			List<Class<?>> genericClassList = ReflectionHelper.getGenericClassList(this.getClass());
 			
 			if (CollectionHelper.isNullOrEmpty(genericClassList)) {
-				throw new UnableToCompleteOperationException(operation);
+				throw new UnableToCompleteOperationException(operation, "entityClassNotFound");
 			}
 			
 			return (Class<T>) genericClassList.get(0);
@@ -1052,7 +1007,7 @@ public class ProgressusDAO<T extends ProgressusEntity<?>> implements ProgressusD
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			throw new UnableToCompleteOperationException(operation);
+			throw new UnableToCompleteOperationException(operation, e);
 		}
 	}
 	
@@ -1068,8 +1023,7 @@ public class ProgressusDAO<T extends ProgressusEntity<?>> implements ProgressusD
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusDAO.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("getBO");
+			throw new UnableToCompleteOperationException("getBO", e);
 		}
 	}
 	
@@ -1081,8 +1035,7 @@ public class ProgressusDAO<T extends ProgressusEntity<?>> implements ProgressusD
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusDAO.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("getBO");
+			throw new UnableToCompleteOperationException("getBO", e);
 		}
 	}
 	
@@ -1104,8 +1057,7 @@ public class ProgressusDAO<T extends ProgressusEntity<?>> implements ProgressusD
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusDAO.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("createTypedQuery");
+			throw new UnableToCompleteOperationException("createTypedQuery", e);
 		}
 	}
 	
@@ -1124,8 +1076,7 @@ public class ProgressusDAO<T extends ProgressusEntity<?>> implements ProgressusD
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusDAO.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("createTypedQuery");
+			throw new UnableToCompleteOperationException("createTypedQuery", e);
 		}
 	}
 	
@@ -1147,8 +1098,7 @@ public class ProgressusDAO<T extends ProgressusEntity<?>> implements ProgressusD
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusDAO.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("createQuery");
+			throw new UnableToCompleteOperationException("createQuery", e);
 		}
 	}
 	
@@ -1178,8 +1128,7 @@ public class ProgressusDAO<T extends ProgressusEntity<?>> implements ProgressusD
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusDAO.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("createQuery");
+			throw new UnableToCompleteOperationException("createQuery", e);
 		}
 	}
 	
