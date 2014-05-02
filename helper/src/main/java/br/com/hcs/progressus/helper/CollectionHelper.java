@@ -5,11 +5,9 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import lombok.extern.slf4j.Slf4j;
 import br.com.hcs.progressus.exception.ProgressusException;
 import br.com.hcs.progressus.exception.UnableToCompleteOperationException;
 
-@Slf4j
 public final class CollectionHelper implements Serializable {
 
 	private static final long serialVersionUID = 6362253797266179520L;
@@ -19,8 +17,7 @@ public final class CollectionHelper implements Serializable {
 		try {
 			return array == null || array.length <= 0;
 		} catch (Exception e) {
-			CollectionHelper.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("isNullOrEmpty");
+			throw new UnableToCompleteOperationException("isNullOrEmpty", e);
 		}
 	}
 	
@@ -28,8 +25,7 @@ public final class CollectionHelper implements Serializable {
 		try {
 			return collection == null || collection.size() <= 0;
 		} catch (Exception e) {
-			CollectionHelper.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("isNullOrEmpty");
+			throw new UnableToCompleteOperationException("isNullOrEmpty", e);
 		}
 	}
 	
@@ -55,8 +51,7 @@ public final class CollectionHelper implements Serializable {
 			}
 			
 		} catch (Exception e) {
-			CollectionHelper.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("add");
+			throw new UnableToCompleteOperationException("add", e);
 		}
 	}
 	
@@ -74,8 +69,7 @@ public final class CollectionHelper implements Serializable {
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			CollectionHelper.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("add");
+			throw new UnableToCompleteOperationException("add", e);
 		}
 	}
 	
@@ -89,8 +83,7 @@ public final class CollectionHelper implements Serializable {
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			CollectionHelper.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("add");
+			throw new UnableToCompleteOperationException("add", e);
 		}
 	}
 	
@@ -101,8 +94,7 @@ public final class CollectionHelper implements Serializable {
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			CollectionHelper.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("add");
+			throw new UnableToCompleteOperationException("add", e);
 		}
 	}
 	
@@ -112,8 +104,7 @@ public final class CollectionHelper implements Serializable {
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			CollectionHelper.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("add");
+			throw new UnableToCompleteOperationException("add", e);
 		}
 	}
 	
@@ -124,8 +115,7 @@ public final class CollectionHelper implements Serializable {
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			CollectionHelper.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("add");
+			throw new UnableToCompleteOperationException("add", e);
 		}
 	}
 	
@@ -142,8 +132,7 @@ public final class CollectionHelper implements Serializable {
 				collection.remove(remove);
 			}
 		} catch (Exception e) {
-			CollectionHelper.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("remove");
+			throw new UnableToCompleteOperationException("remove", e);
 		}
 	}
 	
@@ -158,8 +147,7 @@ public final class CollectionHelper implements Serializable {
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			CollectionHelper.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("remove");
+			throw new UnableToCompleteOperationException("remove", e);
 		}
 	}
 	
@@ -173,8 +161,7 @@ public final class CollectionHelper implements Serializable {
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			CollectionHelper.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("remove");
+			throw new UnableToCompleteOperationException("remove", e);
 		}
 	}
 }

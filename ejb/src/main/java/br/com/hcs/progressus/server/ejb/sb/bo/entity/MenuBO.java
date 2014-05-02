@@ -68,7 +68,7 @@ public class MenuBO extends ProgressusBOEntity<MenuEntity> implements MenuBORemo
 			throw pe;
 		}catch (Exception e) {
 			MenuBO.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("saveTreeList");
+			throw new UnableToCompleteOperationException("saveTreeList", e);
 		}
 	}
 	

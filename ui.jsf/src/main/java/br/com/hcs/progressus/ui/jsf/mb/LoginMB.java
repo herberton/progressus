@@ -42,12 +42,11 @@ public class LoginMB extends ProgressusMB<LoginMB> {
 	
 	
 	@Override
-	public void init() {
+	public void init() throws ProgressusException {
 		try {
 			this.setUser(new UserEntity());
 		} catch (Exception e) {
-			LoginMB.log.error(e.getMessage(), e);
-			JSFMessageHelper.showMessage(new UnableToCompleteOperationException("init"));
+			new UnableToCompleteOperationException("init", e);
 		}
 	}
 	
@@ -57,7 +56,7 @@ public class LoginMB extends ProgressusMB<LoginMB> {
 			return Arrays.asList(SupportedLocale.values());
 		} catch (Exception e) {
 			LoginMB.log.error(e.getMessage(), e);
-			JSFMessageHelper.showMessage(new UnableToCompleteOperationException("getSupportedLocaleList"));
+			JSFMessageHelper.showMessage(new UnableToCompleteOperationException("getSupportedLocaleList", e));
 		}
 		return new ArrayList<>();
 	}
@@ -75,13 +74,13 @@ public class LoginMB extends ProgressusMB<LoginMB> {
 			
 			super.setLoggedInUser(this.getUser());
 			
-			return super.getURL("index");
+			return super.getUrl("index");
 			
 		} catch (ProgressusException pe) {
 			JSFMessageHelper.showMessage(pe);
 		} catch (Exception e) {
 			LoginMB.log.error(e.getMessage(), e);
-			JSFMessageHelper.showMessage(new UnableToCompleteOperationException("authenticate"));
+			JSFMessageHelper.showMessage(new UnableToCompleteOperationException("authenticate", e));
 		}
 		
 		return "";

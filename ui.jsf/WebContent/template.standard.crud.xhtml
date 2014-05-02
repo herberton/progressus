@@ -19,8 +19,7 @@
 		<ui:define 
 			name="body">
 			<h:form
-				id="crudForm"
-				prependId="false">
+				id="crudForm">
 				<p:toolbar 
 					rendered="#{toolbarRendered}">
 					<p:toolbarGroup 
@@ -30,23 +29,24 @@
 							action="#{mb.preSave}"
 							process=":crudForm, @this"
 							update=":headerForm, :crudForm, :dataTableForm"
-							icon="save.icon" 
+							icon="icon_save" 
 							value="#{i18n.save}" 
 							title="#{i18n.save}" />
 						<p:commandButton 
 							id="deleteCommandButton"
 							onclick="deleteConfirmDialog.show()" 
-							icon="delete.icon" 
+							icon="icon_delete" 
 							value="#{i18n.delete}" 
-							title="#{i18n.delete}" />
+							title="#{i18n.delete}"
+							disabled="#{mb.deleteDisabled}" />
 						<p:commandButton 
-							id="cleanCommandButton"
+							id="refreshCommandButton"
 							immediate="true"
-							action="#{mb.clean}"
+							action="#{mb.refresh}"
 							update=":headerForm, :crudForm, :dataTableForm" 
-							icon="clean.icon"
-							value="#{i18n.clean}" 
-							title="#{i18n.clean}" />
+							icon="icon_refresh"
+							value="#{i18n.refresh}" 
+							title="#{i18n.refresh}" />
 					</p:toolbarGroup>
 				</p:toolbar>
 				<p:spacer 
@@ -57,9 +57,6 @@
 					<ui:insert 
 						name="form"/>
 				</p:fieldset>
-				<hcs:loading
-        			block="formFieldset"
-        			trigger="saveCommandButton, deleteCommandButton, cleanCommandButton"/>
 			</h:form>
 			<p:spacer 
 				height="5"/>
@@ -102,23 +99,29 @@
         			block="dataTable"
         			trigger="dataTable"/>
 			</h:form>
+			<hcs:loading
+       			block=":bodyLayoutUnit"
+       			trigger=":crudForm:saveCommandButton, :crudForm:deleteCommandButton, :crudForm:refreshCommandButton"/>
 			<p:confirmDialog
 				widgetVar="deleteConfirmDialog" 
 				message="#{i18n.areYouSureToRemove}" 
 				header="#{i18n.delete}" 
 				severity="alert"
-				appendToBody="true">
+				appendTo="@(body)">
 				<p:commandButton
-					id="confirm" 
+					id="confirmCommandButton" 
 					onclick="deleteConfirmDialog.hide()" 
 					actionListener="#{mb.preDelete}" 
 					update=":headerForm, :crudForm, :dataTableForm"  
 					immediate="true" 
 					value="#{i18n.yes}" />
 				<p:commandButton 
-					id="decline" 
+					id="declineCommandButton" 
 					onclick="deleteConfirmDialog.hide()" 
 					value="#{i18n.no}" />
+				<hcs:loading
+        			block=":bodyLayoutUnit"
+        			trigger="confirmCommandButton, declineCommandButton"/>
 			</p:confirmDialog>
 		</ui:define>
 	</ui:composition>

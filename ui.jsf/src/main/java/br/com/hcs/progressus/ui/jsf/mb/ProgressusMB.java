@@ -9,6 +9,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.component.EditableValueHolder;
 import javax.faces.component.UIComponent;
 
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,12 +28,15 @@ import br.com.hcs.progressus.helper.StringHelper;
 import br.com.hcs.progressus.server.jpa.entity.MenuEntity;
 import br.com.hcs.progressus.server.jpa.entity.UserEntity;
 import br.com.hcs.progressus.to.ColumnTO;
+import br.com.hcs.progressus.to.MessageTO;
 import br.com.hcs.progressus.to.ProgressusTO;
 import br.com.hcs.progressus.ui.jsf.helper.DefaultMenuModelHelper;
 import br.com.hcs.progressus.ui.jsf.helper.I18NHelper;
 import br.com.hcs.progressus.ui.jsf.helper.JSFHelper;
+import br.com.hcs.progressus.ui.jsf.helper.JSFMessageHelper;
 
 @Slf4j
+@NoArgsConstructor
 public abstract class ProgressusMB<T extends ProgressusMB<T>> 
 	extends 
 		ProgressusTO<T> 
@@ -47,10 +51,15 @@ public abstract class ProgressusMB<T extends ProgressusMB<T>>
 	private List<ColumnTO> columnList;
 	
 	
-	public ProgressusMB() { super(); }
+	public final List<ColumnTO> getColumnList() {
+		if (this.columnList == null) {
+			this.setColumnList(new ArrayList<ColumnTO>());
+		}
+		return this.columnList;
+	}
 		
 	
-	public abstract void init();
+	protected abstract void init() throws ProgressusException;
 	
 	
 	@PostConstruct
@@ -60,8 +69,11 @@ public abstract class ProgressusMB<T extends ProgressusMB<T>>
 			
 			this.init();
 			
+		} catch (ProgressusException pe) {
+			JSFMessageHelper.showMessage(pe);
 		} catch (Exception e) {
 			ProgressusMB.log.error(e.getMessage(), e);
+			JSFMessageHelper.showMessage(new UnableToCompleteOperationException("preInit", e));
 		}
 		
 	}
@@ -72,6 +84,7 @@ public abstract class ProgressusMB<T extends ProgressusMB<T>>
 			return ProgressusMB.getInstance(SessionMB.class).getLoggedInUser();
 		} catch (Exception e) {
 			ProgressusMB.log.error(e.getMessage(), e);
+			JSFMessageHelper.showMessage(new UnableToCompleteOperationException("getLoggedInUser", e));
 		}
 		return null;
 	}
@@ -81,6 +94,7 @@ public abstract class ProgressusMB<T extends ProgressusMB<T>>
 			ProgressusMB.getInstance(SessionMB.class).setLoggedInUser(loggedInUser);
 		} catch (Exception e) {
 			ProgressusMB.log.error(e.getMessage(), e);
+			JSFMessageHelper.showMessage(new UnableToCompleteOperationException("setLoggedInUser", e));
 		}
 	}
 	
@@ -90,6 +104,7 @@ public abstract class ProgressusMB<T extends ProgressusMB<T>>
 			return ProgressusMB.getInstance(SessionMB.class).getSupportedLocale();
 		} catch (Exception e) {
 			ProgressusMB.log.error(e.getMessage(), e);
+			JSFMessageHelper.showMessage(new UnableToCompleteOperationException("getSupportedLocale", e));
 		}
 		return SupportedLocale.getDefault();
 	}
@@ -99,6 +114,7 @@ public abstract class ProgressusMB<T extends ProgressusMB<T>>
 			ProgressusMB.getInstance(SessionMB.class).setSupportedLocale(supportedLocale);
 		} catch (Exception e) {
 			ProgressusMB.log.error(e.getMessage(), e);
+			JSFMessageHelper.showMessage(new UnableToCompleteOperationException("setSupportedLocale", e));
 		}
 	}
 	
@@ -107,6 +123,7 @@ public abstract class ProgressusMB<T extends ProgressusMB<T>>
 			return ProgressusMB.getInstance(SessionMB.class).getTemplate();
 		} catch (Exception e) {
 			ProgressusMB.log.error(e.getMessage(), e);
+			JSFMessageHelper.showMessage(new UnableToCompleteOperationException("getTemplate", e));
 		}
 		return Template.getDefault();
 	}
@@ -116,6 +133,7 @@ public abstract class ProgressusMB<T extends ProgressusMB<T>>
 			ProgressusMB.getInstance(SessionMB.class).setTemplate(template);
 		} catch (Exception e) {
 			ProgressusMB.log.error(e.getMessage(), e);
+			JSFMessageHelper.showMessage(new UnableToCompleteOperationException("setTemplate", e));
 		}
 	}
 	
@@ -124,6 +142,7 @@ public abstract class ProgressusMB<T extends ProgressusMB<T>>
 			return ProgressusMB.getInstance(SessionMB.class).getTheme();
 		} catch (Exception e) {
 			ProgressusMB.log.error(e.getMessage(), e);
+			JSFMessageHelper.showMessage(new UnableToCompleteOperationException("getTheme", e));
 		}
 		return this.getTemplate().getDefaultTheme();
 	}
@@ -133,6 +152,7 @@ public abstract class ProgressusMB<T extends ProgressusMB<T>>
 			ProgressusMB.getInstance(SessionMB.class).setTheme(theme);
 		} catch (Exception e) {
 			ProgressusMB.log.error(e.getMessage(), e);
+			JSFMessageHelper.showMessage(new UnableToCompleteOperationException("setTheme", e));
 		}
 	}
 	
@@ -142,6 +162,7 @@ public abstract class ProgressusMB<T extends ProgressusMB<T>>
 			return ProgressusMB.getInstance(SessionMB.class).getLocale();
 		} catch (Exception e) {
 			ProgressusMB.log.error(e.getMessage(), e);
+			JSFMessageHelper.showMessage(new UnableToCompleteOperationException("getLocale", e));
 		}
 		return SupportedLocale.getDefault().getLocale();
 	}
@@ -151,6 +172,7 @@ public abstract class ProgressusMB<T extends ProgressusMB<T>>
 			return ProgressusMB.getInstance(SessionMB.class).getThemeName();
 		} catch (Exception e) {
 			ProgressusMB.log.error(e.getMessage(), e);
+			JSFMessageHelper.showMessage(new UnableToCompleteOperationException("setLocale", e));
 		}
 		return Template.getDefault().getDefaultTheme().toString();
 	}
@@ -161,6 +183,7 @@ public abstract class ProgressusMB<T extends ProgressusMB<T>>
 			return ProgressusMB.getInstance(SessionMB.class).getTemplatePage();
 		} catch (Exception e) {
 			ProgressusMB.log.error(e.getMessage(), e);
+			JSFMessageHelper.showMessage(new UnableToCompleteOperationException("getTemplatePage", e));
 		}
 		return Template.getDefault().toString();
 	}
@@ -168,25 +191,32 @@ public abstract class ProgressusMB<T extends ProgressusMB<T>>
 	
 	
 	
-	public final void clean() {
-		this.clean(true);
+	public final void refresh() {
+		try {
+			this.refresh(true);
+			JSFMessageHelper.showMessage(MessageTO.getInstance("refreshedSuccessfully"));
+		} catch (Exception e) {
+			ProgressusMB.log.error(e.getMessage(), e);
+			JSFMessageHelper.showMessage(new UnableToCompleteOperationException("refresh", e));
+		}
 	}
 	
 	
-	public final void clean(boolean isInvokeInitMethod) {
+	public final void refresh(boolean isInvokeInitMethod) {
 		try {
-			this.clean(JSFHelper.getUIViewRoot());
+			this.refresh(JSFHelper.getUIViewRoot());
 			
 			if (isInvokeInitMethod) {
 				this.preInit();
 			}
 		} catch (Exception e) {
 			ProgressusMB.log.error(e.getMessage(), e);
+			JSFMessageHelper.showMessage(new UnableToCompleteOperationException("refresh", e));
 		}
 	}
 	
 	
-	public final void clean(UIComponent uiComponent) {
+	public final void refresh(UIComponent uiComponent) {
 		try {
 			
 			if (uiComponent == null) {
@@ -205,11 +235,12 @@ public abstract class ProgressusMB<T extends ProgressusMB<T>>
 			} 
 			
 			for(UIComponent uiComponentChild : uiComponent.getChildren()) {
-				this.clean(uiComponentChild);
+				this.refresh(uiComponentChild);
 			}
 			
 		} catch (Exception e) {
 			ProgressusMB.log.error(e.getMessage(), e);
+			JSFMessageHelper.showMessage(new UnableToCompleteOperationException("refresh", e));
 		}
 	}	
 	
@@ -217,7 +248,12 @@ public abstract class ProgressusMB<T extends ProgressusMB<T>>
 	
 	
 	public final void setValid() {
-		this.setValid(JSFHelper.getUIViewRoot());
+		try {
+			this.setValid(JSFHelper.getUIViewRoot());
+		} catch (Exception e) {
+			ProgressusMB.log.error(e.getMessage(), e);
+			JSFMessageHelper.showMessage(new UnableToCompleteOperationException("setValid", e));
+		}
 	}
 	
 	
@@ -240,6 +276,7 @@ public abstract class ProgressusMB<T extends ProgressusMB<T>>
 			
 		} catch (Exception e) {
 			ProgressusMB.log.error(e.getMessage(), e);
+			JSFMessageHelper.showMessage(new UnableToCompleteOperationException("setValid", e));
 		}
 	}
 	
@@ -251,6 +288,7 @@ public abstract class ProgressusMB<T extends ProgressusMB<T>>
 			return true;
 		} catch (Exception e) {
 			ProgressusMB.log.error(e.getMessage(), e);
+			JSFMessageHelper.showMessage(new UnableToCompleteOperationException("checkPermission", e));
 		}
 		return false;
 	}
@@ -259,7 +297,7 @@ public abstract class ProgressusMB<T extends ProgressusMB<T>>
 
 	
 	public final String getVersion() {
-		return "3.0.0.0";
+		return "1.0.0.0";
 	}
 	
 	
@@ -272,6 +310,7 @@ public abstract class ProgressusMB<T extends ProgressusMB<T>>
 			return JSFHelper.getURL("login");
 		} catch (Exception e) {
 			ProgressusMB.log.error(e.getMessage(), e);
+			JSFMessageHelper.showMessage(new UnableToCompleteOperationException("logout", e));
 		}
 		return "";
 	}
@@ -308,8 +347,11 @@ public abstract class ProgressusMB<T extends ProgressusMB<T>>
 			
 			return defaultMenuModel;
 			
+		} catch (ProgressusException pe) {
+			JSFMessageHelper.showMessage(pe);
 		} catch (Exception e) {
 			ProgressusMB.log.error(e.getMessage(), e);
+			JSFMessageHelper.showMessage(new UnableToCompleteOperationException("getDefaultMenuModel", e));
 		}
 		
 		return null;
@@ -321,17 +363,19 @@ public abstract class ProgressusMB<T extends ProgressusMB<T>>
 			JSFHelper.putSessionAttribute(Setting.WEB_SESSION_DEFAULT_MENU_MODEL.toString(), defaultMenuModel);
 		} catch (Exception e) {
 			ProgressusMB.log.error(e.getMessage(), e);
+			JSFMessageHelper.showMessage(new UnableToCompleteOperationException("setDefaultMenuModel", e));
 		}
 	}
 	
 	
 	
 	
-	public final String getURL(String page) {
+	public final String getUrl(String page) {
 		try {
 			return JSFHelper.getURL(page);
 		} catch (Exception e) {
 			ProgressusMB.log.error(e.getMessage(), e);
+			JSFMessageHelper.showMessage(new UnableToCompleteOperationException("getUrl", e));
 		}
 		return "#";
 	}
@@ -346,22 +390,10 @@ public abstract class ProgressusMB<T extends ProgressusMB<T>>
 			}
 		} catch (Exception e) {
 			ProgressusMB.log.error(e.getMessage(), e);
+			JSFMessageHelper.showMessage(new UnableToCompleteOperationException("getView", e));
 		}
 		return null;
 	}
-	
-	
-	
-	
-	public final List<ColumnTO> getColumnList() {
-		if (this.columnList == null) {
-			this.setColumnList(new ArrayList<ColumnTO>());
-		}
-		return this.columnList;
-	}
-	
-	
-	
 		
 	public final <TO extends ProgressusTO<TO>> void loadColumnList(Class<TO> clazz, boolean isClearColumnList) throws ProgressusException {
 		try {
@@ -382,7 +414,7 @@ public abstract class ProgressusMB<T extends ProgressusMB<T>>
 			throw pe;
 		} catch (Exception e) {
 			ProgressusMB.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("loadColumnList");
+			throw new UnableToCompleteOperationException("loadColumnList", e);
 		}
 	}
 	
@@ -394,7 +426,7 @@ public abstract class ProgressusMB<T extends ProgressusMB<T>>
 			throw pe;
 		} catch (Exception e) {
 			ProgressusMB.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("loadColumnList");
+			throw new UnableToCompleteOperationException("loadColumnList", e);
 		}
 	}
 	
@@ -410,7 +442,7 @@ public abstract class ProgressusMB<T extends ProgressusMB<T>>
 			throw pe;
 		} catch (Exception e) {
 			ProgressusMB.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("loadColumnList");
+			throw new UnableToCompleteOperationException("loadColumnList", e);
 		}
 	}
 	
@@ -425,7 +457,7 @@ public abstract class ProgressusMB<T extends ProgressusMB<T>>
 			throw pe;
 		} catch (Exception e) {
 			ProgressusMB.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("loadColumnList");
+			throw new UnableToCompleteOperationException("loadColumnList", e);
 		}
 	}
 	

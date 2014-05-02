@@ -10,7 +10,6 @@ import javax.ejb.Stateless;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import br.com.hcs.progressus.annotation.View;
 import br.com.hcs.progressus.client.ejb.sb.bo.entity.MenuBORemote;
 import br.com.hcs.progressus.client.ejb.sb.bo.entity.UserBORemote;
@@ -24,7 +23,6 @@ import br.com.hcs.progressus.server.jpa.entity.MenuEntity;
 import br.com.hcs.progressus.server.jpa.entity.UserEntity;
 import br.com.hcs.progressus.server.jpa.entity.UserPreferenceEntity;
 
-@Slf4j
 @NoArgsConstructor
 @Stateless
 public class ApplicationBO extends ProgressusBOProcess implements ApplicationBOLocal {
@@ -60,7 +58,7 @@ public class ApplicationBO extends ProgressusBOProcess implements ApplicationBOL
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ApplicationBO.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("createAdministratorUser", e);
 		}
 	}
 	
@@ -101,7 +99,7 @@ public class ApplicationBO extends ProgressusBOProcess implements ApplicationBOL
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			throw new UnableToCompleteOperationException("createMenuTree");
+			throw new UnableToCompleteOperationException("createMenuTree", e);
 		}
 		
 	}	
@@ -110,9 +108,10 @@ public class ApplicationBO extends ProgressusBOProcess implements ApplicationBOL
 	public List<MenuEntity> selectMenuTreeList() throws ProgressusException {
 		try {
 			return this.getMenuBO().selectTreeList();
+		} catch (ProgressusException pe) {
+			throw pe;
 		} catch (Exception e) {
-			ApplicationBO.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("selectMenuTreeList", e);
 		}
-		return new ArrayList<MenuEntity>();
 	}	
 }

@@ -8,7 +8,6 @@ import java.util.Map;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
-import lombok.extern.slf4j.Slf4j;
 import br.com.hcs.progressus.enumerator.WhereClauseOperator;
 import br.com.hcs.progressus.exception.ProgressusException;
 import br.com.hcs.progressus.exception.UnableToCompleteOperationException;
@@ -17,7 +16,6 @@ import br.com.hcs.progressus.to.ProgressusTO;
 import br.com.hcs.progressus.to.WhereClauseTO;
 import br.com.hcs.progressus.to.WhereTO;
 
-@Slf4j
 public final class JPQLHelper implements Serializable {
 
 	private static final long serialVersionUID = 3962812252308941950L;
@@ -39,8 +37,7 @@ public final class JPQLHelper implements Serializable {
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			JPQLHelper.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("bindParameter");
+			throw new UnableToCompleteOperationException("bindParameter", e);
 		}
 	}
 	
@@ -70,8 +67,7 @@ public final class JPQLHelper implements Serializable {
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			JPQLHelper.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("bindParameter");
+			throw new UnableToCompleteOperationException("bindParameter", e);
 		}
 	}
 		
@@ -97,8 +93,7 @@ public final class JPQLHelper implements Serializable {
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			JPQLHelper.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("getSelect");
+			throw new UnableToCompleteOperationException("getSelect", e);
 		}
 	}
 
@@ -125,8 +120,7 @@ public final class JPQLHelper implements Serializable {
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			JPQLHelper.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("getSelect");
+			throw new UnableToCompleteOperationException("getSelect", e);
 		}
 	}
 	
@@ -146,8 +140,7 @@ public final class JPQLHelper implements Serializable {
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			JPQLHelper.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("getSelectCount");
+			throw new UnableToCompleteOperationException("getSelectCount", e);
 		}
 	}
 
@@ -170,8 +163,7 @@ public final class JPQLHelper implements Serializable {
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			JPQLHelper.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("getSelectCount");
+			throw new UnableToCompleteOperationException("getSelectCount", e);
 		}
 	}
 
@@ -209,8 +201,7 @@ public final class JPQLHelper implements Serializable {
 			} catch (ProgressusException pe) {
 				throw pe;
 			} catch (Exception e) {
-				JPQLHelper.log.error(e.getMessage(), e);
-				throw new UnableToCompleteOperationException("getWhere");
+				throw new UnableToCompleteOperationException("getWhere", e);
 			}
 		}
 }

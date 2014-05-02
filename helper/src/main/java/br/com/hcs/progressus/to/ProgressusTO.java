@@ -205,8 +205,7 @@ public abstract class ProgressusTO<T extends ProgressusTO<T>>
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ProgressusTO.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("newDescriptionMap");
+			throw new UnableToCompleteOperationException("newDescriptionMap", e);
 		} 
 	}
 	
@@ -215,8 +214,7 @@ public abstract class ProgressusTO<T extends ProgressusTO<T>>
 		try {
 			return this.getDescriptionMap().get(descriptionFieldName);
 		} catch (Exception e) {
-			ProgressusTO.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("getDescriptionValue");
+			throw new UnableToCompleteOperationException("getDescriptionValue", e);
 		}
 	}
 	
@@ -225,8 +223,7 @@ public abstract class ProgressusTO<T extends ProgressusTO<T>>
 		try {
 			return new ArrayList<>(this.getDescriptionMap().keySet());
 		} catch (Exception e) {
-			ProgressusTO.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("getDescriptionList");
+			throw new UnableToCompleteOperationException("getDescriptionList", e);
 		}
 	}
 	

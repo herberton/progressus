@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import br.com.hcs.progressus.exception.InvalidParameterException;
+import br.com.hcs.progressus.exception.UnableToCompleteOperationException;
 import br.com.hcs.progressus.helper.CollectionHelper;
 import br.com.hcs.progressus.helper.MapHelper;
 import br.com.hcs.progressus.helper.ObjectHelper;
@@ -46,7 +47,7 @@ public class WhereTO extends ProgressusTO<WhereTO> {
 	}
 
 	
-	public void addClause(WhereClauseTO...clauseArray) throws InvalidParameterException {
+	public void addClause(WhereClauseTO...clauseArray) throws UnableToCompleteOperationException {
 		
 		try {
 			
@@ -65,7 +66,7 @@ public class WhereTO extends ProgressusTO<WhereTO> {
 			this.setClauseMapCollection(clauseList);
 			
 		} catch (Exception e) {
-			WhereTO.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("addClause", e);
 		}
 	}
 	

@@ -14,6 +14,8 @@ import org.primefaces.model.menu.MenuElement;
 import br.com.hcs.progressus.enumerator.MenuLevel;
 import br.com.hcs.progressus.enumerator.Separator;
 import br.com.hcs.progressus.enumerator.Setting;
+import br.com.hcs.progressus.exception.ProgressusException;
+import br.com.hcs.progressus.exception.UnableToCompleteOperationException;
 import br.com.hcs.progressus.helper.StringHelper;
 import br.com.hcs.progressus.server.jpa.entity.ItemMenuEntity;
 import br.com.hcs.progressus.server.jpa.entity.MenuEntity;
@@ -26,16 +28,18 @@ public final class DefaultMenuModelHelper implements Serializable {
 
 	private static final long serialVersionUID = -123667730972504441L;
 
-	public static final DefaultMenuModel getDefaultMenuModel(List<MenuEntity> menuList, MenuLevel menuLevel) {
+	
+	public static final DefaultMenuModel getDefaultMenuModel(List<MenuEntity> menuList, MenuLevel menuLevel) throws ProgressusException {
 		try {
 			return DefaultMenuModelHelper.getDefaultMenuModel(null, menuList, menuLevel);
+		} catch (ProgressusException pe) {
+			throw pe;
 		} catch (Exception e) {
-			DefaultMenuModelHelper.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("getDefaultMenuModel", e);
 		}
-		return null;
 	}
 	
-	public static final DefaultMenuModel getDefaultMenuModel(UserEntity user, List<MenuEntity> menuList, MenuLevel menuLevel) {
+	public static final DefaultMenuModel getDefaultMenuModel(UserEntity user, List<MenuEntity> menuList, MenuLevel menuLevel) throws ProgressusException {
 		
 		try {
 			
@@ -52,15 +56,15 @@ public final class DefaultMenuModelHelper implements Serializable {
 			
 			return defaultMenuModel;
 			
+		} catch (ProgressusException pe) {
+			throw pe;
 		} catch (Exception e) {
-			DefaultMenuModelHelper.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("getDefaultMenuModel", e);
 		}
-		
-		return null;
 	}
 		
 	
-	public static final DefaultSubMenu getSubMenu(UserEntity user, MenuEntity menu, MenuLevel menuLevel) {
+	public static final DefaultSubMenu getSubMenu(UserEntity user, MenuEntity menu, MenuLevel menuLevel) throws ProgressusException {
 		
 		try {
 			
@@ -105,14 +109,14 @@ public final class DefaultMenuModelHelper implements Serializable {
 			
 			return submenu;
 			
+		} catch (ProgressusException pe) {
+			throw pe;
 		} catch (Exception e) {
-			DefaultMenuModelHelper.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("getSubMenu", e);
 		}
-		
-		return null;
 	}
 	
-	public static final DefaultSubMenu getSubMenu(MenuEntity menu) {
+	public static final DefaultSubMenu getSubMenu(MenuEntity menu) throws ProgressusException {
 		
 		try {
 			return 
@@ -123,14 +127,14 @@ public final class DefaultMenuModelHelper implements Serializable {
 						I18NHelper.getText(menu.getName())
 					);
 			
+		} catch (ProgressusException pe) {
+			throw pe;
 		} catch (Exception e) {
-			DefaultMenuModelHelper.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("getSubMenu", e);
 		}
-		
-		return null;
 	}
 	
-	public static final DefaultSubMenu getSubMenu(String id, String icon, String label) {
+	public static final DefaultSubMenu getSubMenu(String id, String icon, String label) throws ProgressusException {
 		
 		try {
 			
@@ -143,13 +147,11 @@ public final class DefaultMenuModelHelper implements Serializable {
 			return submenu;
 			
 		} catch (Exception e) {
-			DefaultMenuModelHelper.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("getSubMenu", e);
 		}
-		
-		return null;
 	}
 	
-	public static final DefaultSubMenu getSubMenu(ViewEntity view, MenuLevel level) {
+	public static final DefaultSubMenu getSubMenu(ViewEntity view, MenuLevel level) throws ProgressusException {
 		
 		try {
 			
@@ -175,15 +177,15 @@ public final class DefaultMenuModelHelper implements Serializable {
 			
 			return submenu;
 			
+		} catch (ProgressusException pe) {
+			throw pe;
 		} catch (Exception e) {
-			DefaultMenuModelHelper.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("getSubMenu", e);
 		}
-		
-		return null;
 	}
 	
 	
-	public static final DefaultMenuItem getMenuItem(ViewEntity view) {
+	public static final DefaultMenuItem getMenuItem(ViewEntity view) throws ProgressusException {
 		
 		try {
 			
@@ -197,14 +199,14 @@ public final class DefaultMenuModelHelper implements Serializable {
 						DefaultMenuModelHelper.getOutcome(DefaultMenuModelHelper.getModuleName(view), view.getName())
 					);
 			
+		} catch (ProgressusException pe) {
+			throw pe;
 		} catch (Exception e) {
-			DefaultMenuModelHelper.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("getMenuItem", e);
 		}
-		
-		return null;
 	}
 	
-	public static final DefaultMenuItem getMenuItem(String id, String icon, String value, String title, String outcome) {
+	public static final DefaultMenuItem getMenuItem(String id, String icon, String value, String title, String outcome) throws ProgressusException {
 		
 		try {
 			
@@ -217,14 +219,13 @@ public final class DefaultMenuModelHelper implements Serializable {
 			menuItem.setOutcome(outcome);
 			
 			return menuItem;
-		} catch (Exception e) {
-			DefaultMenuModelHelper.log.error(e.getMessage(), e);
-		}
 		
-		return null;
+		} catch (Exception e) {
+			throw new UnableToCompleteOperationException("getMenuItem", e);
+		}
 	}
 
-	public static final DefaultMenuItem getMenuItem(PermissionEntity permission) {
+	public static final DefaultMenuItem getMenuItem(PermissionEntity permission) throws ProgressusException {
 		
 		try {
 			return 
@@ -236,16 +237,18 @@ public final class DefaultMenuModelHelper implements Serializable {
 						I18NHelper.getText(permission.getName()), 
 						null
 					);
+		} catch (ProgressusException pe) {
+			throw pe;
 		} catch (Exception e) {
-			DefaultMenuModelHelper.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("getMenuItem", e);
 		}
-		return null;
 	}
 	
 	
-	public static final MenuElement getElement(ViewEntity view, MenuLevel menuLevel) {
+	public static final MenuElement getElement(ViewEntity view, MenuLevel menuLevel) throws ProgressusException {
 		
 		try {
+			
 			if (menuLevel.equals(MenuLevel.VIEW)) {
 				
 				if (view.getChildViewList().size() > 0) {
@@ -272,60 +275,61 @@ public final class DefaultMenuModelHelper implements Serializable {
 			
 			return DefaultMenuModelHelper.getSubMenu(view, menuLevel);
 			
+		} catch (ProgressusException pe) {
+			throw pe;
 		} catch (Exception e) {
-			DefaultMenuModelHelper.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("geElement", e);
 		}
-		
-		return null;
 	}
 	
 	
-	public static final void addSeparator(DefaultSubMenu defaultSubMenu) {
+	public static final void addSeparator(DefaultSubMenu defaultSubMenu) throws ProgressusException {
 		try {
 			defaultSubMenu.addElement(new DefaultSeparator());
 		} catch (Exception e) {
-			DefaultMenuModelHelper.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("addSeparator", e);
 		}
 	}
 
 	
-	public static final String getOutcome(String moduleName, String viewName) {
+	public static final String getOutcome(String moduleName, String viewName) throws ProgressusException {
 		try {
 			return 
 				String.format("/%s/%s", moduleName, viewName);
 		} catch (Exception e) {
-			DefaultMenuModelHelper.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("getOutcome", e);
 		}
-		return "";
 	}
 	
 	
-	public static final String getModuleName(ViewEntity view) {
+	public static final String getModuleName(ViewEntity view) throws ProgressusException {
 		try {
 			return 
 				view instanceof ItemMenuEntity ?
 					DefaultMenuModelHelper.getModuleName(((ItemMenuEntity)view).getParentMenu()) :
 					DefaultMenuModelHelper.getModuleName(view.getParentView());
+		} catch (ProgressusException pe) {
+			throw pe;
 		} catch (Exception e) {
-			DefaultMenuModelHelper.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("getModuleName", e);
 		}
-		return "";
 	}
 	
-	public static final String getModuleName(MenuEntity menu) {
+	public static final String getModuleName(MenuEntity menu) throws ProgressusException {
 		try {
 			return
 				menu.getParentMenu() != null ?
 					DefaultMenuModelHelper.getModuleName(menu.getParentMenu()) :
 					menu.getName();
+		} catch (ProgressusException pe) {
+			throw pe;
 		} catch (Exception e) {
-			DefaultMenuModelHelper.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("getModuleName", e);
 		}
-		return "";
 	}
 	
 	
-	public static final String getSubMenuID(MenuEntity menu) {
+	public static final String getSubMenuID(MenuEntity menu) throws ProgressusException {
 		try {
 			return 
 				Setting.WEB_MENU_ID_FORMAT.toString()
@@ -333,32 +337,34 @@ public final class DefaultMenuModelHelper implements Serializable {
 					.replace("[menu_name]", menu.getName())
 					.replace("[math.random]", new Double(Math.random()).toString().replaceAll("\\.", ""));
 		} catch (Exception e) {
-			DefaultMenuModelHelper.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("getSubMenuID", e);
 		}
-		return "";
 	}
 	
-	public static final String getMenuItemID(ViewEntity view) {
-		return 
-			Setting.WEB_VIEW_ID_FORMAT.toString()
-				.replace("[view_id]", view.getId().toString())
-				.replace("[view_name]", view.getName())
-				.replace("[math.random]", new Double(Math.random()).toString().replaceAll("\\.", ""));
+	public static final String getMenuItemID(ViewEntity view) throws ProgressusException {
+		try {
+			return 
+				Setting.WEB_VIEW_ID_FORMAT.toString()
+					.replace("[view_id]", view.getId().toString())
+					.replace("[view_name]", view.getName())
+					.replace("[math.random]", new Double(Math.random()).toString().replaceAll("\\.", ""));
+		} catch (Exception e) {
+			throw new UnableToCompleteOperationException("getMenuItemID", e);
+		}
 	}
 
-	public static final String getMenuItemID() {
+	public static final String getMenuItemID() throws ProgressusException {
 		try {
 			return 
 				Setting.WEB_ITEM_MENU_ID_PREFIX.toString()
 					.concat(Setting.SEPARATOR.toString())
 						.concat(new Double(Math.random()).toString().replaceAll("\\.", ""));
 		} catch (Exception e) {
-			DefaultMenuModelHelper.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("getMenuItemID", e);
 		}
-		return "";
 	}
 	
-	public static final String getMenuItemID(PermissionEntity permission) {
+	public static final String getMenuItemID(PermissionEntity permission) throws ProgressusException {
 		try {
 			return 
 				Setting.WEB_PERMISSION_ID_FORMAT.toString()
@@ -366,9 +372,8 @@ public final class DefaultMenuModelHelper implements Serializable {
 					.replace("[permission_name]", permission.getName())
 					.replace("[math.random]", new Double(Math.random()).toString().replaceAll("\\.", ""));
 		} catch (Exception e) {
-			DefaultMenuModelHelper.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("getMenuItemID", e);
 		}
-		return "";
 	}
 	
 	
@@ -384,13 +389,12 @@ public final class DefaultMenuModelHelper implements Serializable {
 		return "";
 	}
 	
-	public static final String getIcon(PermissionEntity permission) {
+	public static final String getIcon(PermissionEntity permission) throws ProgressusException {
 		try {
 			return Setting.WEB_PERMISSION_ICON_DEFAULT.toString();
 		} catch (Exception e) {
-			DefaultMenuModelHelper.log.error(e.getMessage(), e);
+			throw new UnableToCompleteOperationException("getIcon", e);
 		}
-		return "";
 	}
 
 	

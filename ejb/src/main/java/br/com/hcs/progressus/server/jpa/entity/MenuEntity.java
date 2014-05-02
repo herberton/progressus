@@ -84,7 +84,7 @@ public class MenuEntity extends ProgressusEntity<MenuEntity> implements Serializ
 			}
 			this.getParentMenu().getChildMenuList().add(this);
 		} catch (Exception e) {
-			throw new UnableToCompleteOperationException("setParentMenu");
+			throw new UnableToCompleteOperationException("setParentMenu", e);
 		}
 	}
 	
@@ -97,8 +97,8 @@ public class MenuEntity extends ProgressusEntity<MenuEntity> implements Serializ
 			return this.childMenuList;
 		} catch (ProgressusException pe) {
 			throw pe;
-		} catch(Exception ee) {
-			throw new UnableToCompleteOperationException("getChildMenuList");
+		} catch(Exception e) {
+			throw new UnableToCompleteOperationException("getChildMenuList", e);
 		}
 	}
 	
@@ -117,8 +117,8 @@ public class MenuEntity extends ProgressusEntity<MenuEntity> implements Serializ
 			}
 		} catch (ProgressusException pe) {
 			throw pe;
-		} catch(Exception ee) {
-			throw new UnableToCompleteOperationException("setChildMenuList");
+		} catch(Exception e) {
+			throw new UnableToCompleteOperationException("setChildMenuList", e);
 		}
 	}
 	
@@ -145,8 +145,8 @@ public class MenuEntity extends ProgressusEntity<MenuEntity> implements Serializ
 			}
 		} catch (ProgressusException pe) {
 			throw pe;
-		} catch(Exception ee) {
-			throw new UnableToCompleteOperationException("setChildMenuList");
+		} catch(Exception e) {
+			throw new UnableToCompleteOperationException("setChildMenuList", e);
 		}
 	}
 	
@@ -168,7 +168,7 @@ public class MenuEntity extends ProgressusEntity<MenuEntity> implements Serializ
 			this.getChildMenuList().add(childMenu);
 			childMenu.setParentMenu(this);
 		} catch (Exception e) {
-			throw new UnableToCompleteOperationException("addChildMenu");
+			throw new UnableToCompleteOperationException("addChildMenu", e);
 		}
 	}
 	
@@ -178,7 +178,7 @@ public class MenuEntity extends ProgressusEntity<MenuEntity> implements Serializ
 			this.getItemMenuList().add(itemMenu);
 			itemMenu.setParentMenu(this);
 		} catch (Exception e) {
-			throw new UnableToCompleteOperationException("addItemMenu");
+			throw new UnableToCompleteOperationException("addItemMenu", e);
 		}
 	}
 	
@@ -278,7 +278,7 @@ public class MenuEntity extends ProgressusEntity<MenuEntity> implements Serializ
 			return entity;
 			
 		} catch (Exception e) {
-			throw new UnableToCompleteOperationException("getInstance");
+			throw new UnableToCompleteOperationException("getInstance", e);
 		}
 	}
 	
@@ -320,8 +320,8 @@ public class MenuEntity extends ProgressusEntity<MenuEntity> implements Serializ
 			
 		} catch (ProgressusException pe) {
 			throw pe;
-		} catch(Exception ee) {
-			throw new UnableToCompleteOperationException("addMenuInList");
+		} catch(Exception e) {
+			throw new UnableToCompleteOperationException("addMenuInList", e);
 		}
 	}
 }

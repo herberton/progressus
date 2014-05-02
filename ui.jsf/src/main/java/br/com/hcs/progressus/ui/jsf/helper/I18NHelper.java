@@ -40,14 +40,11 @@ public final class I18NHelper implements Serializable {
 	public static final String getText(Locale locale, String key, Object...argumentArray) {
 		
 		try {
-			
 			if (argumentArray == null || argumentArray.length <= 0) {
 				return I18NHelper.getText(locale, key);
 			}
-			
 		} catch (Exception e) {
-			I18NHelper.log.error(e.getMessage(), e);
-			return I18NHelper.getI18NNotFoundMessage(key);
+			return key;
 		}
 		
 		try {
@@ -94,8 +91,7 @@ public final class I18NHelper implements Serializable {
 				}
 			}
 		} catch (Exception e) {
-			I18NHelper.log.error(e.getMessage(), e);
-			return I18NHelper.getI18NNotFoundMessage(key);
+			return key;
 		}
 		
 		try {
@@ -106,18 +102,15 @@ public final class I18NHelper implements Serializable {
 			I18NHelper.log.error(e.getMessage(), e);
 		}
 		
-		return I18NHelper.getI18NNotFoundMessage(key);
+		return key;
 	}
 	
 	public static final String getText(Locale locale, String key) {
 		try {
-			
 			return I18NHelper.getResourceBundle(locale).getString(key);
-			
 		} catch(Exception e){
-			I18NHelper.log.error(e.getMessage(), e);
+			return key;
 		}
-		return I18NHelper.getI18NNotFoundMessage(key);
 	}
 	
 	public static final String getText(String key, Object...argumentArray) {
@@ -135,13 +128,7 @@ public final class I18NHelper implements Serializable {
 			return I18NHelper.getText(locale, key, argumentArray);
 			
 		} catch (Exception e) {
-			I18NHelper.log.error(e.getMessage(), e);
-			return I18NHelper.getI18NNotFoundMessage(key);
+			return key;
 		}
-	}
-
-	
-	private static String getI18NNotFoundMessage(String key) {
-		return Setting.I18N_NOT_FOUND_MESSAGE.toString().replace("[i18n]", key);
 	}
 }

@@ -42,8 +42,7 @@ public class ParameterTO<T>  extends ProgressusTO<ParameterTO<T>> {
 			this.setName(name);
 			this.setValue(value);
 		} catch (Exception e) {
-			ParameterTO.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("ParameterTO");
+			throw new UnableToCompleteOperationException("ParameterTO", e);
 		}
 	}
 	@SuppressWarnings("unchecked")
@@ -52,8 +51,7 @@ public class ParameterTO<T>  extends ProgressusTO<ParameterTO<T>> {
 		try {
 			this.setIndex(index);
 		} catch (Exception e) {
-			ParameterTO.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("ParameterTO");
+			throw new UnableToCompleteOperationException("ParameterTO", e);
 		}
 	}
 	
@@ -166,8 +164,7 @@ public class ParameterTO<T>  extends ProgressusTO<ParameterTO<T>> {
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			ParameterTO.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("getInstance");
+			throw new UnableToCompleteOperationException("getInstance", e);
 		}
 	}
 }

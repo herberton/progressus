@@ -46,8 +46,7 @@ public class LDM<T extends ProgressusEntity<T>> extends LazyDataModel<T> {
 		try {
 			this.setBo(bo);
 		} catch (Exception e) {
-			LDM.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("LDM");
+			throw new UnableToCompleteOperationException("LDM", e);
 		}
 	}
 	
@@ -56,8 +55,7 @@ public class LDM<T extends ProgressusEntity<T>> extends LazyDataModel<T> {
 		try {
 			this.setMb(ProgressusMB);
 		} catch (Exception e) {
-			LDM.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("LDM");
+			throw new UnableToCompleteOperationException("LDM", e);
 		}
 	}
 	
@@ -75,8 +73,7 @@ public class LDM<T extends ProgressusEntity<T>> extends LazyDataModel<T> {
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			LDM.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("LDM");
+			throw new UnableToCompleteOperationException("LDM", e);
 		}
 	} 
 	
@@ -85,25 +82,32 @@ public class LDM<T extends ProgressusEntity<T>> extends LazyDataModel<T> {
 		try {
 			this.setMb(ProgressusMB);
 		} catch (Exception e) {
-			LDM.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("LDM");
+			throw new UnableToCompleteOperationException("LDM", e);
 		}
 	} 
 	
 	
 	public SelectListMethodTO<T> getSelectList() throws ProgressusException {
-		if (this.selectList == null) {
-			this.setSelectList(new SelectListMethodTO<T>());
+		try {
+			if (this.selectList == null) {
+				this.setSelectList(new SelectListMethodTO<T>());
+			}
+			return this.selectList;
+		} catch (Exception e) {
+			throw new UnableToCompleteOperationException("getSelectList", e);
 		}
-		return this.selectList;
 	}
 	
 	
 	public CountMethodTO getCount() throws ProgressusException  {
-		if (this.count == null) {
-			this.setCount(new CountMethodTO());
+		try {
+			if (this.count == null) {
+				this.setCount(new CountMethodTO());
+			}
+			return this.count;
+		} catch (Exception e) {
+			throw new UnableToCompleteOperationException("getCount", e);
 		}
-		return this.count;
 	}
 	
 	
@@ -178,7 +182,7 @@ public class LDM<T extends ProgressusEntity<T>> extends LazyDataModel<T> {
 			JSFMessageHelper.showMessage(pe);
 		} catch (Exception e) {
 			LDM.log.error(e.getMessage(), e);
-			JSFMessageHelper.showMessage(new UnableToCompleteOperationException("load"));
+			JSFMessageHelper.showMessage(new UnableToCompleteOperationException("load", e));
 		}
 		
 		return entityList;
@@ -193,8 +197,7 @@ public class LDM<T extends ProgressusEntity<T>> extends LazyDataModel<T> {
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
-			LDM.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("loadColumnList");
+			throw new UnableToCompleteOperationException("loadColumnList", e);
 		}
 	}
 	
@@ -251,8 +254,7 @@ public class LDM<T extends ProgressusEntity<T>> extends LazyDataModel<T> {
 			return parameterMap;
 		
 		} catch (Exception e) {
-			LDM.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("getParameterMap");
+			throw new UnableToCompleteOperationException("getParameterMap", e);
 		}
 	}
 }

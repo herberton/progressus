@@ -2,11 +2,9 @@ package  br.com.hcs.progressus.helper;
 
 import java.io.Serializable;
 
-import lombok.extern.slf4j.Slf4j;
 import br.com.hcs.progressus.exception.ProgressusException;
 import br.com.hcs.progressus.exception.UnableToCompleteOperationException;
 
-@Slf4j
 public final class StringHelper implements Serializable {
 
 	private static final long serialVersionUID = -6703583757542354987L;
@@ -19,8 +17,7 @@ public final class StringHelper implements Serializable {
 			}
 			return clazz.getSimpleName().substring(0, 1).toLowerCase() + clazz.getSimpleName().subSequence(1, clazz.getSimpleName().length());
 		} catch (Exception e) {
-			StringHelper.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("getI18N");
+			throw new UnableToCompleteOperationException("getI18N", e);
 		}
 	}
 	
@@ -31,8 +28,7 @@ public final class StringHelper implements Serializable {
 			}
 			return "enum." + enumerate.name();
 		} catch (Exception e) {
-			StringHelper.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("getI18N");
+			throw new UnableToCompleteOperationException("getI18N", e);
 		}
 	}
 	
@@ -41,8 +37,7 @@ public final class StringHelper implements Serializable {
 		try {
 			return string == null || string.isEmpty();
 		} catch (Exception e) {
-			StringHelper.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("isNullOrEmpty");
+			throw new UnableToCompleteOperationException("isNullOrEmpty", e);
 		}
 	}
 	
@@ -57,8 +52,7 @@ public final class StringHelper implements Serializable {
 			// "((-|\\+)?[0-9]+(\\.[0-9]+)?)+"
 			return string.matches("[-+]?\\d*\\.?\\d+");
 		} catch (Exception e) {
-			StringHelper.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("isNumeric");
+			throw new UnableToCompleteOperationException("isNumeric", e);
 		}
     }
 
@@ -73,8 +67,7 @@ public final class StringHelper implements Serializable {
 			
 			return String.format("get%s", fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1, fieldName.length()));
 		} catch (Exception e) {
-			StringHelper.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("getGetter");
+			throw new UnableToCompleteOperationException("getGetter", e);
 		}
 		
 	}
@@ -88,8 +81,7 @@ public final class StringHelper implements Serializable {
 		try {
 			return String.format("set%s", fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1, fieldName.length()));
 		} catch (Exception e) {
-			StringHelper.log.error(e.getMessage(), e);
-			throw new UnableToCompleteOperationException("getSetter");
+			throw new UnableToCompleteOperationException("getSetter", e);
 		}
 	}
 }

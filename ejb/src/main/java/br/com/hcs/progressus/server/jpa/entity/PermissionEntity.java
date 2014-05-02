@@ -57,7 +57,7 @@ public class PermissionEntity extends ProgressusEntity<PermissionEntity> impleme
 			}
 			this.getView().getPermissionList().add(this);
 		} catch (Exception e) {
-			throw new UnableToCompleteOperationException("setView");
+			throw new UnableToCompleteOperationException("setView", e);
 		}
 	}
 	
@@ -141,7 +141,7 @@ public class PermissionEntity extends ProgressusEntity<PermissionEntity> impleme
 			return permissionList;
 			
 		} catch (Exception e) {
-			throw new UnableToCompleteOperationException("addPermissionInList");
+			throw new UnableToCompleteOperationException("addPermissionInList", e);
 		}
 	}
 }
