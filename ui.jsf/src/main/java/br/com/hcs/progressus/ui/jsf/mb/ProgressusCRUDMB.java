@@ -41,7 +41,7 @@ public abstract class ProgressusCRUDMB<K extends ProgressusCRUDMB<K, V>, V exten
 	@Getter(AccessLevel.PROTECTED)
 	@Setter(AccessLevel.PRIVATE)
 	private ProgressusBOEntityRemote<V> bo; 
-	
+		
 	
 	public V getEntity() {
 		try {
@@ -207,9 +207,7 @@ public abstract class ProgressusCRUDMB<K extends ProgressusCRUDMB<K, V>, V exten
 		this.getBo().save(this.getEntity());
 	}
 	
-	
-	
-	
+		
 	public final void preDelete() {
 		try {
 			this.delete();
@@ -234,6 +232,35 @@ public abstract class ProgressusCRUDMB<K extends ProgressusCRUDMB<K, V>, V exten
 	
 	protected CountMethodTO getCountMethod() throws ProgressusException {
 		return new CountMethodTO();
+	}
+
+	
+	public int getDataTableRows() {
+		return 10;
+	}
+	
+	
+	public final int getLdmCount() {
+		try {
+			return ObjectHelper.isNullOrEmpty(this.getLdm()) ? 0 : this.getLdm().getCount();
+		} catch (ProgressusException pe) {
+			JSFMessageHelper.showMessage(pe);
+		} catch (Exception e) {
+			JSFMessageHelper.showMessage(new UnableToCompleteOperationException("getLdmRowCount", e));
+		}
+		return 0;
+	}
+	
+	
+	public final String getDataTableHeight() {
+		try {
+			if (this.getLdmCount() > 0) {
+				return Integer.toString(110 + (23 * this.getLdmCount())).concat("px");
+			}
+		} catch (Exception e) {
+			JSFMessageHelper.showMessage(new UnableToCompleteOperationException("getDataTableHeight", e));
+		}
+		return "0px";
 	}
 	
 	
@@ -262,4 +289,5 @@ public abstract class ProgressusCRUDMB<K extends ProgressusCRUDMB<K, V>, V exten
 			throw new UnableToCompleteOperationException("getEntityClass", e);
 		}
 	}
+
 }

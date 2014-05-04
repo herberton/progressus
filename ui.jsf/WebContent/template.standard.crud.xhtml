@@ -18,89 +18,115 @@
 		</ui:define>
 		<ui:define 
 			name="body">
-			<h:form
-				id="crudForm">
-				<p:toolbar 
-					rendered="#{toolbarRendered}">
-					<p:toolbarGroup 
-						align="left">
-						<p:commandButton 
-							id="saveCommandButton"
-							action="#{mb.preSave}"
-							process=":crudForm, @this"
-							update=":headerForm, :crudForm, :dataTableForm"
-							icon="icon_save" 
-							value="#{i18n.save}" 
-							title="#{i18n.save}" />
-						<p:commandButton 
-							id="deleteCommandButton"
-							onclick="deleteConfirmDialog.show()" 
-							icon="icon_delete" 
-							value="#{i18n.delete}" 
-							title="#{i18n.delete}"
-							disabled="#{mb.deleteDisabled}" />
-						<p:commandButton 
-							id="refreshCommandButton"
-							immediate="true"
-							action="#{mb.refresh}"
-							update=":headerForm, :crudForm, :dataTableForm" 
-							icon="icon_refresh"
-							value="#{i18n.refresh}" 
-							title="#{i18n.refresh}" />
-					</p:toolbarGroup>
-				</p:toolbar>
-				<p:spacer 
-					height="5"/>
-				<p:fieldset 
-					id="formFieldset"
-					legend="#{crudFieldset}">
-					<ui:insert 
-						name="form"/>
-				</p:fieldset>
-			</h:form>
-			<p:spacer 
-				height="5"/>
-			<h:form
-				id="dataTableForm"
-				prependId="false">
-				<ui:insert 
-					name="table"/>
-				<p:dataTable
-					id="dataTable"
-					var="entity" 
-					value="#{mb.ldm}" 
-					paginator="true" 
-					rows="10" 
-					lazy="true"
-					dynamic="true"
-					selectionMode="multiple" 
-					selection="#{mb.selectedArray}" 
-					emptyMessage="#{i18n.noRecordsFound}" 
-					paginatorPosition="top"
-					rendered="#{useLDM}" >
-					<p:ajax 
-						event="rowSelect" 
-						update=":crudForm, :dataTableForm"/>
-					<p:columns 
-						value="#{mb.columnList}" 
-						var="column" 
-						columnIndexVar="index"   
-			            sortBy="#{entity[column.property]}" 
-						filterBy="#{entity[column.property]}" 
-						filterMatchMode="contains">
-						<f:facet 
-							name="header">
-			                #{column.header}
-			            </f:facet>  
-			           	#{entity[column.property]}
-			        </p:columns>
-				</p:dataTable>
-				<hcs:loading
-        			block="dataTable"
-        			trigger="dataTable"/>
-			</h:form>
+			<style
+				type="text/css">
+				.body-panel {
+					background: #E0E0E0; 
+					border: 0px !important;
+				}
+				#bodyPanel_content {
+					border: 0px !important;
+					padding: 0px;
+				}
+			</style>
+			<p:panel
+				id="bodyPanel"
+				styleClass="body-panel">
+				<div
+					id="crudDiv">
+					<h:form
+						id="crudForm">
+						<p:toolbar
+							id="crudToolbar" 
+							rendered="#{toolbarRendered}">
+							<p:toolbarGroup
+								id="crudToolbarGroup" 
+								align="left">
+								<p:commandButton 
+									id="saveCommandButton"
+									action="#{mb.preSave}"
+									process=":crudForm, @this"
+									update=":headerForm, :crudForm, :dataTableForm"
+									icon="icon_save" 
+									value="#{i18n.save}" 
+									title="#{i18n.save}"
+									oncomplete="setStyle()" />
+								<p:commandButton 
+									id="deleteCommandButton"
+									onclick="deleteConfirmDialog.show()" 
+									icon="icon_delete" 
+									value="#{i18n.delete}" 
+									title="#{i18n.delete}"
+									disabled="#{mb.deleteDisabled}" />
+								<p:commandButton 
+									id="refreshCommandButton"
+									immediate="true"
+									action="#{mb.refresh}"
+									update=":headerForm, :crudForm, :dataTableForm" 
+									icon="icon_refresh"
+									value="#{i18n.refresh}" 
+									title="#{i18n.refresh}"
+									oncomplete="setStyle()" />
+							</p:toolbarGroup>
+						</p:toolbar>
+						<p:spacer 
+							height="5"/>
+						<p:fieldset				
+							id="formFieldset"
+							legend="#{crudFieldset}">
+							<ui:insert 
+								name="form"/>
+						</p:fieldset>
+						<p:sticky 
+							target=":crudForm:crudToolbar" />
+					</h:form>
+				</div>
+				<div
+					id="dataTableDiv">
+					<h:form
+						id="dataTableForm"
+						prependId="false">
+						<ui:insert 
+							name="table"/>
+						<p:dataTable
+							id="dataTable"
+							var="entity" 
+							value="#{mb.ldm}" 
+							paginator="true" 
+							rows="#{mb.dataTableRows}" 
+							lazy="true"
+							dynamic="true"
+							selectionMode="multiple" 
+							selection="#{mb.selectedArray}" 
+							emptyMessage="#{i18n.noRecordsFound}" 
+							paginatorPosition="top"
+							rendered="#{useLDM}">
+							<p:ajax 
+								event="rowSelect" 
+								update=":crudForm, :dataTableForm"
+								oncomplete="setStyle()"/>
+							<p:columns 
+								value="#{mb.columnList}" 
+								var="column" 
+								columnIndexVar="index"   
+					            sortBy="#{entity[column.property]}" 
+								filterBy="#{entity[column.property]}" 
+								filterMatchMode="contains">
+								<f:facet 
+									name="header">
+					                #{column.header}
+					            </f:facet>  
+					           	#{entity[column.property]}
+					        </p:columns>
+						</p:dataTable>
+						<hcs:loading
+		        			block="dataTable"
+		        			trigger="dataTable"/>
+					</h:form>
+				</div>
+			</p:panel>
 			<hcs:loading
-       			block=":bodyLayoutUnit"
+       			block=":bodyPanel"
        			trigger=":crudForm:saveCommandButton, :crudForm:deleteCommandButton, :crudForm:refreshCommandButton"/>
 			<p:confirmDialog
 				widgetVar="deleteConfirmDialog" 
@@ -114,15 +140,37 @@
 					actionListener="#{mb.preDelete}" 
 					update=":headerForm, :crudForm, :dataTableForm"  
 					immediate="true" 
-					value="#{i18n.yes}" />
+					value="#{i18n.yes}"
+					oncomplete="setStyle()" />
 				<p:commandButton 
 					id="declineCommandButton" 
 					onclick="deleteConfirmDialog.hide()" 
-					value="#{i18n.no}" />
+					value="#{i18n.no}"
+					oncomplete="setStyle()" />
 				<hcs:loading
-        			block=":bodyLayoutUnit"
+        			block=":bodyPanel"
         			trigger="confirmCommandButton, declineCommandButton"/>
 			</p:confirmDialog>
+			<script
+				type="text/javascript">
+				function setCrudDivStyle() {
+					$('#crudDiv').css("width", "100%");
+					$('#crudDiv').css("padding-bottom", "calc(" + $("#dataTableDiv").css("height") + " + 5px)");
+				};
+				function setDataTableDivStyle() {
+					$('#dataTableDiv').css("position", "fixed");
+					$('#dataTableDiv').css("width", "100%");
+					$('#dataTableDiv').css("height", "calc(" + $("#dataTable").css("height") + " + 1px + " +  $("#footerDiv").css("height") + ")");
+					$('#dataTableDiv').css("bottom", "0px");
+				};
+				function setStyle() {
+					setCrudDivStyle();
+					setDataTableDivStyle();
+				};
+				$(document).ready(function() {
+					setStyle(); 
+				});
+			</script>
 		</ui:define>
 	</ui:composition>
 </html>

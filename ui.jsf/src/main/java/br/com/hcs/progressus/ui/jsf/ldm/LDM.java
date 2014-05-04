@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -29,18 +30,6 @@ public class LDM<T extends ProgressusEntity<T>> extends LazyDataModel<T> {
 	private static final long serialVersionUID = -6788902683039436729L;
 	
 	
-	@Getter
-	@Setter
-	private ProgressusMB<? extends ProgressusMB<?>> mb;
-	@Getter
-	@Setter
-	private ProgressusBOEntityRemote<T> bo;
-	@Setter
-	private SelectListMethodTO<T> selectList;
-	@Setter
-	private CountMethodTO count;
-	
-	
 	public LDM(ProgressusBOEntityRemote<T> bo) throws ProgressusException {
 		super();
 		try {
@@ -59,52 +48,94 @@ public class LDM<T extends ProgressusEntity<T>> extends LazyDataModel<T> {
 		}
 	}
 	
-	public LDM(ProgressusBOEntityRemote<T> bo, SelectListMethodTO<T> selectList, CountMethodTO count) throws ProgressusException {
+	public LDM(ProgressusBOEntityRemote<T> bo, SelectListMethodTO<T> selectListMethod, CountMethodTO countMethod) throws ProgressusException {
 		
 		this(bo);
 		
 		try {
 			
-			this.setSelectList(selectList);
-			this.setCount(count);
+			this.setSelectListMethod(selectListMethod);
+			this.setCountMethod(countMethod);
 			
-			this.setRowCount(this.getCount().execute(this.getBo(), new HashMap<String, Object>()));
+			this.setRowCount(this.getCount());
 			
 		} catch (ProgressusException pe) {
 			throw pe;
 		} catch (Exception e) {
 			throw new UnableToCompleteOperationException("LDM", e);
 		}
-	} 
-	
-	public LDM(ProgressusMB<? extends ProgressusMB<?>> ProgressusMB, ProgressusBOEntityRemote<T> bo, SelectListMethodTO<T> selectList, CountMethodTO count) throws ProgressusException {
-		this(bo, selectList, count);
+	}
+
+	public LDM(ProgressusMB<? extends ProgressusMB<?>> ProgressusMB, ProgressusBOEntityRemote<T> bo, SelectListMethodTO<T> selectListMethod, CountMethodTO countMethod) throws ProgressusException {
+		this(bo, selectListMethod, countMethod);
 		try {
 			this.setMb(ProgressusMB);
 		} catch (Exception e) {
 			throw new UnableToCompleteOperationException("LDM", e);
 		}
-	} 
+	}
 	
 	
-	public SelectListMethodTO<T> getSelectList() throws ProgressusException {
+	@Getter
+	@Setter
+	private ProgressusMB<? extends ProgressusMB<?>> mb;
+	@Getter
+	@Setter
+	private ProgressusBOEntityRemote<T> bo;
+	@Setter
+	private SelectListMethodTO<T> selectListMethod;
+	@Setter
+	private CountMethodTO countMethod;
+	@Setter(AccessLevel.PROTECTED)
+	private Map<String, Object> parameterMap;
+	
+	
+	public SelectListMethodTO<T> getSelectListMethod() throws ProgressusException {
 		try {
-			if (this.selectList == null) {
-				this.setSelectList(new SelectListMethodTO<T>());
+			if (this.selectListMethod == null) {
+				this.setSelectListMethod(new SelectListMethodTO<T>());
 			}
-			return this.selectList;
+			return this.selectListMethod;
 		} catch (Exception e) {
-			throw new UnableToCompleteOperationException("getSelectList", e);
+			throw new UnableToCompleteOperationException("getSelectListMethod", e);
 		}
 	}
 	
 	
-	public CountMethodTO getCount() throws ProgressusException  {
+	public CountMethodTO getCountMethod() throws ProgressusException {
 		try {
-			if (this.count == null) {
-				this.setCount(new CountMethodTO());
+			if (this.countMethod == null) {
+				this.setCountMethod(new CountMethodTO());
 			}
-			return this.count;
+			return this.countMethod;
+		} catch (Exception e) {
+			throw new UnableToCompleteOperationException("getCountMethod", e);
+		}
+	}
+	
+	public Map<String, Object> getParameterMap() throws ProgressusException {
+		try {
+			if (this.parameterMap == null) {
+				this.setParameterMap(new HashMap<String, Object>());
+			}
+			return this.parameterMap;
+		} catch (Exception e) {
+			throw new UnableToCompleteOperationException("getParameterMap", e);
+		}
+	}
+	
+	
+	public int getCount() throws ProgressusException {
+		try {
+			return this.getCountMethod().execute(this.getBo(), this.getParameterMap());
+		} catch (Exception e) {
+			throw new UnableToCompleteOperationException("getCount", e);
+		}
+	}
+	
+	public List<T> getSelectList() throws ProgressusException {
+		try {
+			return this.getSelectListMethod().execute(this.getBo(), this.getParameterMap());
 		} catch (Exception e) {
 			throw new UnableToCompleteOperationException("getCount", e);
 		}
@@ -146,7 +177,7 @@ public class LDM<T extends ProgressusEntity<T>> extends LazyDataModel<T> {
 		try {
 			Map<String, Object> parameterMap = new HashMap<>();
 			parameterMap.put("id", Long.valueOf(id));
-			return this.getSelectList().execute(this.getBo(), parameterMap, 0, 1, new OrderByTO()).get(0);
+			return this.getSelectListMethod().execute(this.getBo(), parameterMap, 0, 1, new OrderByTO()).get(0);
 		} catch (Exception e) {
 			LDM.log.error(e.getMessage(), e);
 		}
@@ -169,12 +200,12 @@ public class LDM<T extends ProgressusEntity<T>> extends LazyDataModel<T> {
 			
 			int maxResult = (first + pageSize) - first;
 			
-			Map<String, Object> parameterMap = this.getParameterMap(filters);
+			this.setParameterMap(this.getParameterMap(filters));
 			OrderByTO orderBy = new OrderByTO(sortField, orderByType);
 			
-			entityList = this.getSelectList().execute(this.getBo(), parameterMap, first, maxResult, orderBy);
+			entityList = this.getSelectListMethod().execute(this.getBo(), this.getParameterMap(), first, maxResult, orderBy);
 			
-			this.setRowCount(this.getCount().execute(this.getBo(), parameterMap));
+			this.setRowCount(getCount());
 			
 			this.loadColumnList();
 		

@@ -34,26 +34,18 @@
 					setTimeout("location.reload(true);", timeoutPeriod);
 				}
 			</script>
-			<style>
-				.ui-layout-north {
-                    z-index: 20 !important;
-                    overflow: visible !important;
-                }
-                .ui-layout-north .ui-layout-unit-content {
-                    overflow: visible !important;
-                }
-				.ui-datagrid-content {
-					border: none;
+			<style
+				type="text/css">
+				div#bodyDiv {
+					width: 100%;
+					padding-bottom: 32px;
 				}
-				.ui-layout-unit .ui-layout-unit-content {
-					padding: 0em 0em; 
-					border: none;
-					overflow: hidden;
-					background: #E0E0E0;
-				}
-				.ui-layout-unit {
-					border: none;
-					background: #E0E0E0;
+				div#footerDiv {
+					position: fixed; 
+				    width: 100%;
+				    height: 32px;
+				    padding: 0px; 
+				    bottom: 0px;
 				}
 				.header-toolbar {
 					height:60px;
@@ -62,9 +54,6 @@
 					width: 70%;
 					height: 100%;
 					text-align:right;
-				}
-				.footer-toolbar-group {
-					width: 100%;
 				}
 				div.header-right-top-div {
 					float: right;
@@ -90,20 +79,14 @@
 					width: 35px;
 					height:100%;
 				}
-				div.footer-div {
-					padding: 0px;
-				    margin: 0px;
-					text-align: center;
-				}
 			</style>
 		</h:head>
 		<h:body 
 			onload="reloadPage(630000);">
-			<p:layout 
-				fullPage="true">
-				<p:layoutUnit
-					id="headerLayoutUnit" 
-					position="north">
+			<div
+				id="containerDiv">
+				<div
+					id="headerDiv">
 					<h:form
 						id="headerForm"
 						prependId="false">
@@ -167,24 +150,21 @@
 							life="5000" 
 							showDetail="true"/>
 					</h:form>
-			    </p:layoutUnit>
-		    	<p:layoutUnit
-		    		id="bodyLayoutUnit"
-					position="center">
+			    </div>
+		    	<div
+					id="bodyDiv">
 					<ui:insert
 		          		name="body"/>
-			    </p:layoutUnit>
-		        <p:layoutUnit 
-		        	id="footerLayoutUnit"
-			    	position="south"
-			    	size="30"> 
+			    </div>
+		        <div 
+		        	id="footerDiv"> 
 			    	<p:breadCrumb>
-						<p:menuitem value="#{i18n.index}" url="/index" />
-						<p:menuitem value="#{i18n.crud}" url="/index" />
-						<p:menuitem value="#{i18n.user}" url="/index" />
+						<p:menuitem value="#{i18n.index}" url="/index.xhtml" />
+						<p:menuitem value="#{i18n.crud}" url="/index.xhtml" />
+						<p:menuitem value="#{i18n.user}" url="/crud/user.xhtml" />
 					</p:breadCrumb>
-			    </p:layoutUnit>
-			</p:layout>
+			    </div>
+			</div>
 		</h:body>
 	</f:view>
 </html>
